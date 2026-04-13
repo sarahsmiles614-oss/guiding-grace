@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import SubscriptionGuard from "@/components/SubscriptionGuard";
 import { supabase } from "@/lib/supabase";
+import PageBackground from "@/components/PageBackground";
 
 const promises = [
   { id: 1, reference: "Jeremiah 29:11", text: "For I know the plans I have for you, declares the Lord, plans to prosper you and not to harm you, plans to give you hope and a future." },
@@ -42,28 +43,30 @@ export default function PromisesPage() {
 
   return (
     <SubscriptionGuard>
-      <main className="min-h-screen bg-gradient-to-b from-purple-50 to-white p-6">
-        <div className="max-w-2xl mx-auto">
-          <div className="flex justify-between items-center mb-6">
-            <Link href="/dashboard" className="text-purple-700 text-sm">← Dashboard</Link>
-            <h1 className="text-lg font-bold text-purple-900">His Promises</h1>
-            <div className="w-16" />
-          </div>
-          <div className="space-y-4">
-            {promises.map((p) => (
-              <div key={p.id} className="bg-white rounded-2xl shadow-sm border border-purple-100 p-6 flex gap-4">
-                <div className="flex-1">
-                  <p className="text-xs text-purple-400 mb-1">{p.reference}</p>
-                  <p className="text-gray-700 leading-relaxed">"{p.text}"</p>
+      <PageBackground url="https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/gersweb-god-2012104.jpg">
+        <main className="flex-1 p-6">
+          <div className="max-w-2xl mx-auto">
+            <div className="flex justify-between items-center mb-6">
+              <Link href="/dashboard" className="text-white/80 text-sm">← Dashboard</Link>
+              <h1 className="text-lg font-bold text-white" style={{ textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>His Promises</h1>
+              <div className="w-16" />
+            </div>
+            <div className="space-y-4">
+              {promises.map((p) => (
+                <div key={p.id} className="bg-white/90 backdrop-blur rounded-2xl shadow-sm p-6 flex gap-4">
+                  <div className="flex-1">
+                    <p className="text-xs text-purple-400 mb-1">{p.reference}</p>
+                    <p className="text-gray-700 leading-relaxed">"{p.text}"</p>
+                  </div>
+                  <button onClick={() => toggleFavorite(p.id)} className="text-2xl flex-shrink-0">
+                    {favorites.includes(p.id) ? "💜" : "🤍"}
+                  </button>
                 </div>
-                <button onClick={() => toggleFavorite(p.id)} className="text-2xl flex-shrink-0">
-                  {favorites.includes(p.id) ? "💜" : "🤍"}
-                </button>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
-      </main>
+        </main>
+      </PageBackground>
     </SubscriptionGuard>
   );
 }

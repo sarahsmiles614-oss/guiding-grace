@@ -2,6 +2,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import SubscriptionGuard from "@/components/SubscriptionGuard";
+import PageBackground from "@/components/PageBackground";
 
 const devotions = [
   { date: "April 12", title: "Walking in Grace", verse: "John 1:16", verseText: "Out of his fullness we have all received grace in place of grace already given.", reflection: "Grace is not a one-time gift — it is an endless river. Every morning you wake, you are standing in a fresh current of it. Today, let yourself receive rather than strive." },
@@ -17,29 +18,31 @@ export default function DevotionsPage() {
 
   return (
     <SubscriptionGuard>
-      <main className="min-h-screen bg-gradient-to-b from-purple-50 to-white p-6">
-        <div className="max-w-2xl mx-auto">
-          <div className="flex justify-between items-center mb-6">
-            <Link href="/dashboard" className="text-purple-700 text-sm">← Dashboard</Link>
-            <h1 className="text-lg font-bold text-purple-900">Daily Devotions</h1>
-            <div className="w-16" />
-          </div>
-          <div className="flex gap-2 overflow-x-auto pb-2 mb-6">
-            {devotions.map((d) => (
-              <button key={d.date} onClick={() => setSelected(d)} className={`flex-shrink-0 px-3 py-1 rounded-full text-xs font-medium transition ${selected.date === d.date ? "bg-purple-700 text-white" : "bg-white border border-purple-200 text-purple-700"}`}>{d.date}</button>
-            ))}
-          </div>
-          <div className="bg-white rounded-3xl shadow-sm border border-purple-100 p-8">
-            <p className="text-xs text-purple-400 uppercase tracking-widest mb-2">{selected.date}</p>
-            <h2 className="text-2xl font-bold text-purple-900 mb-4">{selected.title}</h2>
-            <div className="bg-purple-50 rounded-2xl p-4 mb-6">
-              <p className="text-purple-800 italic mb-1">"{selected.verseText}"</p>
-              <p className="text-xs text-purple-400">— {selected.verse}</p>
+      <PageBackground url="https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/imagenesiacristianas-god-8585365_1920.jpg">
+        <main className="flex-1 p-6">
+          <div className="max-w-2xl mx-auto">
+            <div className="flex justify-between items-center mb-6">
+              <Link href="/dashboard" className="text-white/80 text-sm">← Dashboard</Link>
+              <h1 className="text-lg font-bold text-white" style={{ textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>Daily Devotions</h1>
+              <div className="w-16" />
             </div>
-            <p className="text-gray-600 leading-relaxed">{selected.reflection}</p>
+            <div className="flex gap-2 overflow-x-auto pb-2 mb-6">
+              {devotions.map((d) => (
+                <button key={d.date} onClick={() => setSelected(d)} className={`flex-shrink-0 px-3 py-1 rounded-full text-xs font-medium transition ${selected.date === d.date ? "bg-white text-purple-900" : "bg-white/20 text-white border border-white/30"}`}>{d.date}</button>
+              ))}
+            </div>
+            <div className="bg-white/90 backdrop-blur rounded-3xl shadow-sm p-8">
+              <p className="text-xs text-purple-400 uppercase tracking-widest mb-2">{selected.date}</p>
+              <h2 className="text-2xl font-bold text-purple-900 mb-4">{selected.title}</h2>
+              <div className="bg-purple-50 rounded-2xl p-4 mb-6">
+                <p className="text-purple-800 italic mb-1">"{selected.verseText}"</p>
+                <p className="text-xs text-purple-400">— {selected.verse}</p>
+              </div>
+              <p className="text-gray-600 leading-relaxed">{selected.reflection}</p>
+            </div>
           </div>
-        </div>
-      </main>
+        </main>
+      </PageBackground>
     </SubscriptionGuard>
   );
 }
