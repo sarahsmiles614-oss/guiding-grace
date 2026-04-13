@@ -93,7 +93,7 @@ export default function GraceChallengeContent() {
   }
 
   const heartsRemaining = heartBudget - givenHearts.length;
-  const allHeartsUsed = givenHearts.length === heartBudget;
+  const allHeartsUsed = givenHearts.length === heartBudget && heartBudget > 0;
   const sortedPosts = revealed ? [...posts].sort((a, b) => (totalHearts[b.id] || 0) - (totalHearts[a.id] || 0)) : posts;
   const mostLoved = revealed && sortedPosts.length > 0 ? sortedPosts[0] : null;
 
@@ -103,54 +103,49 @@ export default function GraceChallengeContent() {
         <main className="flex-1 p-6">
           <div className="max-w-2xl mx-auto">
             <div className="flex justify-between items-center mb-6">
-              <Link href="/dashboard" className="text-white/80 text-sm">← Dashboard</Link>
+              <Link href="/dashboard" className="text-white/70 text-sm">← Dashboard</Link>
               <h1 className="text-lg font-bold text-white" style={{ textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>Daily Grace Challenge</h1>
               <Link href="/grace-challenge/leaderboard" className="text-yellow-300 text-sm font-medium">🏆 Board</Link>
             </div>
 
             {!challenge ? (
-              <div className="bg-white/20 backdrop-blur rounded-2xl p-8 text-center text-white">No challenge posted yet today. Check back soon. 🌅</div>
+              <p className="text-white/60 text-center py-12">No challenge posted yet today. Check back soon. 🌅</p>
             ) : (
               <>
-                <div className="bg-gradient-to-br from-yellow-400/90 to-orange-300/90 backdrop-blur rounded-3xl p-8 mb-6 text-white shadow-lg">
-                  <p className="text-xs uppercase tracking-widest mb-2 opacity-80">Today's Challenge</p>
-                  <p className="text-xl font-bold leading-relaxed">{challenge.challenge_text}</p>
-                </div>
+                <p className="text-white/50 text-xs uppercase tracking-widest mb-2">Today's Challenge</p>
+                <p className="text-2xl font-bold text-white mb-8 leading-relaxed" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 12px rgba(0,0,0,0.8)" }}>{challenge.challenge_text}</p>
 
                 {mostLoved && (
-                  <div className="bg-purple-700/90 backdrop-blur text-white rounded-2xl p-5 mb-6 text-center">
-                    <p className="text-xs uppercase tracking-widest mb-1 opacity-70">Most Loved Today</p>
-                    <p className="font-semibold">{mostLoved.user_name}</p>
-                    <p className="text-sm opacity-80 mt-1 italic">"{mostLoved.post_text?.slice(0, 100)}{mostLoved.post_text?.length > 100 ? "..." : ""}"</p>
-                    <p className="text-xs mt-2 opacity-60">Your heart has been recognized today as being full of grace. 💛</p>
+                  <div className="mb-8">
+                    <p className="text-yellow-300 text-xs uppercase tracking-widest mb-1">Most Loved Today</p>
+                    <p className="text-white font-semibold" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.8)" }}>{mostLoved.user_name}</p>
+                    <p className="text-white/70 text-sm italic mt-1">"{mostLoved.post_text?.slice(0, 100)}{mostLoved.post_text?.length > 100 ? "..." : ""}"</p>
+                    <p className="text-white/50 text-xs mt-1">Your heart has been recognized today as being full of grace. 💛</p>
                   </div>
                 )}
 
                 {!userPost ? (
-                  <div className="bg-white/90 backdrop-blur rounded-2xl p-6 mb-6">
-                    <p className="text-sm font-medium text-gray-700 mb-3">Did you take on today's challenge?</p>
+                  <div className="bg-white/10 backdrop-blur rounded-2xl p-5 mb-8 border border-white/20">
+                    <p className="text-white/80 text-sm font-medium mb-3">Did you take on today's challenge?</p>
                     <div className="flex gap-3 mb-4">
-                      <button onClick={() => setCompleted(true)} className={`flex-1 py-2 rounded-xl text-sm font-medium border transition ${completed === true ? "bg-green-600 text-white border-green-600" : "border-gray-200 text-gray-600"}`}>✅ I did it</button>
-                      <button onClick={() => setCompleted(false)} className={`flex-1 py-2 rounded-xl text-sm font-medium border transition ${completed === false ? "bg-orange-500 text-white border-orange-500" : "border-gray-200 text-gray-600"}`}>🌱 Not yet</button>
+                      <button onClick={() => setCompleted(true)} className={`flex-1 py-2 rounded-xl text-sm font-medium border transition ${completed === true ? "bg-white/30 text-white border-white/50" : "border-white/20 text-white/60"}`}>✅ I did it</button>
+                      <button onClick={() => setCompleted(false)} className={`flex-1 py-2 rounded-xl text-sm font-medium border transition ${completed === false ? "bg-white/30 text-white border-white/50" : "border-white/20 text-white/60"}`}>🌱 Not yet</button>
                     </div>
-                    <textarea value={response} onChange={e => setResponse(e.target.value)} placeholder="Share how it went, or why it was hard..." className="w-full border border-yellow-200 rounded-xl px-4 py-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-yellow-300 mb-3" rows={4} />
-                    <button onClick={handleSubmit} disabled={!response.trim() || completed === null || submitting} className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-3 rounded-xl transition disabled:opacity-40">
+                    <textarea value={response} onChange={e => setResponse(e.target.value)} placeholder="Share how it went, or why it was hard..." className="w-full bg-transparent border border-white/30 rounded-xl px-4 py-3 text-white placeholder-white/40 text-sm resize-none focus:outline-none focus:border-white/60 mb-3" rows={4} />
+                    <button onClick={handleSubmit} disabled={!response.trim() || completed === null || submitting} className="w-full bg-white/20 hover:bg-white/30 border border-white/30 text-white font-semibold py-3 rounded-xl transition disabled:opacity-40">
                       {submitting ? "Sharing..." : "Share My Response 💛"}
                     </button>
                   </div>
                 ) : (
-                  <div className="bg-green-50/90 backdrop-blur border border-green-200 rounded-2xl p-5 mb-6 text-center">
-                    <p className="text-green-700 font-medium text-sm">You shared your response today 💛</p>
-                  </div>
+                  <p className="text-white/60 text-sm text-center mb-8">You shared your response today 💛</p>
                 )}
 
                 {userPost && !revealed && heartBudget > 0 && (
-                  <div className={`rounded-2xl p-4 mb-6 text-center backdrop-blur ${allHeartsUsed ? "bg-green-50/90 border border-green-200" : "bg-yellow-50/90 border border-yellow-200"}`}>
-                    <p className="text-sm font-medium text-gray-700 mb-1">
-                      {allHeartsUsed ? "💛 All hearts given — your tally counts!" : `💛 ${heartsRemaining} heart${heartsRemaining !== 1 ? "s" : ""} remaining`}
+                  <div className="mb-8">
+                    <p className="text-white/60 text-sm mb-2">
+                      {allHeartsUsed ? "💛 All hearts given — your tally counts!" : `💛 ${heartsRemaining} heart${heartsRemaining !== 1 ? "s" : ""} remaining — give all ${heartBudget} or your received hearts won't count`}
                     </p>
-                    <p className="text-xs text-gray-400">{allHeartsUsed ? "You can still change your hearts until 6:55am" : `Give all ${heartBudget} hearts or your received hearts won't count`}</p>
-                    <div className="flex justify-center gap-1 mt-2">
+                    <div className="flex gap-1">
                       {Array.from({ length: heartBudget }).map((_, i) => (
                         <span key={i} className="text-xl">{i < givenHearts.length ? "💛" : "🤍"}</span>
                       ))}
@@ -159,27 +154,22 @@ export default function GraceChallengeContent() {
                 )}
 
                 {userPost && favorites.length > 0 && (
-                  <div className="text-center mb-4">
-                    <Link href="/grace-challenge/favorites" className="text-yellow-200 text-sm underline">View your {favorites.length} saved favorite{favorites.length !== 1 ? "s" : ""} →</Link>
+                  <div className="mb-6">
+                    <Link href="/grace-challenge/favorites" className="text-yellow-300 text-sm underline">View your {favorites.length} saved favorite{favorites.length !== 1 ? "s" : ""} →</Link>
                   </div>
                 )}
 
-                <div className="space-y-4">
-                  <p className="text-xs text-white/60 uppercase tracking-widest">
-                    {revealed ? "Results — Hearts Revealed" : "Community Responses — Hearts anonymous until 6:55am"}
-                  </p>
+                <p className="text-white/40 text-xs uppercase tracking-widest mb-4">
+                  {revealed ? "Results — Hearts Revealed" : "Community Responses — Hearts anonymous until 6:55am"}
+                </p>
+                <div className="space-y-6">
                   {sortedPosts.map(post => (
-                    <div key={post.id} className={`bg-white/90 backdrop-blur rounded-2xl p-5 ${mostLoved?.id === post.id && revealed ? "border-2 border-yellow-400" : ""}`}>
-                      <div className="flex justify-between items-start mb-2">
-                        <div>
-                          <p className="text-xs text-purple-400">{post.user_name}</p>
-                          <span className={`text-xs px-2 py-0.5 rounded-full ${post.completed ? "bg-green-100 text-green-700" : "bg-orange-100 text-orange-700"}`}>
-                            {post.completed ? "✅ Completed" : "🌱 Still growing"}
-                          </span>
-                        </div>
+                    <div key={post.id} className={`${mostLoved?.id === post.id && revealed ? "border-l-2 border-yellow-400 pl-4" : ""}`}>
+                      <div className="flex justify-between items-start mb-1">
+                        <p className="text-white/40 text-xs">{post.user_name} · {post.completed ? "✅ Completed" : "🌱 Still growing"}</p>
                         <div className="flex items-center gap-2">
                           {post.user_id !== userId && (
-                            <button onClick={() => toggleFavorite(post.id)} className="text-lg hover:scale-110 transition">
+                            <button onClick={() => toggleFavorite(post.id)} className="text-base hover:scale-110 transition">
                               {favorites.includes(post.id) ? "🔖" : "📄"}
                             </button>
                           )}
@@ -190,13 +180,13 @@ export default function GraceChallengeContent() {
                           )}
                           {revealed && (
                             <div className="flex items-center gap-1">
-                              <span className="text-xl">💛</span>
-                              <span className="text-sm font-semibold text-gray-600">{totalHearts[post.id] || 0}</span>
+                              <span className="text-lg">💛</span>
+                              <span className="text-sm font-semibold text-white/70">{totalHearts[post.id] || 0}</span>
                             </div>
                           )}
                         </div>
                       </div>
-                      <p className="text-gray-700 text-sm leading-relaxed">{post.post_text}</p>
+                      <p className="text-white/80 text-sm leading-relaxed" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>{post.post_text}</p>
                     </div>
                   ))}
                 </div>

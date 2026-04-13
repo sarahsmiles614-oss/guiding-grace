@@ -62,38 +62,34 @@ export default function FavoritesPage() {
         <main className="flex-1 p-6">
           <div className="max-w-2xl mx-auto">
             <div className="flex justify-between items-center mb-6">
-              <Link href="/grace-challenge" className="text-white/80 text-sm">← Challenge</Link>
+              <Link href="/grace-challenge" className="text-white/70 text-sm">← Challenge</Link>
               <h1 className="text-lg font-bold text-white" style={{ textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>My Favorites</h1>
               <div className="w-16" />
             </div>
+
             {!revealed && heartBudget > 0 && (
-              <div className="bg-yellow-50/90 backdrop-blur border border-yellow-200 rounded-2xl p-4 mb-6 text-center">
-                <p className="text-sm font-medium text-gray-700">💛 {heartsRemaining} heart{heartsRemaining !== 1 ? "s" : ""} remaining</p>
-                <p className="text-xs text-gray-400 mt-1">Hearts lock at 6:55am</p>
-                <div className="flex justify-center gap-1 mt-2">
+              <div className="mb-8">
+                <p className="text-white/60 text-sm mb-2">💛 {heartsRemaining} heart{heartsRemaining !== 1 ? "s" : ""} remaining · Hearts lock at 6:55am</p>
+                <div className="flex gap-1">
                   {Array.from({ length: heartBudget }).map((_, i) => (
                     <span key={i} className="text-xl">{i < givenHearts.length ? "💛" : "🤍"}</span>
                   ))}
                 </div>
               </div>
             )}
+
             {posts.length === 0 ? (
-              <div className="bg-white/20 backdrop-blur rounded-2xl p-8 text-center text-white">
+              <div className="text-center py-12">
                 <p className="text-4xl mb-3">🔖</p>
-                <p>No favorites saved yet.</p>
+                <p className="text-white/60">No favorites saved yet.</p>
                 <Link href="/grace-challenge" className="text-yellow-300 text-sm underline mt-2 block">Browse today's responses →</Link>
               </div>
             ) : (
-              <div className="space-y-4">
+              <div className="space-y-6">
                 {posts.map(post => (
-                  <div key={post.id} className="bg-white/90 backdrop-blur rounded-2xl p-5">
-                    <div className="flex justify-between items-start mb-2">
-                      <div>
-                        <p className="text-xs text-purple-400">{post.user_name}</p>
-                        <span className={`text-xs px-2 py-0.5 rounded-full ${post.completed ? "bg-green-100 text-green-700" : "bg-orange-100 text-orange-700"}`}>
-                          {post.completed ? "✅ Completed" : "🌱 Still growing"}
-                        </span>
-                      </div>
+                  <div key={post.id}>
+                    <div className="flex justify-between items-start mb-1">
+                      <p className="text-white/40 text-xs">{post.user_name} · {post.completed ? "✅ Completed" : "🌱 Still growing"}</p>
                       <div className="flex items-center gap-2">
                         {!revealed && (
                           <button onClick={() => toggleHeart(post.id)} disabled={!givenHearts.includes(post.id) && heartsRemaining === 0} className={`text-xl transition ${!givenHearts.includes(post.id) && heartsRemaining === 0 ? "opacity-30 cursor-default" : "hover:scale-110"}`}>
@@ -103,7 +99,7 @@ export default function FavoritesPage() {
                         <button onClick={() => removeFavorite(post.id)} className="text-lg hover:scale-110 transition">🔖</button>
                       </div>
                     </div>
-                    <p className="text-gray-700 text-sm leading-relaxed">{post.post_text}</p>
+                    <p className="text-white/80 text-sm leading-relaxed" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>{post.post_text}</p>
                   </div>
                 ))}
               </div>
