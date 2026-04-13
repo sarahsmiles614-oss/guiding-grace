@@ -39,7 +39,8 @@ export default function AccountContent() {
           <div className="bg-white rounded-2xl shadow-sm border border-purple-100 p-6">
             <p className="text-sm text-gray-500 mb-1">Subscription</p>
             <p className="font-medium text-purple-800 capitalize">{sub.status}</p>
-            {sub.trial_ends_at && <p className="text-xs text-gray-400 mt-1">Trial ends {new Date(sub.trial_ends_at).toLocaleDateString()}</p>}
+            {sub.trial_end_date && <p className="text-xs text-gray-400 mt-1">Trial ends {new Date(sub.trial_end_date).toLocaleDateString()}</p>}
+            {sub.current_period_end && <p className="text-xs text-gray-400 mt-1">Next billing {new Date(sub.current_period_end).toLocaleDateString()}</p>}
           </div>
         )}
       </div>
