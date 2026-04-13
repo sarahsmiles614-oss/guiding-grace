@@ -32,17 +32,17 @@ export default function PrayerWallPage() {
     setSubmitting(true);
     await supabase.from("prayer_requests").insert({
       user_id: userId,
-      display_name: anonymous ? "Anonymous" : userName,
-      request,
-      anonymous,
+      user_name: anonymous ? "Anonymous" : userName,
+      prayer_text: request,
+      is_private: anonymous,
     });
     setRequest("");
     await loadPrayers();
     setSubmitting(false);
   }
 
-  async function handlePrayed(id: string) {
-    await supabase.from("prayer_requests").update({ prayed_count: prayers.find(p => p.id === id)?.prayed_count + 1 || 1 }).eq("id", id);
+  async function handlePrayed(id: string, current: number) {
+    await supabase.from("prayer_requests").update({ prayer_count: current + 1 }).eq("id", id);
     loadPrayers();
   }
 
@@ -73,10 +73,10 @@ export default function PrayerWallPage() {
           <div className="space-y-4">
             {prayers.map(p => (
               <div key={p.id} className="bg-white rounded-2xl shadow-sm border border-purple-100 p-5">
-                <p className="text-xs text-purple-400 mb-1">{p.display_name}</p>
-                <p className="text-gray-700 text-sm mb-3">{p.request}</p>
-                <button onClick={() => handlePrayed(p.id)} className="text-xs text-purple-600 hover:text-purple-800 transition">
-                  🙏 I prayed for this {p.prayed_count > 0 ? `· ${p.prayed_count}` : ""}
+                <p className="text-xs text-purple-400 mb-1">{p.user_name}</p>
+                <p className="text-gray-700 text-sm mb-3">{p.prayer_text}</p>
+                <button onClick={() => handlePrayed(p.id, p.prayer_count || 0)} className="text-xs text-purple-600 hover:text-purple-800 transition">
+                  🙏 I prayed for this {p.prayer_count > 0 ? `· ${p.prayer_count}` : ""}
                 </button>
               </div>
             ))}
