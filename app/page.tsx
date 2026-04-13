@@ -4,10 +4,19 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col" style={{ backgroundImage: "url('https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/terrianneallen-sunset-3916244.jpg')", backgroundSize: "cover", backgroundPosition: "center" }}>
       <div className="min-h-screen flex flex-col bg-black/40">
+
+        {/* Nav */}
+        <nav className="flex justify-between items-center px-6 pt-6">
+          <p className="text-white/60 text-sm font-medium">Guiding Grace</p>
+          <Link href="/dashboard">
+            <button className="text-white/80 hover:text-white text-sm border border-white/30 px-4 py-1.5 rounded-full transition">Sign In</button>
+          </Link>
+        </nav>
+
         <div className="flex-1 flex flex-col items-center w-full">
 
           {/* Hero */}
-          <div className="flex flex-col items-center justify-center text-center px-6 py-24 w-full">
+          <div className="flex flex-col items-center justify-center text-center px-6 py-20 w-full">
             <p className="text-purple-200 text-sm uppercase tracking-widest mb-4">A Daily Faith Companion</p>
             <h1 className="text-5xl sm:text-6xl font-bold text-white mb-6 leading-tight" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 4px 20px rgba(0,0,0,0.8)" }}>
               Start Each Day<br />With His Grace
