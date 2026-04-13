@@ -25,23 +25,21 @@ export default function SubscribePage() {
   return (
     <PageBackground url="https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/jensphotography-beach-7239311_1920.jpg">
       <main className="flex-1 flex items-center justify-center p-6">
-        <div className="bg-white/90 backdrop-blur rounded-3xl shadow-lg p-10 max-w-md w-full text-center">
-          <h1 className="text-3xl font-bold text-purple-900 mb-2">Guiding Grace</h1>
-          <p className="text-gray-500 mb-6">Your daily faith companion</p>
-          <div className="bg-purple-50 rounded-2xl p-6 mb-6">
-            <p className="text-4xl font-bold text-purple-800">$2.99<span className="text-lg font-normal">/mo</span></p>
-            <p className="text-sm text-gray-500 mt-1">or $29.99/year — save 16%</p>
-            <p className="text-sm text-purple-600 font-medium mt-3">✨ 3-day free trial · No credit card required</p>
-          </div>
-          <ul className="text-left text-sm text-gray-600 space-y-2 mb-8">
+        <div className="max-w-md w-full text-center">
+          <h1 className="text-4xl font-bold text-white mb-2" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 12px rgba(0,0,0,0.8)" }}>Guiding Grace</h1>
+          <p className="text-white/60 mb-10">Your daily faith companion</p>
+          <p className="text-5xl font-bold text-white mb-1" style={{ textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>$2.99<span className="text-2xl font-normal">/mo</span></p>
+          <p className="text-white/50 text-sm mb-1">or $29.99/year — save 16%</p>
+          <p className="text-white/70 text-sm mb-10">✨ 3-day free trial · No credit card required</p>
+          <div className="grid grid-cols-2 gap-2 mb-10 text-left">
             {["Daily Devotions","His Promises","Shame Recycle Bin","Heaven's Hearts","Nightly Reflections","Heroes & Villains","P.U.S.H. Prayer Wall","Truth Testimonies Wall","Daily Grace Challenge"].map(f => (
-              <li key={f} className="flex items-center gap-2"><span className="text-purple-500">✓</span>{f}</li>
+              <p key={f} className="text-white/70 text-sm flex items-center gap-2"><span className="text-white/40">✓</span>{f}</p>
             ))}
-          </ul>
-          <button onClick={handleSubscribe} disabled={loading} className="w-full bg-purple-700 hover:bg-purple-800 text-white font-semibold py-3 rounded-xl transition disabled:opacity-60">
+          </div>
+          <button onClick={handleSubscribe} disabled={loading} className="w-full bg-white/20 hover:bg-white/30 backdrop-blur border border-white/40 text-white font-semibold py-4 rounded-xl transition disabled:opacity-60 text-lg mb-4">
             {loading ? "Redirecting..." : "Start Free Trial"}
           </button>
-          <p className="text-xs text-gray-400 mt-4">Already have an account? <a href="/" className="text-purple-600 underline">Sign in</a></p>
+          <p className="text-white/40 text-xs">Already have an account? <a href="/" className="text-white/70 underline">Sign in</a></p>
         </div>
       </main>
     </PageBackground>

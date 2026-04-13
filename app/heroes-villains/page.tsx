@@ -30,39 +30,32 @@ export default function HeroesVillainsPage() {
         <main className="flex-1 p-6">
           <div className="max-w-2xl mx-auto">
             <div className="flex justify-between items-center mb-6">
-              <Link href="/dashboard" className="text-white/80 text-sm">← Dashboard</Link>
+              <Link href="/dashboard" className="text-white/70 text-sm">← Dashboard</Link>
               <h1 className="text-lg font-bold text-white" style={{ textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>Heroes & Villains</h1>
               <div className="w-16" />
             </div>
-            <div className="flex gap-2 mb-6">
+            <div className="flex gap-3 mb-8">
               {(["all","hero","villain","both"] as Filter[]).map(f => (
-                <button key={f} onClick={() => setFilter(f)} className={`px-4 py-1.5 rounded-full text-xs font-medium capitalize transition ${filter === f ? "bg-white text-purple-900" : "bg-white/20 text-white border border-white/30"}`}>{f === "both" ? "Complex" : f}</button>
+                <button key={f} onClick={() => setFilter(f)} className={`px-4 py-1.5 rounded-full text-xs font-medium capitalize transition ${filter === f ? "bg-white/30 text-white" : "text-white/50 hover:text-white"}`}>{f === "both" ? "Complex" : f}</button>
               ))}
             </div>
             {selected ? (
-              <div className="bg-white/90 backdrop-blur rounded-3xl p-8">
-                <button onClick={() => setSelected(null)} className="text-purple-700 text-sm mb-4">← Back</button>
+              <div>
+                <button onClick={() => setSelected(null)} className="text-white/60 text-sm mb-6 hover:text-white">← Back</button>
                 <div className="flex items-center gap-3 mb-4">
-                  <span className="text-3xl">{selected.type === "hero" ? "⚔️" : selected.type === "villain" ? "🐍" : "⚖️"}</span>
-                  <div>
-                    <h2 className="text-2xl font-bold text-purple-900">{selected.name}</h2>
-                    <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${selected.type === "hero" ? "bg-green-100 text-green-700" : selected.type === "villain" ? "bg-red-100 text-red-700" : "bg-yellow-100 text-yellow-700"}`}>
-                      {selected.type === "both" ? "Complex Figure" : selected.type === "hero" ? "Hero" : "Villain"}
-                    </span>
-                  </div>
+                  <span className="text-4xl">{selected.type === "hero" ? "⚔️" : selected.type === "villain" ? "🐍" : "⚖️"}</span>
+                  <h2 className="text-3xl font-bold text-white" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 12px rgba(0,0,0,0.8)" }}>{selected.name}</h2>
                 </div>
-                <p className="text-gray-600 leading-relaxed mb-6">{selected.summary}</p>
-                <div className="space-y-2">{selected.verses.map((v: string) => <p key={v} className="text-xs text-purple-400">📖 {v}</p>)}</div>
+                <p className="text-white/80 leading-relaxed mb-6" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>{selected.summary}</p>
+                <div className="space-y-1">{selected.verses.map((v: string) => <p key={v} className="text-white/50 text-xs">📖 {v}</p>)}</div>
               </div>
             ) : (
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-6">
                 {filtered.map(p => (
-                  <button key={p.name} onClick={() => setSelected(p)} className="bg-white/20 backdrop-blur rounded-2xl border border-white/30 p-5 text-left hover:bg-white/30 transition">
-                    <span className="text-2xl mb-2 block">{p.type === "hero" ? "⚔️" : p.type === "villain" ? "🐍" : "⚖️"}</span>
-                    <p className="font-semibold text-white text-sm">{p.name}</p>
-                    <span className={`text-xs px-2 py-0.5 rounded-full mt-1 inline-block ${p.type === "hero" ? "bg-green-100 text-green-700" : p.type === "villain" ? "bg-red-100 text-red-700" : "bg-yellow-100 text-yellow-700"}`}>
-                      {p.type === "both" ? "Complex" : p.type === "hero" ? "Hero" : "Villain"}
-                    </span>
+                  <button key={p.name} onClick={() => setSelected(p)} className="text-left hover:opacity-80 transition">
+                    <span className="text-3xl mb-2 block">{p.type === "hero" ? "⚔️" : p.type === "villain" ? "🐍" : "⚖️"}</span>
+                    <p className="font-semibold text-white text-sm" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>{p.name}</p>
+                    <p className="text-white/50 text-xs mt-0.5">{p.type === "both" ? "Complex" : p.type === "hero" ? "Hero" : "Villain"}</p>
                   </button>
                 ))}
               </div>
