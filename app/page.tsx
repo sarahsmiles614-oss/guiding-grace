@@ -17,17 +17,17 @@ export default function Home() {
           <p className="text-white/60 text-sm">$2.99/month · No credit card required · Cancel anytime</p>
         </main>
 
-        <section className="text-center px-6 pb-12 max-w-2xl mx-auto w-full">
+        <section className="text-center px-6 pb-12 w-full max-w-2xl mx-auto">
           <p className="text-white/50 text-xs uppercase tracking-widest mb-3">New Feature</p>
           <h2 className="text-3xl font-bold text-white mb-3" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 12px rgba(0,0,0,0.8)" }}>Daily Grace Challenge</h2>
           <p className="text-white/75 mb-8 leading-relaxed max-w-xl mx-auto">Each morning a new challenge drops — a real-world act of grace for you to take into your day. Share how it went, give hearts to responses that move you, and see who the community recognizes as most full of grace.</p>
-          <div className="grid grid-cols-3 gap-6 mb-10 text-center">
+          <div className="grid grid-cols-3 gap-6 mb-10 max-w-xl mx-auto">
             {[
               { icon: "☀️", label: "Morning Challenge", desc: "A new grace prompt every day at 7am" },
               { icon: "💛", label: "Blind Heart Voting", desc: "Give hearts without seeing the count" },
               { icon: "🏆", label: "Most Loved", desc: "Morning reveal honors the most graceful response" },
             ].map(f => (
-              <div key={f.label}>
+              <div key={f.label} className="text-center">
                 <div className="text-3xl mb-2">{f.icon}</div>
                 <p className="text-white text-sm font-semibold mb-1">{f.label}</p>
                 <p className="text-white/60 text-xs">{f.desc}</p>
@@ -36,7 +36,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="px-6 pb-12 max-w-2xl mx-auto w-full">
+        <section className="px-6 pb-12 w-full max-w-2xl mx-auto">
           <p className="text-center text-white/50 text-xs uppercase tracking-widest mb-6">Everything Inside</p>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
             {[
