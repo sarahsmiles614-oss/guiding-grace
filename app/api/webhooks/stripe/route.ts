@@ -26,7 +26,7 @@ export async function POST(req: Request) {
       stripe_customer_id: session.customer,
       stripe_subscription_id: session.subscription,
       status: sub.status,
-      trial_ends_at: sub.trial_end ? new Date(sub.trial_end * 1000).toISOString() : null,
+      trial_end_date: sub.trial_end ? new Date(sub.trial_end * 1000).toISOString() : null,
       current_period_end: new Date((sub as any).current_period_end * 1000).toISOString(),
     }, { onConflict: "user_id" });
   }
@@ -39,7 +39,7 @@ export async function POST(req: Request) {
         user_id: uid,
         stripe_subscription_id: sub.id,
         status: sub.status,
-        trial_ends_at: sub.trial_end ? new Date(sub.trial_end * 1000).toISOString() : null,
+        trial_end_date: sub.trial_end ? new Date(sub.trial_end * 1000).toISOString() : null,
         current_period_end: new Date((sub as any).current_period_end * 1000).toISOString(),
       }, { onConflict: "user_id" });
     }

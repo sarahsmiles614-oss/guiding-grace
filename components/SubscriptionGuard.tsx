@@ -15,13 +15,13 @@ export default function SubscriptionGuard({ children }: { children: React.ReactN
 
       const { data: sub } = await supabase
         .from("subscriptions")
-        .select("status, trial_ends_at")
+        .select("status, trial_end_date")
         .eq("user_id", user.id)
         .single();
 
       if (!sub) { router.push("/subscribe"); return; }
 
-      const isTrialing = sub.status === "trialing" && new Date(sub.trial_ends_at) > new Date();
+      const isTrialing = sub.status === "trialing" && new Date(sub.trial_end_date) > new Date();
       const isActive = sub.status === "active";
 
       if (isActive || isTrialing) {
