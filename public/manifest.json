@@ -1,0 +1,18 @@
+{
+  "name": "Guiding Grace",
+  "short_name": "Guiding Grace",
+  "description": "A daily faith companion",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1e0a3c",
+  "theme_color": "#1e0a3c",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/Screenshot_20260407_160007_Chrome.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ]
+}
