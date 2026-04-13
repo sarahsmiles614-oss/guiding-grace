@@ -1,9 +1,11 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: "2026-03-25.dahlia" });
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: "2026-03-25.dahlia" as any,
+});
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
     const { userId, email } = await req.json();
 
@@ -17,8 +19,8 @@ export async function POST(req: Request) {
         metadata: { userId },
       },
       metadata: { userId },
-      success_url: `${process.env.NEXTAUTH_URL}/success`,
-      cancel_url: `${process.env.NEXTAUTH_URL}/subscribe`,
+      success_url: "https://guidinggrace.app/success",
+      cancel_url: "https://guidinggrace.app/subscribe",
     });
 
     return NextResponse.json({ url: session.url });
