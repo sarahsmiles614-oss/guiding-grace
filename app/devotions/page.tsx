@@ -22,24 +22,20 @@ export default function DevotionsPage() {
         <main className="flex-1 p-6">
           <div className="max-w-2xl mx-auto">
             <div className="flex justify-between items-center mb-6">
-              <Link href="/dashboard" className="text-white/80 text-sm">← Dashboard</Link>
+              <Link href="/dashboard" className="text-white/70 text-sm">← Dashboard</Link>
               <h1 className="text-lg font-bold text-white" style={{ textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>Daily Devotions</h1>
               <div className="w-16" />
             </div>
-            <div className="flex gap-2 overflow-x-auto pb-2 mb-6">
+            <div className="flex gap-2 overflow-x-auto pb-2 mb-8">
               {devotions.map((d) => (
-                <button key={d.date} onClick={() => setSelected(d)} className={`flex-shrink-0 px-3 py-1 rounded-full text-xs font-medium transition ${selected.date === d.date ? "bg-white text-purple-900" : "bg-white/20 text-white border border-white/30"}`}>{d.date}</button>
+                <button key={d.date} onClick={() => setSelected(d)} className={`flex-shrink-0 px-3 py-1 rounded-full text-xs font-medium transition ${selected.date === d.date ? "bg-white/30 text-white" : "text-white/60 hover:text-white"}`}>{d.date}</button>
               ))}
             </div>
-            <div className="bg-white/90 backdrop-blur rounded-3xl shadow-sm p-8">
-              <p className="text-xs text-purple-400 uppercase tracking-widest mb-2">{selected.date}</p>
-              <h2 className="text-2xl font-bold text-purple-900 mb-4">{selected.title}</h2>
-              <div className="bg-purple-50 rounded-2xl p-4 mb-6">
-                <p className="text-purple-800 italic mb-1">"{selected.verseText}"</p>
-                <p className="text-xs text-purple-400">— {selected.verse}</p>
-              </div>
-              <p className="text-gray-600 leading-relaxed">{selected.reflection}</p>
-            </div>
+            <p className="text-xs text-white/50 uppercase tracking-widest mb-2">{selected.date}</p>
+            <h2 className="text-3xl font-bold text-white mb-6" style={{ textShadow: "0 2px 12px rgba(0,0,0,0.8)", fontFamily: "'Playfair Display', Georgia, serif" }}>{selected.title}</h2>
+            <p className="text-white/90 italic text-lg mb-2" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.8)" }}>"{selected.verseText}"</p>
+            <p className="text-white/50 text-sm mb-8">— {selected.verse}</p>
+            <p className="text-white/80 leading-relaxed" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>{selected.reflection}</p>
           </div>
         </main>
       </PageBackground>

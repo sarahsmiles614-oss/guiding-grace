@@ -62,27 +62,27 @@ export default function TestimonyWallPage() {
         <main className="flex-1 p-6">
           <div className="max-w-2xl mx-auto">
             <div className="flex justify-between items-center mb-6">
-              <Link href="/dashboard" className="text-white/80 text-sm">← Dashboard</Link>
+              <Link href="/dashboard" className="text-white/70 text-sm">← Dashboard</Link>
               <h1 className="text-lg font-bold text-white" style={{ textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>Truth Testimonies</h1>
               <div className="w-16" />
             </div>
-            <p className="text-center text-sm text-white/70 mb-6">Share what God has done. Your story is someone else's hope. ✨</p>
-            <div className="bg-white/90 backdrop-blur rounded-2xl p-6 mb-6">
-              <input value={title} onChange={e => setTitle(e.target.value)} placeholder="Title (optional)" className="w-full border border-purple-200 rounded-xl px-4 py-3 text-sm mb-3 focus:outline-none focus:ring-2 focus:ring-purple-300" />
-              <textarea value={story} onChange={e => setStory(e.target.value)} placeholder="Share your testimony..." className="w-full border border-purple-200 rounded-xl px-4 py-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-purple-300 mb-3" rows={4} />
-              <button onClick={handleSubmit} disabled={!story.trim() || submitting} className="w-full bg-purple-700 hover:bg-purple-800 text-white font-semibold py-3 rounded-xl transition disabled:opacity-40">
+            <p className="text-center text-sm text-white/60 mb-8">Share what God has done. Your story is someone else's hope. ✨</p>
+            <div className="bg-white/10 backdrop-blur rounded-2xl p-5 mb-8 border border-white/20">
+              <input value={title} onChange={e => setTitle(e.target.value)} placeholder="Title (optional)" className="w-full bg-transparent border border-white/30 rounded-xl px-4 py-3 text-white placeholder-white/40 text-sm mb-3 focus:outline-none focus:border-white/60" />
+              <textarea value={story} onChange={e => setStory(e.target.value)} placeholder="Share your testimony..." className="w-full bg-transparent border border-white/30 rounded-xl px-4 py-3 text-white placeholder-white/40 text-sm resize-none focus:outline-none focus:border-white/60 mb-3" rows={4} />
+              <button onClick={handleSubmit} disabled={!story.trim() || submitting} className="w-full bg-white/20 hover:bg-white/30 border border-white/30 text-white font-semibold py-3 rounded-xl transition disabled:opacity-40">
                 {submitting ? "Sharing..." : "Share My Testimony ✨"}
               </button>
             </div>
-            <div className="space-y-4">
+            <div className="space-y-8">
               {testimonies.map(t => (
-                <div key={t.id} className="bg-white/90 backdrop-blur rounded-2xl p-6">
-                  <p className="text-xs text-purple-400 mb-1">{t.user_name}</p>
-                  {t.testimony_title && <p className="font-semibold text-purple-900 mb-2">{t.testimony_title}</p>}
-                  <p className="text-gray-700 text-sm leading-relaxed mb-4">{t.testimony_text}</p>
-                  <button onClick={() => handleHeart(t.id)} className="flex items-center gap-1 text-sm transition">
+                <div key={t.id}>
+                  <p className="text-white/40 text-xs mb-1">{t.user_name}</p>
+                  {t.testimony_title && <p className="font-semibold text-white mb-1" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.8)" }}>{t.testimony_title}</p>}
+                  <p className="text-white/80 text-sm leading-relaxed mb-2" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>{t.testimony_text}</p>
+                  <button onClick={() => handleHeart(t.id)} className="flex items-center gap-1 text-sm">
                     <span>{userHearts.includes(t.id) ? "💜" : "🤍"}</span>
-                    <span className="text-gray-400 text-xs">{t.hearts_count || 0}</span>
+                    <span className="text-white/40 text-xs">{t.hearts_count || 0}</span>
                   </button>
                 </div>
               ))}

@@ -47,18 +47,18 @@ export default function PromisesPage() {
         <main className="flex-1 p-6">
           <div className="max-w-2xl mx-auto">
             <div className="flex justify-between items-center mb-6">
-              <Link href="/dashboard" className="text-white/80 text-sm">← Dashboard</Link>
+              <Link href="/dashboard" className="text-white/70 text-sm">← Dashboard</Link>
               <h1 className="text-lg font-bold text-white" style={{ textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>His Promises</h1>
               <div className="w-16" />
             </div>
-            <div className="space-y-4">
+            <div className="space-y-8">
               {promises.map((p) => (
-                <div key={p.id} className="bg-white/90 backdrop-blur rounded-2xl shadow-sm p-6 flex gap-4">
+                <div key={p.id} className="flex gap-4 items-start">
                   <div className="flex-1">
-                    <p className="text-xs text-purple-400 mb-1">{p.reference}</p>
-                    <p className="text-gray-700 leading-relaxed">"{p.text}"</p>
+                    <p className="text-white/50 text-xs mb-1">{p.reference}</p>
+                    <p className="text-white/90 leading-relaxed italic" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.8)" }}>"{p.text}"</p>
                   </div>
-                  <button onClick={() => toggleFavorite(p.id)} className="text-2xl flex-shrink-0">
+                  <button onClick={() => toggleFavorite(p.id)} className="text-2xl flex-shrink-0 mt-1">
                     {favorites.includes(p.id) ? "💜" : "🤍"}
                   </button>
                 </div>

@@ -40,12 +40,12 @@ export default function DashboardContent() {
               <button onClick={() => signOut().then(() => router.push("/"))} className="text-sm text-white/70 hover:text-white">Sign out</button>
             </div>
           </div>
-          {user && <p className="text-white/80 mb-6" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>Welcome, {user.user_metadata?.full_name?.split(" ")[0] || "friend"} 🌿</p>}
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+          {user && <p className="text-white/80 mb-8" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>Welcome, {user.user_metadata?.full_name?.split(" ")[0] || "friend"} 🌿</p>}
+          <div className="grid grid-cols-2 gap-6 sm:grid-cols-3">
             {features.map((f) => (
-              <Link key={f.href} href={f.href} className="bg-white/20 backdrop-blur rounded-2xl border border-white/30 p-4 flex flex-col items-center text-center hover:bg-white/30 transition">
-                <span className="text-3xl mb-2">{f.icon}</span>
-                <span className="text-sm font-medium text-white">{f.label}</span>
+              <Link key={f.href} href={f.href} className="flex flex-col items-center text-center hover:opacity-80 transition">
+                <span className="text-4xl mb-2">{f.icon}</span>
+                <span className="text-sm font-medium text-white" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>{f.label}</span>
               </Link>
             ))}
           </div>
