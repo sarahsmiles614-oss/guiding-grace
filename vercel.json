@@ -1,0 +1,12 @@
+{
+  "crons": [
+    {
+      "path": "/api/generate-challenge",
+      "schedule": "0 12 * * *"
+    },
+    {
+      "path": "/api/post-results",
+      "schedule": "55 11 * * *"
+    }
+  ]
+}
