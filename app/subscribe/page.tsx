@@ -17,25 +17,21 @@ export default function SubscribePage() {
     });
   }, []);
 
-  async function handleSubscribe() {
+  async function handleCheckout(mode: "trial" | "monthly" | "yearly") {
     setChecking(true);
-
-    // Not signed in — save intent and go to Google OAuth
     if (!user) {
-      localStorage.setItem("subscribe_intent", "true");
+      localStorage.setItem("subscribe_intent", mode);
       await supabase.auth.signInWithOAuth({
         provider: "google",
         options: { redirectTo: `${window.location.origin}/subscribe` },
       });
       return;
     }
-
-    // Signed in — create Stripe checkout session
     try {
       const res = await fetch("/api/create-checkout-session", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId: user.id, email: user.email }),
+        body: JSON.stringify({ userId: user.id, email: user.email, mode }),
       });
       const data = await res.json();
       if (data.url) {
@@ -50,11 +46,13 @@ export default function SubscribePage() {
     }
   }
 
-  // After OAuth redirect back — auto-trigger checkout if intent was set
   useEffect(() => {
-    if (!loading && user && localStorage.getItem("subscribe_intent")) {
-      localStorage.removeItem("subscribe_intent");
-      handleSubscribe();
+    if (!loading && user) {
+      const intent = localStorage.getItem("subscribe_intent");
+      if (intent) {
+        localStorage.removeItem("subscribe_intent");
+        handleCheckout(intent as "trial" | "monthly" | "yearly");
+      }
     }
   }, [loading, user]);
 
@@ -64,26 +62,26 @@ export default function SubscribePage() {
         <div className="max-w-md w-full text-center">
           <h1 className="text-4xl font-bold text-white mb-2" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 12px rgba(0,0,0,0.8)" }}>Guiding Grace</h1>
           <p className="text-white/60 mb-10">Your daily faith companion</p>
-
-          <p className="text-5xl font-bold text-white mb-1" style={{ textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>$2.99<span className="text-2xl font-normal">/mo</span></p>
-          <p className="text-white/50 text-sm mb-1">or $29.99/year — save 16%</p>
-          <p className="text-white/70 text-sm mb-10">✨ 3-day free trial · No credit card required</p>
-
           <div className="grid grid-cols-2 gap-2 mb-10 text-left">
             {["Daily Devotions","His Promises","Shame Recycle Bin","Heaven's Hearts","Nightly Reflections","Heroes & Villains","P.U.S.H. Prayer Wall","Truth Testimonies","Daily Grace Challenge"].map(f => (
               <p key={f} className="text-white/70 text-sm flex items-center gap-2"><span className="text-white/40">✓</span>{f}</p>
             ))}
           </div>
-
-          <button
-            onClick={handleSubscribe}
-            disabled={checking}
-            className="w-full bg-white/20 hover:bg-white/30 backdrop-blur border border-white/40 text-white font-semibold py-4 rounded-xl transition disabled:opacity-60 text-lg mb-4"
-          >
-            {checking ? "Please wait..." : "Start Free Trial"}
+          <button onClick={() => handleCheckout("trial")} disabled={checking} className="w-full bg-white/20 hover:bg-white/30 backdrop-blur border border-white/40 text-white font-semibold py-4 rounded-xl transition disabled:opacity-60 text-lg mb-3">
+            {checking ? "Please wait..." : "✨ Start Free 3-Day Trial"}
           </button>
-
-          <p className="text-white/40 text-xs">Already have an account? <a href="/dashboard" className="text-white/70 underline">Sign in</a></p>
+          <p className="text-white/40 text-xs mb-6">No credit card required</p>
+          <div className="grid grid-cols-2 gap-3 mb-6">
+            <button onClick={() => handleCheckout("monthly")} disabled={checking} className="bg-white/10 hover:bg-white/20 border border-white/30 text-white font-medium py-3 rounded-xl transition disabled:opacity-60">
+              <p className="text-lg font-bold">$2.99</p>
+              <p className="text-xs text-white/60">per month</p>
+            </button>
+            <button onClick={() => handleCheckout("yearly")} disabled={checking} className="bg-white/10 hover:bg-white/20 border border-white/30 text-white font-medium py-3 rounded-xl transition disabled:opacity-60">
+              <p className="text-lg font-bold">$29.99</p>
+              <p className="text-xs text-white/60">per year · save 16%</p>
+            </button>
+          </div>
+          <p className="text-white/40 text-xs">Already subscribed? <a href="/dashboard" className="text-white/70 underline">Go to dashboard</a></p>
         </div>
       </main>
     </PageBackground>

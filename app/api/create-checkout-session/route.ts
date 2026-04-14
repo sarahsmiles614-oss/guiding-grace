@@ -7,25 +7,26 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 
 export async function POST(req: NextRequest) {
   try {
-    const { userId, email } = await req.json();
-
+    const { userId, email, mode } = await req.json();
     const customer = await stripe.customers.create({ email, metadata: { userId } });
+
+    const isTrial = mode === "trial" || !mode;
+    const isYearly = mode === "yearly";
 
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
       payment_method_types: ["card"],
-      payment_method_collection: "if_required",
+      payment_method_collection: isTrial ? "if_required" : "always",
       customer: customer.id,
-      line_items: [{ price: process.env.STRIPE_PRICE_ID!, quantity: 1 }],
+      line_items: [{ price: isYearly ? process.env.STRIPE_YEARLY_PRICE_ID! : process.env.STRIPE_PRICE_ID!, quantity: 1 }],
       subscription_data: {
-        trial_period_days: 3,
+        ...(isTrial ? { trial_period_days: 3 } : {}),
         metadata: { userId },
       },
       metadata: { userId },
       success_url: "https://guidinggrace.app/success",
       cancel_url: "https://guidinggrace.app/subscribe",
     });
-
     return NextResponse.json({ url: session.url });
   } catch (err: any) {
     console.error("Stripe error:", err.message);
