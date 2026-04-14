@@ -9,10 +9,13 @@ export async function POST(req: NextRequest) {
   try {
     const { userId, email } = await req.json();
 
+    const customer = await stripe.customers.create({ email, metadata: { userId } });
+
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
       payment_method_types: ["card"],
-      customer_email: email,
+      payment_method_collection: "if_required",
+      customer: customer.id,
       line_items: [{ price: process.env.STRIPE_PRICE_ID!, quantity: 1 }],
       subscription_data: {
         trial_period_days: 3,
