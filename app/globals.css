@@ -10,3 +10,87 @@ html, body {
   max-width: 100vw;
   overflow-x: hidden;
 }
+
+/* Shame Recycle Bin Animations */
+@keyframes fireGlow {
+  0% { opacity: 0.5; filter: blur(80px); transform: scale(1); }
+  10% { opacity: 0.7; filter: blur(70px); transform: scale(1.02); }
+  20% { opacity: 0.6; filter: blur(85px); transform: scale(0.98); }
+  30% { opacity: 0.8; filter: blur(65px); transform: scale(1.05); }
+  40% { opacity: 0.55; filter: blur(90px); transform: scale(0.97); }
+  50% { opacity: 0.75; filter: blur(72px); transform: scale(1.03); }
+  60% { opacity: 0.65; filter: blur(82px); transform: scale(0.99); }
+  70% { opacity: 0.85; filter: blur(60px); transform: scale(1.06); }
+  80% { opacity: 0.6; filter: blur(88px); transform: scale(0.96); }
+  90% { opacity: 0.7; filter: blur(75px); transform: scale(1.01); }
+  100% { opacity: 0.5; filter: blur(80px); transform: scale(1); }
+}
+
+@keyframes textBurn {
+  0% { opacity: 1; transform: translateY(0); filter: brightness(1); color: white; }
+  25% { opacity: 0.95; transform: translateY(3px); filter: brightness(1.2); color: #fff5e6; }
+  50% { opacity: 0.7; transform: translateY(8px); filter: brightness(1.5); color: #ffcc80; }
+  75% { opacity: 0.3; transform: translateY(15px); filter: brightness(2); color: #ff9800; }
+  100% { opacity: 0; transform: translateY(25px); filter: brightness(3); color: #ff5722; }
+}
+
+@keyframes ashDrift {
+  0% { opacity: 0; transform: translateY(0) translateX(0); }
+  15% { opacity: 0.7; }
+  100% { opacity: 0; transform: translateY(-300px) translateX(var(--drift-x)); }
+}
+
+@keyframes goldenPulse {
+  0% { opacity: 0; }
+  50% { opacity: 0.35; }
+  100% { opacity: 0; }
+}
+
+@keyframes textFadeIn {
+  0% { opacity: 0; transform: translateY(15px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes gentleGlow {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 0.4; }
+}
+
+@keyframes progressPulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+@keyframes progressBar {
+  0% { width: 0%; }
+  100% { width: 100%; }
+}
+
+/* Nightly Reflections Animations */
+@keyframes driftUpward {
+  0% { transform: translateY(80vh) translateX(0); opacity: 0; }
+  5% { opacity: 0.9; }
+  85% { opacity: 0.9; }
+  100% { transform: translateY(-110vh) translateX(var(--sway)); opacity: 0; }
+}
+
+@keyframes sway {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-20px); }
+  50% { transform: translateX(0); }
+  75% { transform: translateX(20px); }
+}
+
+@keyframes trailFade {
+  0% { opacity: 0.2; transform: scaleY(1); }
+  100% { opacity: 0; transform: scaleY(1.5); }
+}
+
+/* Ash particle utility class */
+.ash-particle {
+  position: absolute;
+  border-radius: 9999px;
+  background-color: #757575;
+  opacity: 0;
+  animation: ashDrift 2.5s ease-out forwards;
+}

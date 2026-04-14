@@ -3,67 +3,176 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import SubscriptionGuard from "@/components/SubscriptionGuard";
 import { supabase } from "@/lib/supabase";
+import { promises, categories } from "@/lib/promises";
 import PageBackground from "@/components/PageBackground";
 
-const promises = [
-  { id: 1, reference: "Jeremiah 29:11", text: "For I know the plans I have for you, declares the Lord, plans to prosper you and not to harm you, plans to give you hope and a future." },
-  { id: 2, reference: "Romans 8:28", text: "And we know that in all things God works for the good of those who love him, who have been called according to his purpose." },
-  { id: 3, reference: "Philippians 4:13", text: "I can do all this through him who gives me strength." },
-  { id: 4, reference: "Isaiah 41:10", text: "So do not fear, for I am with you; do not be dismayed, for I am your God. I will strengthen you and help you." },
-  { id: 5, reference: "Psalm 46:1", text: "God is our refuge and strength, an ever-present help in trouble." },
-  { id: 6, reference: "Matthew 11:28", text: "Come to me, all you who are weary and burdened, and I will give you rest." },
-  { id: 7, reference: "John 16:33", text: "I have told you these things, so that in me you may have peace. In this world you will have trouble. But take heart! I have overcome the world." },
-  { id: 8, reference: "2 Corinthians 12:9", text: "My grace is sufficient for you, for my power is made perfect in weakness." },
-];
-
 export default function PromisesPage() {
+  const [selectedCategory, setSelectedCategory] = useState("All");
   const [favorites, setFavorites] = useState<number[]>([]);
   const [userId, setUserId] = useState<string | null>(null);
+  const [currentPromise, setCurrentPromise] = useState(
+    () => promises[Math.floor(Math.random() * promises.length)]
+  );
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
       if (!user) return;
       setUserId(user.id);
-      supabase.from("favorite_promises").select("promise_id").eq("user_id", user.id).then(({ data }) => {
-        if (data) setFavorites(data.map((r: any) => r.promise_id));
-      });
+      supabase
+        .from("favorite_promises")
+        .select("promise_id")
+        .eq("user_id", user.id)
+        .then(({ data }) => {
+          if (data) setFavorites(data.map((r: { promise_id: number }) => r.promise_id));
+        });
     });
   }, []);
+
+  const filteredPromises =
+    selectedCategory === "All"
+      ? promises
+      : promises.filter((p) => p.category === selectedCategory);
 
   async function toggleFavorite(id: number) {
     if (!userId) return;
     if (favorites.includes(id)) {
       await supabase.from("favorite_promises").delete().eq("user_id", userId).eq("promise_id", id);
-      setFavorites(f => f.filter(x => x !== id));
+      setFavorites((f) => f.filter((x) => x !== id));
     } else {
       await supabase.from("favorite_promises").insert({ user_id: userId, promise_id: id });
-      setFavorites(f => [...f, id]);
+      setFavorites((f) => [...f, id]);
     }
+  }
+
+  function generateNewPromise() {
+    const available = filteredPromises.filter((p) => p.id !== currentPromise.id);
+    if (available.length > 0) {
+      setCurrentPromise(available[Math.floor(Math.random() * available.length)]);
+    }
+  }
+
+  function handleCategoryChange(cat: string) {
+    setSelectedCategory(cat);
+    const pool = cat === "All" ? promises : promises.filter((p) => p.category === cat);
+    setCurrentPromise(pool[Math.floor(Math.random() * pool.length)]);
   }
 
   return (
     <SubscriptionGuard>
       <PageBackground url="https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/gersweb-god-2012104.jpg">
         <main className="flex-1 p-6">
-          <div className="max-w-2xl mx-auto">
+          <div className="max-w-4xl mx-auto">
             <div className="flex justify-between items-center mb-6">
-              <Link href="/dashboard" className="text-white/70 text-sm">← Dashboard</Link>
-              <h1 className="text-lg font-bold text-white" style={{ textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>His Promises</h1>
-              <div className="w-16" />
+              <Link href="/dashboard" className="text-white/70 text-sm hover:text-white">← Dashboard</Link>
+              <h1
+                className="text-3xl font-bold text-white"
+                style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 10px rgba(0,0,0,0.7)" }}
+              >
+                His Promises
+              </h1>
+              <div className="w-24" />
             </div>
-            <div className="space-y-8">
-              {promises.map((p) => (
-                <div key={p.id} className="flex gap-4 items-start">
-                  <div className="flex-1">
-                    <p className="text-white/50 text-xs mb-1">{p.reference}</p>
-                    <p className="text-white/90 leading-relaxed italic" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.8)" }}>"{p.text}"</p>
-                  </div>
-                  <button onClick={() => toggleFavorite(p.id)} className="text-2xl flex-shrink-0 mt-1">
-                    {favorites.includes(p.id) ? "💜" : "🤍"}
+
+            {/* Category Filter */}
+            <div className="mb-5 text-center">
+              <div className="flex flex-wrap items-center justify-center gap-2">
+                <button
+                  onClick={() => handleCategoryChange("All")}
+                  className={`px-4 py-1.5 rounded-full text-xs font-medium transition ${selectedCategory === "All" ? "bg-white/30 text-white" : "text-white/60 hover:text-white hover:bg-white/10"}`}
+                >
+                  All
+                </button>
+                {categories.map((cat) => (
+                  <button
+                    key={cat}
+                    onClick={() => handleCategoryChange(cat)}
+                    className={`px-4 py-1.5 rounded-full text-xs font-medium transition ${selectedCategory === cat ? "bg-white/30 text-white" : "text-white/60 hover:text-white hover:bg-white/10"}`}
+                  >
+                    {cat}
                   </button>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
+
+            {/* Featured Promise */}
+            <div className="mb-8 text-center">
+              <div className="flex items-center justify-between mb-4 max-w-2xl mx-auto">
+                <span className="px-4 py-1.5 text-white text-xs font-bold backdrop-blur-sm bg-white/20 rounded-full">
+                  {currentPromise.category}
+                </span>
+                <button
+                  onClick={() => toggleFavorite(currentPromise.id)}
+                  className="transition-transform hover:scale-110 text-2xl"
+                >
+                  {favorites.includes(currentPromise.id) ? "💜" : "🤍"}
+                </button>
+              </div>
+
+              <blockquote
+                className="text-2xl md:text-3xl text-white font-serif italic leading-relaxed mb-3 max-w-3xl mx-auto"
+                style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 8px rgba(0,0,0,0.7)" }}
+              >
+                &ldquo;{currentPromise.scripture}&rdquo;
+              </blockquote>
+
+              <p className="text-lg text-amber-200 font-semibold mb-5" style={{ textShadow: "0 2px 6px rgba(0,0,0,0.6)" }}>
+                — {currentPromise.reference}
+              </p>
+
+              {currentPromise.reflection && (
+                <p className="text-white/90 text-base leading-relaxed max-w-2xl mx-auto mb-5" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.6)" }}>
+                  {currentPromise.reflection}
+                </p>
+              )}
+
+              <button
+                onClick={generateNewPromise}
+                className="px-8 py-3 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold text-sm rounded-full transition"
+              >
+                ✨ New Promise
+              </button>
+            </div>
+
+            {/* Favorites Section */}
+            {favorites.length > 0 && (
+              <div className="mt-8 pt-6 border-t border-white/20">
+                <h2
+                  className="text-2xl font-bold text-white mb-5 text-center"
+                  style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 8px rgba(0,0,0,0.7)" }}
+                >
+                  💜 My Favorite Promises ({favorites.length})
+                </h2>
+                <div className="space-y-4">
+                  {promises
+                    .filter((p) => favorites.includes(p.id))
+                    .map((p) => (
+                      <div
+                        key={p.id}
+                        className="cursor-pointer hover:bg-white/10 p-5 rounded-xl transition backdrop-blur-sm border border-white/10"
+                        onClick={() => { setCurrentPromise(p); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+                      >
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="flex-1">
+                            <span className="text-xs font-bold text-white/60 uppercase tracking-wide block mb-1">{p.category}</span>
+                            <p className="text-white font-serif italic leading-relaxed mb-1 line-clamp-2" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.6)" }}>
+                              &ldquo;{p.scripture}&rdquo;
+                            </p>
+                            <p className="text-amber-200 text-sm font-medium" style={{ textShadow: "0 1px 3px rgba(0,0,0,0.5)" }}>
+                              {p.reference}
+                            </p>
+                          </div>
+                          <button
+                            onClick={(e) => { e.stopPropagation(); toggleFavorite(p.id); }}
+                            className="text-xl flex-shrink-0"
+                          >
+                            💜
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                </div>
+              </div>
+            )}
           </div>
         </main>
       </PageBackground>
