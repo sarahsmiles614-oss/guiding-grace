@@ -22,7 +22,7 @@ export default function GraceChallengeContent() {
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
-      if (user) { setUserId(user.id); setUserName(user.user_metadata?.full_name || "Friend"); }
+      if (user) { setUserId(user.id); setUserName(user.user_metadata?.full_name || "Friend"); }      
     });
     loadChallenge();
   }, []);
@@ -102,10 +102,13 @@ export default function GraceChallengeContent() {
       <PageBackground url="https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/renegossner-alps-8728621_1920.jpg">
         <main className="flex-1 p-6">
           <div className="max-w-2xl mx-auto">
-            <div className="flex justify-between items-center mb-6">
+            <div className="flex justify-between items-center mb-4">
               <Link href="/dashboard" className="text-white/70 text-sm">← Dashboard</Link>
               <h1 className="text-lg font-bold text-white" style={{ textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>Daily Grace Challenge</h1>
               <Link href="/grace-challenge/leaderboard" className="text-yellow-300 text-sm font-medium">🏆 Board</Link>
+            </div>
+            <div className="flex justify-center mb-6">
+              <img src="https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/image.jpg" alt="Grace Challenge" className="w-28 h-28 object-cover rounded-full shadow-lg border-2 border-white/30" />
             </div>
 
             {!challenge ? (

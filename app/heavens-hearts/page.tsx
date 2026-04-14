@@ -41,6 +41,9 @@ export default function HeavensHeartsPage() {
               <h1 className="text-lg font-bold text-white" style={{ textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>Heaven's Hearts</h1>
               <div className="w-16" />
             </div>
+            <div className="flex justify-center mb-6">
+              <img src="https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/g7Y85%20(1).jpg" alt="Heaven's Hearts" className="w-32 h-32 object-cover rounded-full shadow-lg border-2 border-white/30" />
+            </div>
             <p className="text-white/60 text-sm text-center mb-8">Honor someone who has gone before you. Their light still shines. 💜</p>
             <div className="bg-white/10 backdrop-blur rounded-2xl p-5 mb-10 border border-white/20">
               <input value={name} onChange={e => setName(e.target.value)} placeholder="Their name" className="w-full bg-transparent border border-white/30 rounded-xl px-4 py-3 text-white placeholder-white/40 text-sm mb-3 focus:outline-none focus:border-white/60" />
