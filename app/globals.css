@@ -13,84 +13,145 @@ html, body {
 
 /* Shame Recycle Bin Animations */
 @keyframes fireGlow {
-  0% { opacity: 0.5; filter: blur(80px); transform: scale(1); }
-  10% { opacity: 0.7; filter: blur(70px); transform: scale(1.02); }
-  20% { opacity: 0.6; filter: blur(85px); transform: scale(0.98); }
-  30% { opacity: 0.8; filter: blur(65px); transform: scale(1.05); }
-  40% { opacity: 0.55; filter: blur(90px); transform: scale(0.97); }
-  50% { opacity: 0.75; filter: blur(72px); transform: scale(1.03); }
-  60% { opacity: 0.65; filter: blur(82px); transform: scale(0.99); }
-  70% { opacity: 0.85; filter: blur(60px); transform: scale(1.06); }
-  80% { opacity: 0.6; filter: blur(88px); transform: scale(0.96); }
-  90% { opacity: 0.7; filter: blur(75px); transform: scale(1.01); }
-  100% { opacity: 0.5; filter: blur(80px); transform: scale(1); }
+  0%   { opacity: 0.7; transform: scaleX(1)    scaleY(1); }
+  15%  { opacity: 1;   transform: scaleX(1.04) scaleY(1.03); }
+  30%  { opacity: 0.8; transform: scaleX(0.97) scaleY(0.97); }
+  50%  { opacity: 1;   transform: scaleX(1.05) scaleY(1.05); }
+  70%  { opacity: 0.75; transform: scaleX(0.98) scaleY(0.98); }
+  85%  { opacity: 0.95; transform: scaleX(1.03) scaleY(1.02); }
+  100% { opacity: 0.7; transform: scaleX(1)    scaleY(1); }
 }
 
-@keyframes textBurn {
-  0% { opacity: 1; transform: translateY(0); filter: brightness(1); color: white; }
-  25% { opacity: 0.95; transform: translateY(3px); filter: brightness(1.2); color: #fff5e6; }
-  50% { opacity: 0.7; transform: translateY(8px); filter: brightness(1.5); color: #ffcc80; }
-  75% { opacity: 0.3; transform: translateY(15px); filter: brightness(2); color: #ff9800; }
-  100% { opacity: 0; transform: translateY(25px); filter: brightness(3); color: #ff5722; }
+@keyframes fireMid {
+  0%   { opacity: 0.8;  transform: scaleX(1)    scaleY(1)    rotate(-1deg); }
+  20%  { opacity: 1;    transform: scaleX(1.06) scaleY(1.04) rotate(1deg); }
+  40%  { opacity: 0.7;  transform: scaleX(0.95) scaleY(0.96) rotate(-2deg); }
+  60%  { opacity: 0.95; transform: scaleX(1.04) scaleY(1.06) rotate(1.5deg); }
+  80%  { opacity: 0.75; transform: scaleX(0.97) scaleY(0.97) rotate(-0.5deg); }
+  100% { opacity: 0.8;  transform: scaleX(1)    scaleY(1)    rotate(-1deg); }
+}
+
+@keyframes fireTip {
+  0%   { opacity: 0.9; transform: scaleX(1)    scaleY(1)    rotate(2deg); }
+  25%  { opacity: 1;   transform: scaleX(1.08) scaleY(1.1)  rotate(-2deg); }
+  50%  { opacity: 0.6; transform: scaleX(0.92) scaleY(0.9)  rotate(3deg); }
+  75%  { opacity: 1;   transform: scaleX(1.05) scaleY(1.08) rotate(-1deg); }
+  100% { opacity: 0.9; transform: scaleX(1)    scaleY(1)    rotate(2deg); }
+}
+
+/* Flicker then burn — 4s total matching the release timer */
+@keyframes textConsume {
+  0%   { opacity: 1;    transform: translateY(0);    filter: brightness(1);               color: white; }
+  5%   { opacity: 0.8;  transform: translateY(0);    filter: brightness(1.8) blur(0.4px); color: #fff5e6; }
+  10%  { opacity: 1;    transform: translateY(0);    filter: brightness(1);               color: white; }
+  16%  { opacity: 0.65; transform: translateY(1px);  filter: brightness(2.2) blur(0.6px); color: #ffe0b2; }
+  22%  { opacity: 1;    transform: translateY(0);    filter: brightness(1.1);             color: #fff5e6; }
+  28%  { opacity: 0.75; transform: translateY(2px);  filter: brightness(2)   blur(0.5px); color: #ffcc80; }
+  40%  { opacity: 0.85; transform: translateY(5px);  filter: brightness(1.6);             color: #ffcc80; }
+  55%  { opacity: 0.55; transform: translateY(12px); filter: brightness(2.2);             color: #ff9800; }
+  70%  { opacity: 0.25; transform: translateY(20px); filter: brightness(2.8) blur(1.5px); color: #ff6500; }
+  85%  { opacity: 0.08; transform: translateY(28px); filter: brightness(4)   blur(3px);   color: #ff3500; }
+  100% { opacity: 0;    transform: translateY(35px); filter: brightness(5)   blur(5px);   color: #ff1000; }
 }
 
 @keyframes ashDrift {
-  0% { opacity: 0; transform: translateY(0) translateX(0); }
-  15% { opacity: 0.7; }
-  100% { opacity: 0; transform: translateY(-300px) translateX(var(--drift-x)); }
+  0%   { opacity: 0;   transform: translateY(0)     translateX(0); }
+  15%  { opacity: 0.6; }
+  100% { opacity: 0;   transform: translateY(-320px) translateX(var(--drift-x)); }
 }
 
-@keyframes goldenPulse {
-  0% { opacity: 0; }
-  50% { opacity: 0.35; }
+@keyframes emberFloat {
+  0%   { opacity: 0;   transform: translateY(0)     translateX(0)             scale(1); }
+  12%  { opacity: 1; }
+  75%  { opacity: 0.7; }
+  100% { opacity: 0;   transform: translateY(-420px) translateX(var(--drift-x)) scale(0.2); }
+}
+
+@keyframes sparkShoot {
+  0%   { opacity: 1; transform: translateY(0)     translateX(0); }
+  100% { opacity: 0; transform: translateY(-220px) translateX(var(--spark-x)); }
+}
+
+@keyframes smokeRise {
+  0%   { opacity: 0;    transform: translateY(0)     translateX(0)             scale(0.4); }
+  20%  { opacity: 0.12; }
+  80%  { opacity: 0.06; }
+  100% { opacity: 0;    transform: translateY(-280px) translateX(var(--smoke-x)) scale(3.5); }
+}
+
+@keyframes ignitionPulse {
+  0%   { opacity: 0; }
+  25%  { opacity: 0.7; }
   100% { opacity: 0; }
 }
 
 @keyframes textFadeIn {
-  0% { opacity: 0; transform: translateY(15px); }
+  0%   { opacity: 0; transform: translateY(15px); }
   100% { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes gentleGlow {
   0%, 100% { opacity: 0.2; }
-  50% { opacity: 0.4; }
+  50%       { opacity: 0.45; }
 }
 
 @keyframes progressPulse {
   0%, 100% { opacity: 0.5; }
-  50% { opacity: 1; }
+  50%      { opacity: 1; }
 }
 
 @keyframes progressBar {
-  0% { width: 0%; }
+  0%   { width: 0%; }
   100% { width: 100%; }
 }
 
-/* Nightly Reflections Animations */
-@keyframes driftUpward {
-  0% { transform: translateY(80vh) translateX(0); opacity: 0; }
-  5% { opacity: 0.9; }
-  85% { opacity: 0.9; }
-  100% { transform: translateY(-110vh) translateX(var(--sway)); opacity: 0; }
-}
-
-@keyframes sway {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-20px); }
-  50% { transform: translateX(0); }
-  75% { transform: translateX(20px); }
-}
-
-@keyframes trailFade {
-  0% { opacity: 0.2; transform: scaleY(1); }
-  100% { opacity: 0; transform: scaleY(1.5); }
-}
-
-/* Ash particle utility class */
+/* Particle utility classes */
 .ash-particle {
   position: absolute;
   border-radius: 9999px;
   background-color: #757575;
   opacity: 0;
-  animation: ashDrift 2.5s ease-out forwards;
+  animation: ashDrift 2.8s ease-out forwards;
+}
+
+.ember-particle {
+  position: absolute;
+  border-radius: 9999px;
+  opacity: 0;
+  animation: emberFloat 3.2s ease-out forwards;
+}
+
+.spark-particle {
+  position: absolute;
+  border-radius: 9999px;
+  opacity: 0;
+  animation: sparkShoot 0.9s ease-out forwards;
+}
+
+.smoke-wisp {
+  position: absolute;
+  border-radius: 9999px;
+  background: rgba(30, 30, 30, 0.5);
+  filter: blur(18px);
+  animation: smokeRise 4.5s ease-out forwards;
+}
+
+/* Nightly Reflections Animations */
+@keyframes driftUpward {
+  0%   { transform: translateY(80vh)  translateX(0);            opacity: 0; }
+  5%   { opacity: 0.9; }
+  85%  { opacity: 0.9; }
+  100% { transform: translateY(-110vh) translateX(var(--sway)); opacity: 0; }
+}
+
+@keyframes sway {
+  0%, 100% { transform: translateX(0); }
+  25%       { transform: translateX(-20px); }
+  50%       { transform: translateX(0); }
+  75%       { transform: translateX(20px); }
+}
+
+@keyframes trailFade {
+  0%   { opacity: 0.2; transform: scaleY(1); }
+  100% { opacity: 0;   transform: scaleY(1.5); }
 }

@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import Link from "next/link";
 import SubscriptionGuard from "@/components/SubscriptionGuard";
 import { graceScriptures } from "@/lib/grace-scriptures";
@@ -9,9 +9,39 @@ export default function ShameRecyclePage() {
   const [isReleasing, setIsReleasing] = useState(false);
   const [showScripture, setShowScripture] = useState(false);
   const [currentScripture, setCurrentScripture] = useState(graceScriptures[0]);
-  const [showFallback, setShowFallback] = useState(false);
   const fallbackTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const mainTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Pre-generate particle data so it doesn't shift on re-render
+  const embers = useMemo(() => Array.from({ length: 28 }, (_, i) => ({
+    left: 20 + Math.random() * 60,
+    size: 2 + Math.random() * 5,
+    delay: 0.3 + i * 0.09,
+    drift: (Math.random() - 0.5) * 130,
+    color: i % 3 === 0 ? "#FFD700" : i % 3 === 1 ? "#FF6600" : "#FF3300",
+  })), []);
+
+  const sparks = useMemo(() => Array.from({ length: 14 }, (_, i) => ({
+    left: 30 + Math.random() * 40,
+    size: 1 + Math.random() * 2.5,
+    delay: 0.1 + i * 0.12,
+    sparkX: (Math.random() - 0.5) * 80,
+    white: i % 2 === 0,
+  })), []);
+
+  const ashes = useMemo(() => Array.from({ length: 18 }, (_, i) => ({
+    left: 30 + Math.random() * 40,
+    size: 2 + Math.random() * 3,
+    delay: 1.8 + i * 0.1,
+    drift: (Math.random() - 0.5) * 110,
+  })), []);
+
+  const smokes = useMemo(() => Array.from({ length: 6 }, (_, i) => ({
+    left: 25 + i * 10,
+    size: 55 + i * 18,
+    delay: i * 0.7,
+    smokeX: (Math.random() - 0.5) * 90,
+  })), []);
 
   useEffect(() => {
     return () => {
@@ -23,17 +53,12 @@ export default function ShameRecyclePage() {
   function handleRelease() {
     if (!text.trim()) return;
     setIsReleasing(true);
-    setShowFallback(false);
-
-    fallbackTimerRef.current = setTimeout(() => setShowFallback(true), 2000);
 
     mainTimerRef.current = setTimeout(() => {
-      if (fallbackTimerRef.current) clearTimeout(fallbackTimerRef.current);
       const random = graceScriptures[Math.floor(Math.random() * graceScriptures.length)];
       setCurrentScripture(random);
       setShowScripture(true);
       setIsReleasing(false);
-      setShowFallback(false);
     }, 4000);
   }
 
@@ -43,7 +68,6 @@ export default function ShameRecyclePage() {
     setText("");
     setShowScripture(false);
     setIsReleasing(false);
-    setShowFallback(false);
   }
 
   return (
@@ -96,44 +120,79 @@ export default function ShameRecyclePage() {
                 {/* Fire Animation Overlay */}
                 {isReleasing && (
                   <div className="fixed inset-0 z-50 flex items-center justify-center bg-black overflow-hidden">
+
                     {/* Progress bar */}
                     <div className="absolute top-8 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center gap-2">
                       <div className="w-48 h-1 bg-white/20 rounded-full overflow-hidden">
-                        <div
-                          className="h-full bg-gradient-to-r from-orange-400 to-yellow-300"
-                          style={{ animation: "progressBar 4s linear forwards" }}
-                        />
+                        <div className="h-full bg-gradient-to-r from-orange-400 to-yellow-300" style={{ animation: "progressBar 4s linear forwards" }} />
                       </div>
                       <p className="text-white/80 text-sm" style={{ animation: "progressPulse 1.5s ease-in-out infinite" }}>
                         Releasing to God...
                       </p>
                     </div>
 
-                    {showFallback && (
-                      <div className="absolute top-20 left-1/2 -translate-x-1/2 z-50 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-lg">
-                        <p className="text-white/90 text-xs">Processing your release...</p>
-                      </div>
-                    )}
-
-                    {/* Fire glow */}
-                    <div
-                      className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-[80vh]"
+                    {/* Deep crimson base glow */}
+                    <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-[65vh]"
                       style={{
-                        background: "radial-gradient(ellipse 100% 80% at 50% 100%, #8B0000 0%, #B22222 15%, #DC143C 25%, #FF4500 40%, #FF6347 55%, #FF8C00 70%, transparent 100%)",
-                        animation: "fireGlow 0.7s ease-in-out infinite",
+                        background: "radial-gradient(ellipse 110% 80% at 50% 100%, #3d0000 0%, #8b0000 20%, #cc1100 45%, transparent 72%)",
+                        animation: "fireGlow 1.1s ease-in-out infinite",
+                        filter: "blur(45px)",
                         transformOrigin: "center bottom",
                       }}
                     />
 
+                    {/* Orange mid-fire */}
+                    <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[75%] h-[52vh]"
+                      style={{
+                        background: "radial-gradient(ellipse 100% 90% at 50% 100%, #8b2500 0%, #cc4400 25%, #ff6600 55%, transparent 80%)",
+                        animation: "fireMid 0.75s ease-in-out infinite 0.1s",
+                        filter: "blur(22px)",
+                        transformOrigin: "center bottom",
+                      }}
+                    />
+
+                    {/* Yellow-orange hot core */}
+                    <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[45%] h-[36vh]"
+                      style={{
+                        background: "radial-gradient(ellipse 100% 100% at 50% 100%, #ff4500 0%, #ff8c00 40%, #ffd700 72%, transparent 90%)",
+                        animation: "fireTip 0.5s ease-in-out infinite 0.25s",
+                        filter: "blur(14px)",
+                        transformOrigin: "center bottom",
+                      }}
+                    />
+
+                    {/* Bright white-hot tip */}
+                    <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[22%] h-[20vh]"
+                      style={{
+                        background: "radial-gradient(ellipse at 50% 100%, #ffffff 0%, #fffde7 30%, #ffd700 65%, transparent 88%)",
+                        animation: "fireTip 0.32s ease-in-out infinite 0.05s",
+                        filter: "blur(7px)",
+                        transformOrigin: "center bottom",
+                      }}
+                    />
+
+                    {/* Smoke wisps */}
+                    {smokes.map((s, i) => (
+                      <div key={`smoke-${i}`} className="smoke-wisp"
+                        style={{
+                          left: `${s.left}%`,
+                          bottom: "38%",
+                          width: `${s.size}px`,
+                          height: `${s.size}px`,
+                          animationDelay: `${s.delay}s`,
+                          ["--smoke-x" as string]: `${s.smokeX}px`,
+                        }}
+                      />
+                    ))}
+
                     {/* Text being consumed */}
                     <div className="absolute inset-0 flex items-center justify-center z-20">
                       <div className="max-w-xl px-6">
-                        <p
-                          className="text-2xl md:text-3xl text-white leading-relaxed text-center"
+                        <p className="text-2xl md:text-3xl text-white leading-relaxed text-center"
                           style={{
                             fontFamily: "'Lora', Georgia, serif",
-                            animation: "textBurn 3s ease-in forwards",
-                            textShadow: "0 0 20px rgba(255, 150, 50, 0.8), 0 0 40px rgba(255, 100, 0, 0.6)",
+                            animation: "textConsume 4s ease-in forwards",
+                            textShadow: "0 0 20px rgba(255,150,50,0.9), 0 0 40px rgba(255,100,0,0.7), 0 0 70px rgba(255,50,0,0.5)",
                           }}
                         >
                           {text}
@@ -141,38 +200,63 @@ export default function ShameRecyclePage() {
                       </div>
                     </div>
 
-                    {/* Ash particles */}
+                    {/* Ember particles */}
                     <div className="absolute inset-0 pointer-events-none z-30">
-                      {[...Array(20)].map((_, i) => {
-                        const randomLeft = 35 + Math.random() * 30;
-                        const randomSize = 2 + Math.random() * 3;
-                        const randomDelay = 2 + i * 0.08;
-                        const randomDrift = (Math.random() - 0.5) * 100;
-                        return (
-                          <div
-                            key={i}
-                            className="ash-particle"
-                            style={{
-                              left: `${randomLeft}%`,
-                              bottom: "40%",
-                              width: `${randomSize}px`,
-                              height: `${randomSize}px`,
-                              animationDelay: `${randomDelay}s`,
-                              ["--drift-x" as string]: `${randomDrift}px`,
-                            }}
-                          />
-                        );
-                      })}
+                      {embers.map((e, i) => (
+                        <div key={`ember-${i}`} className="ember-particle"
+                          style={{
+                            left: `${e.left}%`,
+                            bottom: "22%",
+                            width: `${e.size}px`,
+                            height: `${e.size}px`,
+                            background: e.color,
+                            boxShadow: `0 0 ${e.size * 2.5}px ${e.color}, 0 0 ${e.size * 5}px ${e.color}88`,
+                            animationDelay: `${e.delay}s`,
+                            ["--drift-x" as string]: `${e.drift}px`,
+                          }}
+                        />
+                      ))}
                     </div>
 
-                    {/* Golden warmth pulse */}
-                    <div
-                      className="absolute inset-0 z-40"
+                    {/* Spark particles */}
+                    <div className="absolute inset-0 pointer-events-none z-30">
+                      {sparks.map((s, i) => (
+                        <div key={`spark-${i}`} className="spark-particle"
+                          style={{
+                            left: `${s.left}%`,
+                            bottom: "28%",
+                            width: `${s.size}px`,
+                            height: `${s.size}px`,
+                            background: s.white ? "#FFFFFF" : "#FFD700",
+                            boxShadow: `0 0 4px ${s.white ? "#FFFFFF" : "#FFD700"}`,
+                            animationDelay: `${s.delay}s`,
+                            ["--spark-x" as string]: `${s.sparkX}px`,
+                          }}
+                        />
+                      ))}
+                    </div>
+
+                    {/* Ash particles */}
+                    <div className="absolute inset-0 pointer-events-none z-30">
+                      {ashes.map((a, i) => (
+                        <div key={`ash-${i}`} className="ash-particle"
+                          style={{
+                            left: `${a.left}%`,
+                            bottom: "38%",
+                            width: `${a.size}px`,
+                            height: `${a.size}px`,
+                            animationDelay: `${a.delay}s`,
+                            ["--drift-x" as string]: `${a.drift}px`,
+                          }}
+                        />
+                      ))}
+                    </div>
+
+                    {/* Ignition pulse */}
+                    <div className="absolute inset-0 z-40 pointer-events-none"
                       style={{
-                        background: "radial-gradient(ellipse at center, rgba(255, 180, 80, 0.4) 0%, rgba(255, 140, 50, 0.2) 50%, transparent 80%)",
-                        animation: "goldenPulse 1.5s ease-in-out forwards",
-                        animationDelay: "3s",
-                        opacity: 0,
+                        background: "radial-gradient(ellipse at center, rgba(255,100,0,0.55) 0%, transparent 70%)",
+                        animation: "ignitionPulse 1.2s ease-out forwards",
                       }}
                     />
                   </div>
@@ -180,46 +264,52 @@ export default function ShameRecyclePage() {
               </div>
             ) : (
               /* Scripture Reveal */
-              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black">
-                <div
-                  className="absolute inset-0"
+              <div className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden"
+                style={{ background: "radial-gradient(ellipse at center, #1a0800 0%, #0d0400 55%, #000000 100%)" }}
+              >
+                {/* Warm amber glow */}
+                <div className="absolute inset-0"
                   style={{
-                    background: "radial-gradient(ellipse at center, rgba(200, 150, 50, 0.15) 0%, transparent 70%)",
+                    background: "radial-gradient(ellipse at center, rgba(210,130,30,0.22) 0%, rgba(180,80,10,0.1) 45%, transparent 72%)",
                     animation: "gentleGlow 4s ease-in-out infinite",
                   }}
                 />
 
                 <div className="relative z-10 max-w-lg mx-auto px-6 text-center">
-                  <blockquote
-                    className="text-xl md:text-2xl text-white leading-relaxed mb-6"
+                  <p className="text-amber-400/50 text-xs tracking-widest uppercase mb-8"
+                    style={{ animation: "textFadeIn 1.5s ease-out forwards", opacity: 0 }}
+                  >
+                    Your shame is released
+                  </p>
+
+                  <blockquote className="text-xl md:text-2xl text-white leading-relaxed mb-5"
                     style={{
                       fontFamily: "'Lora', Georgia, serif",
                       animation: "textFadeIn 2s ease-out forwards",
-                      animationDelay: "0.5s",
+                      animationDelay: "0.8s",
                       opacity: 0,
+                      textShadow: "0 0 30px rgba(210,130,30,0.4)",
                     }}
                   >
                     &ldquo;{currentScripture.scripture}&rdquo;
                   </blockquote>
 
-                  <p
-                    className="text-base text-white/70 mb-8"
+                  <p className="text-base text-amber-200/55 mb-10"
                     style={{
                       fontFamily: "'Lora', Georgia, serif",
                       animation: "textFadeIn 2s ease-out forwards",
-                      animationDelay: "1.5s",
+                      animationDelay: "1.8s",
                       opacity: 0,
                     }}
                   >
                     — {currentScripture.reference}
                   </p>
 
-                  <button
-                    onClick={handleReset}
-                    className="bg-white/10 hover:bg-white/20 text-white border border-white/20 px-6 py-2 text-sm backdrop-blur-sm"
+                  <button onClick={handleReset}
+                    className="bg-white/10 hover:bg-white/20 text-white border border-amber-300/25 px-8 py-3 text-sm backdrop-blur-sm tracking-wider"
                     style={{
                       animation: "textFadeIn 2s ease-out forwards",
-                      animationDelay: "2.5s",
+                      animationDelay: "3s",
                       opacity: 0,
                     }}
                   >
