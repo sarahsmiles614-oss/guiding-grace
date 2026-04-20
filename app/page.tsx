@@ -8,7 +8,7 @@ export default function Home() {
         {/* Nav */}
         <nav className="flex justify-between items-center px-6 pt-6">
           <p className="text-white/60 text-sm font-medium">Guiding Grace</p>
-          <Link href="/dashboard">
+          <Link href="/signin">
             <button className="text-white/80 hover:text-white text-sm border border-white/30 px-4 py-1.5 rounded-full transition">Sign In</button>
           </Link>
         </nav>
