@@ -71,19 +71,35 @@ export default function HeavensHeartsPage() {
       .select("*")
       .eq("user_id", uid)
       .order("created_at", { ascending: false });
-    if (data) {
-      setMemorials(
-        data.map((m: Record<string, unknown>) => ({
-          id: m.id as string,
-          name: m.name as string,
-          color: (m.color as string) || "#ff6b9d",
-          font_style: (m.font_style as string) || "Playfair Display",
-          x: typeof m.x === "number" ? m.x : 50,
-          y: typeof m.y === "number" ? m.y : 50,
-          size: typeof m.size === "number" ? m.size : 1.0,
-          rotation: typeof m.rotation === "number" ? m.rotation : 0,
-        }))
-      );
+    if (!data) return;
+
+    const toSave: { id: string; x: number; y: number }[] = [];
+
+    const mapped = data.map((m: Record<string, unknown>, index: number) => {
+      const hasPos = typeof m.x === "number" && typeof m.y === "number";
+      // Spread out memorials that have no saved position in a grid pattern
+      const col = index % 3;
+      const row = Math.floor(index / 3);
+      const x = hasPos ? (m.x as number) : 15 + col * 30 + Math.random() * 8;
+      const y = hasPos ? (m.y as number) : 15 + row * 28 + Math.random() * 8;
+      if (!hasPos) toSave.push({ id: m.id as string, x, y });
+      return {
+        id: m.id as string,
+        name: m.name as string,
+        color: (m.color as string) || "#ff6b9d",
+        font_style: (m.font_style as string) || "Playfair Display",
+        x,
+        y,
+        size: typeof m.size === "number" ? m.size : 1.0,
+        rotation: typeof m.rotation === "number" ? m.rotation : 0,
+      };
+    });
+
+    setMemorials(mapped);
+
+    // Persist spread-out positions for memorials that had none
+    for (const { id, x, y } of toSave) {
+      await supabase.from("memorials").update({ x, y }).eq("id", id);
     }
   }
 
