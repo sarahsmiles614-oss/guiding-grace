@@ -13,6 +13,13 @@ export default function SubscriptionGuard({ children }: { children: React.ReactN
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) { router.push("/"); return; }
 
+      // Admin bypass
+      if (user.email === "sarahsmiles614@gmail.com") {
+        setAllowed(true);
+        setChecking(false);
+        return;
+      }
+
       const { data: sub } = await supabase
         .from("subscriptions")
         .select("status, trial_end_date")
