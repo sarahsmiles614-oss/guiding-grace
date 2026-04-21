@@ -85,7 +85,8 @@ export default function SignInPage() {
     >
       <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70" />
 
-      <div className="relative z-10 flex flex-col min-h-screen px-6 py-10">
+      <div className="relative z-10 flex flex-col min-h-screen px-6 py-10 items-center">
+        <div className="w-full max-w-sm">
 
         {/* Header */}
         <div className="text-center mb-8">
@@ -222,6 +223,7 @@ export default function SignInPage() {
           </div>
         )}
 
+        </div>{/* end max-w-sm */}
       </div>
     </div>
   );
