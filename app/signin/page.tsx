@@ -34,11 +34,17 @@ export default function SignInPage() {
     setLoading(false);
   }
 
+  function getCallbackUrl() {
+    const hasIntent = typeof window !== "undefined" && localStorage.getItem("subscribe_intent");
+    const next = hasIntent ? "/subscribe" : "/dashboard";
+    return `${window.location.origin}/auth/callback?next=${next}`;
+  }
+
   async function handleGoogle() {
     setLoading(true); reset();
     await supabase.auth.signInWithOAuth({
       provider: "google",
-      options: { redirectTo: `${window.location.origin}/auth/callback` },
+      options: { redirectTo: getCallbackUrl() },
     });
   }
 
@@ -46,13 +52,15 @@ export default function SignInPage() {
     setLoading(true); reset();
     await supabase.auth.signInWithOAuth({
       provider: "facebook",
-      options: { redirectTo: `${window.location.origin}/auth/callback` },
+      options: { redirectTo: getCallbackUrl() },
     });
   }
 
   async function handleEmailSubmit() {
     if (!email || !password || (isNewUser && !name)) return;
     setLoading(true); reset();
+
+    const dest = localStorage.getItem("subscribe_intent") ? "/subscribe" : "/dashboard";
 
     if (isNewUser) {
       const { error } = await supabase.auth.signUp({
@@ -67,7 +75,7 @@ export default function SignInPage() {
     } else {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) { setError(error.message); setLoading(false); }
-      else router.push("/dashboard");
+      else router.push(dest);
     }
   }
 

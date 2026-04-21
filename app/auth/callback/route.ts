@@ -21,5 +21,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(new URL("/auth/reset-password", requestUrl.origin));
   }
 
-  return NextResponse.redirect(new URL("/dashboard", requestUrl.origin));
+  // If they came from the subscribe flow, send them back to complete checkout
+  const next = requestUrl.searchParams.get("next") || "/dashboard";
+  return NextResponse.redirect(new URL(next, requestUrl.origin));
 }
