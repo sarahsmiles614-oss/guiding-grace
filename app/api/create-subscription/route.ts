@@ -60,13 +60,13 @@ export async function POST(req: NextRequest) {
       metadata: { userId },
     });
 
-    const invoice = subscription.latest_invoice as Stripe.Invoice;
+    const invoice = subscription.latest_invoice as any;
     const paymentIntent = invoice.payment_intent as Stripe.PaymentIntent;
 
     // Update PaymentIntent to allow all automatic payment methods incl. Google Pay
     await stripe.paymentIntents.update(paymentIntent.id, {
       automatic_payment_methods: { enabled: true, allow_redirects: "always" },
-    });
+    } as any);
 
     // Re-fetch updated secret
     const updatedIntent = await stripe.paymentIntents.retrieve(paymentIntent.id);
