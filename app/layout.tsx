@@ -10,19 +10,30 @@ const inter = Inter({ subsets: ["latin"] });
 const LOGO = "/icon.jpg";
 
 export const metadata: Metadata = {
-  title: "Guiding Grace",
-  description: "A daily faith companion for your spiritual journey",
+  title: "Guiding Grace — A Daily Faith Companion",
+  description: "Daily devotions, scripture promises, grace challenges, and sacred spaces to strengthen your faith. Start your free 3-day trial today.",
   manifest: "/manifest.json",
   themeColor: "#1e0a3c",
+  metadataBase: new URL("https://guidinggrace.app"),
+  keywords: ["daily devotions", "Christian app", "faith companion", "scripture", "grace challenge", "prayer", "Bible"],
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
     title: "Guiding Grace",
   },
   openGraph: {
-    title: "Guiding Grace",
-    description: "A daily faith companion for your spiritual journey",
-    images: [LOGO],
+    title: "Guiding Grace — A Daily Faith Companion",
+    description: "Daily devotions, scripture promises, grace challenges, and sacred spaces to strengthen your faith.",
+    url: "https://guidinggrace.app",
+    siteName: "Guiding Grace",
+    images: [{ url: "/icon.jpg", width: 605, height: 589, alt: "Guiding Grace" }],
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "Guiding Grace — A Daily Faith Companion",
+    description: "Daily devotions, scripture promises, and grace challenges to strengthen your faith.",
+    images: ["/icon.jpg"],
   },
 };
 
