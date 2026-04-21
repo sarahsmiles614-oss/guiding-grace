@@ -9,18 +9,57 @@ import PageBackground from "@/components/PageBackground";
 type Tab = "profile" | "notifications";
 
 interface Prefs {
-  email_daily_devotion: boolean;
-  email_challenge_drop: boolean;
-  email_results_reveal: boolean;
-  email_winner: boolean;
+  daily_reminder: boolean;
+  daily_reminder_time: string;
+  challenge_reminder: boolean;
+  challenge_reminder_time: string;
+  community_updates: boolean;
 }
 
 const DEFAULT_PREFS: Prefs = {
-  email_daily_devotion: false,
-  email_challenge_drop: false,
-  email_results_reveal: false,
-  email_winner: false,
+  daily_reminder: false,
+  daily_reminder_time: "08:00",
+  challenge_reminder: false,
+  challenge_reminder_time: "09:00",
+  community_updates: false,
 };
+
+function Toggle({ on, onToggle }: { on: boolean; onToggle: () => void }) {
+  return (
+    <button
+      onClick={e => { e.stopPropagation(); onToggle(); }}
+      className={`w-12 h-6 rounded-full transition-colors flex-shrink-0 ${on ? "bg-green-400/80" : "bg-white/20"}`}
+    >
+      <div className={`w-5 h-5 bg-white rounded-full shadow mt-0.5 transition-transform ${on ? "translate-x-6" : "translate-x-0.5"}`} />
+    </button>
+  );
+}
+
+function TimeSelect({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+  const times = [];
+  for (let h = 0; h < 24; h++) {
+    for (const m of ["00", "30"]) {
+      const hh = h.toString().padStart(2, "0");
+      const val = `${hh}:${m}`;
+      const hour12 = h === 0 ? 12 : h > 12 ? h - 12 : h;
+      const ampm = h < 12 ? "AM" : "PM";
+      const label = `${hour12}:${m} ${ampm}`;
+      times.push({ val, label });
+    }
+  }
+  return (
+    <select
+      value={value}
+      onChange={e => { e.stopPropagation(); onChange(e.target.value); }}
+      onClick={e => e.stopPropagation()}
+      className="bg-white/10 border border-white/20 rounded-lg px-3 py-1.5 text-white text-xs focus:outline-none focus:border-white/40 [color-scheme:dark]"
+    >
+      {times.map(t => (
+        <option key={t.val} value={t.val}>{t.label}</option>
+      ))}
+    </select>
+  );
+}
 
 export default function AccountContent() {
   const router = useRouter();
@@ -47,17 +86,18 @@ export default function AccountContent() {
         .single();
       setSub(subData);
 
-      const { data: prefsData } = await supabase
+      const { data: p } = await supabase
         .from("user_preferences")
         .select("*")
         .eq("user_id", user.id)
         .single();
-      if (prefsData) {
+      if (p) {
         setPrefs({
-          email_daily_devotion: prefsData.email_daily_devotion ?? false,
-          email_challenge_drop: prefsData.email_challenge_drop ?? false,
-          email_results_reveal: prefsData.email_results_reveal ?? false,
-          email_winner: prefsData.email_winner ?? false,
+          daily_reminder: p.daily_reminder ?? false,
+          daily_reminder_time: p.daily_reminder_time ?? "08:00",
+          challenge_reminder: p.challenge_reminder ?? false,
+          challenge_reminder_time: p.challenge_reminder_time ?? "09:00",
+          community_updates: p.community_updates ?? false,
         });
       }
     }
@@ -84,8 +124,8 @@ export default function AccountContent() {
     setSavingName(false);
   }
 
-  function toggle(key: keyof Prefs) {
-    setPrefs(p => ({ ...p, [key]: !p[key] }));
+  function set<K extends keyof Prefs>(key: K, val: Prefs[K]) {
+    setPrefs(p => ({ ...p, [key]: val }));
     setPrefsSaved(false);
   }
 
@@ -199,60 +239,74 @@ export default function AccountContent() {
           {/* Notifications tab */}
           {tab === "notifications" && (
             <div className="space-y-4">
-              <p className="text-white/50 text-sm text-center mb-2">Choose which emails you'd like to receive.</p>
+              <p className="text-white/50 text-sm text-center mb-2">
+                Choose what you'd like to be reminded about and when.
+              </p>
 
-              {([
-                {
-                  key: "email_daily_devotion" as keyof Prefs,
-                  icon: "📖",
-                  title: "Daily Devotion",
-                  desc: "Morning email with today's scripture and reflection",
-                },
-                {
-                  key: "email_challenge_drop" as keyof Prefs,
-                  icon: "☀️",
-                  title: "Challenge Drop",
-                  desc: "Get notified when today's Grace Challenge is posted",
-                },
-                {
-                  key: "email_results_reveal" as keyof Prefs,
-                  icon: "💛",
-                  title: "Results Reveal",
-                  desc: "7am EST reminder that votes are now revealed",
-                },
-                {
-                  key: "email_winner" as keyof Prefs,
-                  icon: "🏆",
-                  title: "Most Loved Winner",
-                  desc: "Find out who the community honored today",
-                },
-              ] as const).map(item => (
-                <div
-                  key={item.key}
-                  onClick={() => toggle(item.key)}
-                  className="flex items-center gap-4 bg-white/10 border border-white/20 rounded-2xl p-4 backdrop-blur-sm cursor-pointer hover:bg-white/15 transition"
-                >
-                  <span className="text-2xl flex-shrink-0">{item.icon}</span>
+              {/* Daily Reminder */}
+              <div className="bg-white/10 border border-white/20 rounded-2xl p-5 backdrop-blur-sm">
+                <div className="flex items-center gap-3 mb-1">
+                  <span className="text-2xl">📖</span>
                   <div className="flex-1">
-                    <p className="text-white text-sm font-medium">{item.title}</p>
-                    <p className="text-white/50 text-xs">{item.desc}</p>
+                    <p className="text-white text-sm font-medium">Daily Reminder</p>
+                    <p className="text-white/50 text-xs">Morning devotion & scripture delivered to your email</p>
                   </div>
-                  <div className={`w-12 h-6 rounded-full transition-colors flex-shrink-0 ${prefs[item.key] ? "bg-green-400/70" : "bg-white/20"}`}>
-                    <div className={`w-5 h-5 bg-white rounded-full shadow mt-0.5 transition-transform ${prefs[item.key] ? "translate-x-6" : "translate-x-0.5"}`} />
-                  </div>
+                  <Toggle on={prefs.daily_reminder} onToggle={() => set("daily_reminder", !prefs.daily_reminder)} />
                 </div>
-              ))}
+                {prefs.daily_reminder && (
+                  <div className="mt-4 flex items-center gap-3 pl-1">
+                    <p className="text-white/50 text-xs flex-1">Send at</p>
+                    <TimeSelect
+                      value={prefs.daily_reminder_time}
+                      onChange={v => set("daily_reminder_time", v)}
+                    />
+                  </div>
+                )}
+              </div>
+
+              {/* Daily Challenge Reminder */}
+              <div className="bg-white/10 border border-white/20 rounded-2xl p-5 backdrop-blur-sm">
+                <div className="flex items-center gap-3 mb-1">
+                  <span className="text-2xl">☀️</span>
+                  <div className="flex-1">
+                    <p className="text-white text-sm font-medium">Daily Challenge Reminder</p>
+                    <p className="text-white/50 text-xs">Get nudged to participate in today's Grace Challenge</p>
+                  </div>
+                  <Toggle on={prefs.challenge_reminder} onToggle={() => set("challenge_reminder", !prefs.challenge_reminder)} />
+                </div>
+                {prefs.challenge_reminder && (
+                  <div className="mt-4 flex items-center gap-3 pl-1">
+                    <p className="text-white/50 text-xs flex-1">Send at</p>
+                    <TimeSelect
+                      value={prefs.challenge_reminder_time}
+                      onChange={v => set("challenge_reminder_time", v)}
+                    />
+                  </div>
+                )}
+              </div>
+
+              {/* Community Updates */}
+              <div className="bg-white/10 border border-white/20 rounded-2xl p-5 backdrop-blur-sm">
+                <div className="flex items-center gap-3">
+                  <span className="text-2xl">💛</span>
+                  <div className="flex-1">
+                    <p className="text-white text-sm font-medium">Community Updates</p>
+                    <p className="text-white/50 text-xs">Results reveals, Most Loved winner, and community highlights</p>
+                  </div>
+                  <Toggle on={prefs.community_updates} onToggle={() => set("community_updates", !prefs.community_updates)} />
+                </div>
+              </div>
 
               <button
                 onClick={savePrefs}
                 disabled={savingPrefs}
-                className="w-full bg-white/20 hover:bg-white/30 border border-white/30 text-white font-semibold py-3 rounded-xl transition disabled:opacity-40 mt-2"
+                className="w-full bg-white/20 hover:bg-white/30 border border-white/30 text-white font-semibold py-3 rounded-xl transition disabled:opacity-40"
               >
                 {savingPrefs ? "Saving..." : prefsSaved ? "✓ Saved!" : "Save Preferences"}
               </button>
 
               <p className="text-white/30 text-xs text-center">
-                Emails are sent to {user?.email}. You can unsubscribe anytime.
+                Emails sent to {user?.email}. Times are in your local timezone.
               </p>
             </div>
           )}
