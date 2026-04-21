@@ -7,6 +7,7 @@ import Link from "next/link";
 export default function SignInPage() {
   const router = useRouter();
   const [isNewUser, setIsNewUser] = useState(false);
+  const [forgotMode, setForgotMode] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
@@ -21,6 +22,17 @@ export default function SignInPage() {
   }, [router]);
 
   function reset() { setError(""); setSuccess(""); }
+
+  async function handleForgotPassword() {
+    if (!email) { setError("Enter your email address first."); return; }
+    setLoading(true); reset();
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/auth/callback?type=recovery`,
+    });
+    if (error) { setError(error.message); }
+    else { setSuccess("Password reset link sent — check your email."); }
+    setLoading(false);
+  }
 
   async function handleGoogle() {
     setLoading(true); reset();
@@ -137,14 +149,38 @@ export default function SignInPage() {
             )}
             <input type="email" placeholder="Email address" value={email} onChange={e => setEmail(e.target.value)}
               className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/40 text-sm focus:outline-none focus:border-white/50" />
-            <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)}
-              onKeyDown={e => e.key === "Enter" && handleEmailSubmit()}
-              className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/40 text-sm focus:outline-none focus:border-white/50" />
-            <button onClick={handleEmailSubmit}
-              disabled={!email || !password || (isNewUser && !name) || loading}
-              className="w-full bg-white/20 hover:bg-white/30 border border-white/30 text-white font-semibold py-3 rounded-xl transition disabled:opacity-40">
-              {loading ? (isNewUser ? "Creating account..." : "Signing in...") : (isNewUser ? "Create Account" : "Sign In")}
-            </button>
+            {!forgotMode && (
+              <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)}
+                onKeyDown={e => e.key === "Enter" && handleEmailSubmit()}
+                className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/40 text-sm focus:outline-none focus:border-white/50" />
+            )}
+
+            {forgotMode ? (
+              <>
+                <button onClick={handleForgotPassword} disabled={!email || loading}
+                  className="w-full bg-white/20 hover:bg-white/30 border border-white/30 text-white font-semibold py-3 rounded-xl transition disabled:opacity-40">
+                  {loading ? "Sending..." : "Send Reset Link"}
+                </button>
+                <button onClick={() => { setForgotMode(false); reset(); }}
+                  className="w-full text-white/50 hover:text-white/80 text-sm py-1 transition">
+                  ← Back to sign in
+                </button>
+              </>
+            ) : (
+              <>
+                <button onClick={handleEmailSubmit}
+                  disabled={!email || !password || (isNewUser && !name) || loading}
+                  className="w-full bg-white/20 hover:bg-white/30 border border-white/30 text-white font-semibold py-3 rounded-xl transition disabled:opacity-40">
+                  {loading ? (isNewUser ? "Creating account..." : "Signing in...") : (isNewUser ? "Create Account" : "Sign In")}
+                </button>
+                {!isNewUser && (
+                  <button onClick={() => { setForgotMode(true); reset(); }}
+                    className="w-full text-white/40 hover:text-white/70 text-xs py-1 transition">
+                    Forgot your password?
+                  </button>
+                )}
+              </>
+            )}
           </div>
         </div>
 
