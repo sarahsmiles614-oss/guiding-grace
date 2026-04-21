@@ -41,15 +41,14 @@ export default function DashboardContent() {
   }, [router]);
 
   const features = [
-    { label: "Daily Devotions", href: "/devotions", icon: "📖" },
-    { label: "His Promises", href: "/promises", icon: "🕊️" },
-    { label: "Shame Recycle Bin", href: "/shame-recycle", icon: "🗑️" },
-    { label: "Heaven's Hearts", href: "/heavens-hearts", icon: "💜" },
-    { label: "Nightly Reflections", href: "/nightly-reflections", icon: "🌙" },
-    { label: "Heroes & Villains", href: "/heroes-villains", icon: "⚔️" },
-    { label: "P.U.S.H. Prayer Wall", href: "/prayer-wall", icon: "🙏" },
-    { label: "Truth Testimonies", href: "/testimony-wall", icon: "✨" },
-    { label: "Daily Grace Challenge", href: "/grace-challenge", icon: "💛" },
+    { label: "Daily Devotions", href: "/devotions", icon: "📖", desc: "Scripture & reflection delivered every morning" },
+    { label: "His Promises", href: "/promises", icon: "🕊️", desc: "A treasury of God's promises to hold onto" },
+    { label: "Shame Recycle Bin", href: "/shame-recycle", icon: "🗑️", desc: "Release guilt and shame — let it burn away" },
+    { label: "Heaven's Hearts", href: "/heavens-hearts", icon: "💜", desc: "Light a candle in memory of someone you love" },
+    { label: "Nightly Reflections", href: "/nightly-reflections", icon: "🌙", desc: "End your day with gratitude and surrender" },
+    { label: "Heroes & Villains", href: "/heroes-villains", icon: "⚔️", desc: "Pray for those who inspire you — and those who challenge you" },
+    { label: "P.U.S.H. Prayer Wall", href: "/prayer-wall", icon: "🙏", desc: "Pray Until Something Happens — post and pray together" },
+    { label: "Truth Testimonies", href: "/testimony-wall", icon: "✨", desc: "Share what God has done in your life" },
   ];
 
   return (
@@ -87,12 +86,40 @@ export default function DashboardContent() {
             </div>
           )}
 
+          {/* Grace Challenge hero */}
+          <div className={subStatus !== "active" ? "opacity-40 pointer-events-none select-none" : ""}>
+            <Link href="/grace-challenge">
+              <div className="bg-gradient-to-r from-yellow-500/20 to-amber-400/10 border border-yellow-400/40 rounded-3xl p-6 mb-10 backdrop-blur-sm hover:from-yellow-500/30 hover:to-amber-400/20 transition cursor-pointer">
+                <div className="flex items-start gap-5">
+                  <span className="text-5xl flex-shrink-0">💛</span>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <p className="text-yellow-300 text-xs uppercase tracking-widest font-semibold">Live Now</p>
+                      <span className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse" />
+                    </div>
+                    <h2 className="text-white text-xl font-bold mb-2" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>
+                      Daily Grace Challenge
+                    </h2>
+                    <p className="text-white/70 text-sm leading-relaxed mb-4">
+                      A fresh real-world challenge drops every morning — inspired by the daily devotion. Share your story, vote for responses that move you, and see who the community honors as Most Loved. It's faith in action, together.
+                    </p>
+                    <span className="inline-block bg-yellow-400/25 border border-yellow-400/40 text-yellow-200 text-xs font-semibold px-4 py-1.5 rounded-full">
+                      Take Today's Challenge →
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </Link>
+          </div>
+
           {/* Feature grid */}
-          <div className={`grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8 md:gap-10 ${subStatus !== "active" ? "opacity-40 pointer-events-none select-none" : ""}`}>
+          <p className="text-white/40 text-xs uppercase tracking-widest mb-6">Everything Inside</p>
+          <div className={`grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 ${subStatus !== "active" ? "opacity-40 pointer-events-none select-none" : ""}`}>
             {features.map((f) => (
-              <Link key={f.href} href={f.href} className="flex flex-col items-center text-center hover:opacity-80 transition group">
-                <span className="text-5xl mb-3 group-hover:scale-110 transition-transform">{f.icon}</span>
-                <span className="text-sm font-medium text-white leading-tight" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>{f.label}</span>
+              <Link key={f.href} href={f.href} className="group bg-white/8 hover:bg-white/15 border border-white/10 hover:border-white/25 rounded-2xl p-4 transition backdrop-blur-sm">
+                <span className="text-3xl mb-3 block group-hover:scale-110 transition-transform">{f.icon}</span>
+                <p className="text-white text-sm font-semibold mb-1 leading-tight" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>{f.label}</p>
+                <p className="text-white/50 text-xs leading-relaxed">{f.desc}</p>
               </Link>
             ))}
           </div>
