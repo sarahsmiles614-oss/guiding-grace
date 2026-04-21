@@ -32,6 +32,14 @@ function fontFamily(fontValue: string) {
   return `'${fontValue}', Georgia, serif`;
 }
 
+const backgrounds = [
+  { label: "Heaven", url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/geralt-heaven-3335585_1920.jpg" },
+  { label: "Sunset", url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/mateus-campos-felipe-88D7C4c6en8-unsplash.jpg" },
+  { label: "Shore", url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/lou-lou-b-photo-eD0TsB_E-pM-unsplash.jpg" },
+  { label: "Light", url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/manuel-chinchilla-CMAM-ehX210-unsplash.jpg" },
+  { label: "Clouds", url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/marcelkessler-heaven-4850411_1920.jpg" },
+];
+
 export default function HeavensHeartsPage() {
   const [memorials, setMemorials] = useState<Memorial[]>([]);
   const [userId, setUserId] = useState<string | null>(null);
@@ -44,6 +52,7 @@ export default function HeavensHeartsPage() {
   const [isDragging, setIsDragging] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
   const [isRotating, setIsRotating] = useState(false);
+  const [bgIndex, setBgIndex] = useState(0);
   const canvasRef = useRef<HTMLDivElement>(null);
   const latestRef = useRef<{ x: number; y: number; size: number; rotation: number } | null>(null);
 
@@ -252,7 +261,7 @@ export default function HeavensHeartsPage() {
       <div
         className="min-h-screen bg-cover bg-center bg-fixed relative"
         style={{
-          backgroundImage: "url('https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/geralt-heaven-3335585_1920.jpg')",
+          backgroundImage: `url('${backgrounds[bgIndex].url}')`,
         }}
       >
         <div className="absolute inset-0 bg-white/30 backdrop-blur-[1px]" />
@@ -262,6 +271,19 @@ export default function HeavensHeartsPage() {
             <div className="max-w-5xl mx-auto">
               <div className="flex items-center justify-between mb-4">
                 <Link href="/dashboard" className="text-rose-800 text-sm hover:text-rose-600">← Dashboard</Link>
+                {/* Background picker */}
+                <div className="flex items-center gap-2">
+                  <span className="text-rose-800/60 text-xs mr-1">Scene</span>
+                  {backgrounds.map((bg, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setBgIndex(i)}
+                      title={bg.label}
+                      className={`w-7 h-7 rounded-full border-2 bg-cover bg-center transition ${bgIndex === i ? "border-rose-600 scale-110 shadow-lg" : "border-white/60 hover:border-rose-400"}`}
+                      style={{ backgroundImage: `url('${bg.url}')` }}
+                    />
+                  ))}
+                </div>
               </div>
               <h1
                 className="text-4xl font-bold text-rose-900 mb-2"
