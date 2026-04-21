@@ -6,7 +6,7 @@ import ServiceWorkerRegistration from "@/components/ServiceWorkerRegistration";
 
 const inter = Inter({ subsets: ["latin"] });
 
-const LOGO = "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/Screenshot_20260407_144445_Chrome.jpg";
+const LOGO = "/icon.jpg";
 
 export const metadata: Metadata = {
   title: "Guiding Grace",
