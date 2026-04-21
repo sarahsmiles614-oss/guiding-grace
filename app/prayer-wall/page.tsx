@@ -4,6 +4,7 @@ import Link from "next/link";
 import SubscriptionGuard from "@/components/SubscriptionGuard";
 import { supabase } from "@/lib/supabase";
 import PageBackground from "@/components/PageBackground";
+import ShareButton from "@/components/ShareButton";
 
 export default function PrayerWallPage() {
   const [prayers, setPrayers] = useState<any[]>([]);
@@ -64,20 +65,74 @@ export default function PrayerWallPage() {
     setEditingId(null);
   }
 
+  function handleDownload() {
+    const lines = prayers.map((p) => {
+      const answered = p.is_answered ? " ✓ Answered" : "";
+      const count = p.prayer_count > 0 ? ` [${p.prayer_count} praying]` : "";
+      return `${p.user_name}${answered}${count}\n${p.prayer_text}`;
+    });
+    const content = `P.U.S.H. Prayer Wall — Guiding Grace\n${new Date().toLocaleDateString()}\n${"—".repeat(40)}\n\n${lines.join("\n\n")}`;
+    const blob = new Blob([content], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "prayer-wall.txt";
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  async function shareItem(text: string, author: string) {
+    const shareText = `"${text}" — ${author} | Pray with us on Guiding Grace`;
+    if (navigator.share) {
+      try { await navigator.share({ title: "Prayer Request", text: shareText, url: "https://guidinggrace.app/prayer-wall" }); } catch {}
+    } else {
+      await navigator.clipboard.writeText(`${shareText}\nhttps://guidinggrace.app/prayer-wall`);
+    }
+  }
+
   return (
     <SubscriptionGuard>
+      <style dangerouslySetInnerHTML={{ __html: `
+        @media print {
+          .pw-no-print { display: none !important; }
+          .pw-print-header { display: block !important; margin-bottom: 16px; }
+        }
+      `}} />
       <PageBackground url="https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/imagenesiacristianas-ai-generated-8762262.jpg">
         <main className="flex-1 p-6">
           <div className="max-w-2xl mx-auto">
             <div className="flex justify-between items-center mb-6">
-              <Link href="/dashboard" className="text-white/70 text-sm">← Dashboard</Link>
+              <Link href="/dashboard" className="pw-no-print text-white/70 text-sm">← Dashboard</Link>
               <h1 className="text-lg font-bold text-white" style={{ textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>P.U.S.H. Prayer Wall</h1>
-              <div className="w-16" />
+              {/* Action toolbar */}
+              <div className="pw-no-print flex items-center gap-1">
+                <button
+                  onClick={handleDownload}
+                  title="Save as text file"
+                  className="text-white/60 hover:text-white text-sm px-2 py-1.5 rounded-lg hover:bg-white/10 transition"
+                >
+                  💾
+                </button>
+                <ShareButton
+                  title="P.U.S.H. Prayer Wall"
+                  text="Join me in prayer on Guiding Grace — Pray Until Something Happens."
+                  url="https://guidinggrace.app/prayer-wall"
+                  label="↑"
+                  className="text-white/60 hover:text-white text-sm px-2 py-1.5 rounded-lg hover:bg-white/10 transition"
+                />
+                <button
+                  onClick={() => window.print()}
+                  title="Print"
+                  className="text-white/60 hover:text-white text-sm px-2 py-1.5 rounded-lg hover:bg-white/10 transition"
+                >
+                  🖨️
+                </button>
+              </div>
             </div>
             <p className="text-center text-xs text-white/50 mb-8 uppercase tracking-widest">Pray Until Something Happens</p>
 
             {/* Submit form */}
-            <div className="bg-white/10 backdrop-blur rounded-2xl p-5 mb-8 border border-white/20">
+            <div className="pw-no-print bg-white/10 backdrop-blur rounded-2xl p-5 mb-8 border border-white/20">
               <textarea
                 value={request}
                 onChange={(e) => setRequest(e.target.value)}
@@ -126,7 +181,7 @@ export default function PrayerWallPage() {
                     <p className="text-white/90 text-sm mb-2" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>{p.prayer_text}</p>
                   )}
 
-                  <div className="flex items-center gap-4">
+                  <div className="pw-no-print flex items-center gap-4">
                     <button
                       onClick={() => handlePrayed(p.id, p.prayer_count || 0)}
                       className="text-xs text-white/50 hover:text-white/80 transition"
@@ -134,7 +189,13 @@ export default function PrayerWallPage() {
                       🙏 I prayed for this{p.prayer_count > 0 ? ` · ${p.prayer_count}` : ""}
                     </button>
 
-                    {/* Own prayer actions */}
+                    <button
+                      onClick={() => shareItem(p.prayer_text, p.user_name)}
+                      className="text-xs text-white/40 hover:text-white/70 transition"
+                    >
+                      ↑ Share
+                    </button>
+
                     {p.user_id === userId && editingId !== p.id && (
                       <>
                         <button

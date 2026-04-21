@@ -4,6 +4,7 @@ import Link from "next/link";
 import SubscriptionGuard from "@/components/SubscriptionGuard";
 import { supabase } from "@/lib/supabase";
 import { HexColorPicker } from "react-colorful";
+import ShareButton from "@/components/ShareButton";
 
 interface Memorial {
   id: string;
@@ -47,12 +48,12 @@ export default function HeavensHeartsPage() {
   const [newName, setNewName] = useState("");
   const [selectedColor, setSelectedColor] = useState("#ff6b9d");
   const [selectedFont, setSelectedFont] = useState(fontStyles[0]);
-  const [isInstructionsOpen, setIsInstructionsOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
   const [isRotating, setIsRotating] = useState(false);
   const [bgIndex, setBgIndex] = useState(0);
+  const [saving, setSaving] = useState(false);
   const canvasRef = useRef<HTMLDivElement>(null);
   const latestRef = useRef<{ x: number; y: number; size: number; rotation: number } | null>(null);
 
@@ -86,7 +87,6 @@ export default function HeavensHeartsPage() {
 
     const mapped = data.map((m: Record<string, unknown>, index: number) => {
       const hasPos = typeof m.x === "number" && typeof m.y === "number";
-      // Spread out memorials that have no saved position in a grid pattern
       const col = index % 3;
       const row = Math.floor(index / 3);
       const x = hasPos ? (m.x as number) : 15 + col * 30 + Math.random() * 8;
@@ -106,7 +106,6 @@ export default function HeavensHeartsPage() {
 
     setMemorials(mapped);
 
-    // Persist spread-out positions for memorials that had none
     for (const { id, x, y } of toSave) {
       await supabase.from("memorials").update({ x, y }).eq("id", id);
     }
@@ -148,6 +147,25 @@ export default function HeavensHeartsPage() {
   async function handleRemove(id: string) {
     await supabase.from("memorials").delete().eq("id", id);
     setMemorials((prev) => prev.filter((m) => m.id !== id));
+  }
+
+  async function handleSaveImage() {
+    if (!canvasRef.current || saving) return;
+    setSaving(true);
+    try {
+      const html2canvas = (await import("html2canvas")).default;
+      const canvas = await html2canvas(canvasRef.current, {
+        useCORS: true,
+        backgroundColor: "#fff5f7",
+        scale: 2,
+      });
+      const link = document.createElement("a");
+      link.download = "heavens-hearts-memorial.png";
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    } finally {
+      setSaving(false);
+    }
   }
 
   function handleMouseDown(e: React.MouseEvent, id: string, action: "drag" | "resize" | "rotate") {
@@ -258,73 +276,77 @@ export default function HeavensHeartsPage() {
 
   return (
     <SubscriptionGuard>
+      <style dangerouslySetInnerHTML={{ __html: `
+        @media print {
+          .hh-no-print { display: none !important; }
+          .hh-print-list { display: block !important; }
+          body { background: white !important; }
+          .hh-canvas { min-height: auto !important; }
+        }
+        .hh-print-list { display: none; }
+      `}} />
       <div
         className="min-h-screen bg-cover bg-center bg-fixed relative"
-        style={{
-          backgroundImage: `url('${backgrounds[bgIndex].url}')`,
-        }}
+        style={{ backgroundImage: `url('${backgrounds[bgIndex].url}')` }}
       >
         <div className="absolute inset-0 bg-white/30 backdrop-blur-[1px]" />
 
         <div className="relative z-10">
-          <header className="py-6 px-6">
-            <div className="max-w-5xl mx-auto">
-              <div className="flex items-center justify-between mb-4">
-                <Link href="/dashboard" className="text-rose-800 text-sm hover:text-rose-600">← Dashboard</Link>
-                {/* Background picker */}
-                <div className="flex items-center gap-2">
-                  <span className="text-rose-800/60 text-xs mr-1">Scene</span>
-                  {backgrounds.map((bg, i) => (
-                    <button
-                      key={i}
-                      onClick={() => setBgIndex(i)}
-                      title={bg.label}
-                      className={`w-7 h-7 rounded-full border-2 bg-cover bg-center transition ${bgIndex === i ? "border-rose-600 scale-110 shadow-lg" : "border-white/60 hover:border-rose-400"}`}
-                      style={{ backgroundImage: `url('${bg.url}')` }}
-                    />
-                  ))}
-                </div>
-              </div>
+          {/* Compact header */}
+          <header className="hh-no-print py-3 px-4">
+            <div className="max-w-5xl mx-auto flex items-center justify-between gap-3">
+              <Link href="/dashboard" className="text-rose-800 text-sm hover:text-rose-600 shrink-0">← Dashboard</Link>
+
               <h1
-                className="text-4xl font-bold text-rose-900 mb-2"
+                className="text-xl font-bold text-rose-900 shrink-0"
                 style={{ fontFamily: fontFamily("Playfair Display"), textShadow: "0 1px 4px rgba(255,255,255,0.8)" }}
               >
                 Heaven&apos;s Hearts
               </h1>
-              <p className="text-rose-800" style={{ textShadow: "0 1px 2px rgba(255,255,255,0.6)" }}>
-                A sacred space to honor and remember those who&apos;ve gone before us
-              </p>
+
+              <div className="flex items-center gap-2">
+                {/* Scene picker */}
+                {backgrounds.map((bg, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setBgIndex(i)}
+                    title={bg.label}
+                    className={`w-6 h-6 rounded-full border-2 bg-cover bg-center transition ${bgIndex === i ? "border-rose-600 scale-110 shadow-lg" : "border-white/60 hover:border-rose-400"}`}
+                    style={{ backgroundImage: `url('${bg.url}')` }}
+                  />
+                ))}
+                <div className="w-px h-4 bg-rose-300/50 mx-1" />
+                {/* Save / Share / Print */}
+                <button
+                  onClick={handleSaveImage}
+                  disabled={saving || memorials.length === 0}
+                  title="Save as image"
+                  className="text-rose-800 hover:text-rose-600 text-sm px-1.5 py-1 rounded hover:bg-white/40 transition disabled:opacity-40"
+                >
+                  {saving ? "..." : "💾"}
+                </button>
+                <ShareButton
+                  title="Heaven's Hearts"
+                  text="I created a memorial wall for my loved ones on Guiding Grace."
+                  url="https://guidinggrace.app/heavens-hearts"
+                  label="↑"
+                  className="text-rose-800 hover:text-rose-600 text-sm px-1.5 py-1 rounded hover:bg-white/40 transition"
+                />
+                <button
+                  onClick={() => window.print()}
+                  title="Print"
+                  className="text-rose-800 hover:text-rose-600 text-sm px-1.5 py-1 rounded hover:bg-white/40 transition"
+                >
+                  🖨️
+                </button>
+              </div>
             </div>
           </header>
 
-          <div className="max-w-5xl mx-auto px-6 pb-12">
-            {/* Instructions */}
-            <div className="mb-6">
-              <button
-                onClick={() => setIsInstructionsOpen((o) => !o)}
-                className="w-full p-5 flex items-center justify-between hover:bg-white/40 transition rounded-lg backdrop-blur-sm"
-              >
-                <div className="flex items-center gap-3">
-                  <span className="text-3xl">💜</span>
-                  <h2 className="text-xl font-semibold text-rose-900" style={{ fontFamily: fontFamily("Playfair Display"), textShadow: "0 1px 3px rgba(255,255,255,0.8)" }}>
-                    Create Your Memorial Wall
-                  </h2>
-                </div>
-                <span className="text-rose-700">{isInstructionsOpen ? "▲" : "▼"}</span>
-              </button>
-              {isInstructionsOpen && (
-                <div className="px-5 py-3 bg-white/40 backdrop-blur-sm rounded-b-lg">
-                  <p className="text-rose-900 leading-relaxed ml-12 text-sm" style={{ textShadow: "0 1px 2px rgba(255,255,255,0.6)" }}>
-                    Add the names of loved ones who are with the Lord. Customize each name with colors and fonts.
-                    Click a name on the canvas to drag, resize (blue handle), or rotate (purple handle) it.
-                  </p>
-                </div>
-              )}
-            </div>
-
+          <div className="max-w-5xl mx-auto px-4 pb-12">
             {/* Add Button */}
             {!isAdding && (
-              <div className="text-center mb-10">
+              <div className="hh-no-print text-center mb-6">
                 <button
                   onClick={() => setIsAdding(true)}
                   className="px-8 py-3 text-base bg-white/90 hover:bg-white text-rose-900 shadow-xl backdrop-blur-sm font-semibold rounded-xl"
@@ -336,7 +358,7 @@ export default function HeavensHeartsPage() {
 
             {/* Add Form */}
             {isAdding && (
-              <div className="p-7 mb-10 bg-white/90 backdrop-blur-sm border border-white/60 shadow-xl rounded-2xl">
+              <div className="hh-no-print p-7 mb-6 bg-white/90 backdrop-blur-sm border border-white/60 shadow-xl rounded-2xl">
                 <h3 className="text-xl font-semibold text-rose-900 mb-5" style={{ fontFamily: fontFamily("Playfair Display") }}>
                   Add to Heaven&apos;s Hearts
                 </h3>
@@ -415,20 +437,23 @@ export default function HeavensHeartsPage() {
             {/* Canvas Wall */}
             {memorials.length > 0 ? (
               <div>
-                <h2
-                  className="text-3xl font-bold text-rose-900 mb-4 text-center"
-                  style={{ fontFamily: fontFamily("Playfair Display"), textShadow: "0 1px 4px rgba(255,255,255,0.8)" }}
-                >
-                  In Loving Memory
-                </h2>
-                <p className="text-center text-rose-700 mb-4 text-xs" style={{ textShadow: "0 1px 2px rgba(255,255,255,0.6)" }}>
-                  Click a name to select · Drag to move · Blue handle to resize · Purple handle to rotate
-                </p>
+                {/* Print-only title */}
+                <div className="hh-print-list">
+                  <h2 style={{ fontFamily: fontFamily("Playfair Display"), fontSize: 28, color: "#881337", marginBottom: 8 }}>
+                    Heaven&apos;s Hearts — In Loving Memory
+                  </h2>
+                  <p style={{ color: "#9f1239", marginBottom: 16, fontSize: 14 }}>{new Date().toLocaleDateString()}</p>
+                  {memorials.map(m => (
+                    <p key={m.id} style={{ fontFamily: fontFamily(m.font_style), color: m.color, fontSize: 24, marginBottom: 8 }}>
+                      💜 {m.name}
+                    </p>
+                  ))}
+                </div>
 
                 <div
                   ref={canvasRef}
                   onClick={() => setSelectedId(null)}
-                  className="relative border-2 border-rose-300/50 rounded-2xl bg-white/10 backdrop-blur-sm overflow-hidden"
+                  className="hh-canvas relative border-2 border-rose-300/50 rounded-2xl bg-white/10 backdrop-blur-sm overflow-hidden"
                   style={{ minHeight: 600, touchAction: isDragging || isResizing || isRotating ? "none" : "auto" }}
                 >
                   {memorials.map((m) => {
@@ -458,7 +483,6 @@ export default function HeavensHeartsPage() {
 
                         {sel && (
                           <>
-                            {/* Delete */}
                             <button
                               onClick={(e) => { e.stopPropagation(); handleRemove(m.id); }}
                               className="absolute -top-8 right-0 w-8 h-8 bg-white/95 hover:bg-white rounded-full flex items-center justify-center shadow-lg z-10"
@@ -467,7 +491,6 @@ export default function HeavensHeartsPage() {
                               🗑
                             </button>
 
-                            {/* Resize handle */}
                             <div
                               onMouseDown={(e) => { e.stopPropagation(); handleMouseDown(e, m.id, "resize"); }}
                               onTouchStart={(e) => { e.stopPropagation(); handleTouchStart(e, m.id, "resize"); }}
@@ -477,7 +500,6 @@ export default function HeavensHeartsPage() {
                               <div className="w-3 h-3 border-2 border-white rounded-sm" />
                             </div>
 
-                            {/* Rotate handle */}
                             <div
                               onMouseDown={(e) => { e.stopPropagation(); handleMouseDown(e, m.id, "rotate"); }}
                               onTouchStart={(e) => { e.stopPropagation(); handleTouchStart(e, m.id, "rotate"); }}
@@ -487,7 +509,6 @@ export default function HeavensHeartsPage() {
                               ↻
                             </div>
 
-                            {/* Selection outline */}
                             <div
                               className="absolute inset-0 border-2 border-dashed border-rose-400 rounded pointer-events-none"
                               style={{ transform: `rotate(-${m.rotation}deg)`, margin: "-8px" }}
