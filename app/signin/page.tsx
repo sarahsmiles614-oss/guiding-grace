@@ -26,7 +26,7 @@ export default function SignInPage() {
     <div
       className="min-h-screen flex flex-col items-center justify-center bg-cover bg-center"
       style={{
-        backgroundImage: "url('https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/terrianneallen-sunset-3916244.jpg')",
+        backgroundImage: "url('https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/world-face-cCG4w5NaH4I-unsplash.jpg')",
       }}
     >
       <div className="absolute inset-0 bg-black/50" />

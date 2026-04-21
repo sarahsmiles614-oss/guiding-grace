@@ -49,6 +49,10 @@ export default function GraceChallengeContent() {
   const [winner, setWinner] = useState<any>(null);
   const [generating, setGenerating] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editText, setEditText] = useState("");
+  const [editCompleted, setEditCompleted] = useState<boolean | null>(null);
+  const [editSubmitting, setEditSubmitting] = useState(false);
 
   const loadChallenge = useCallback(async () => {
     const today = getToday();
@@ -231,6 +235,29 @@ export default function GraceChallengeContent() {
     setGenerating(false);
   }
 
+  function startEditing() {
+    if (!userPost) return;
+    setEditText(userPost.post_text);
+    setEditCompleted(userPost.completed);
+    setIsEditing(true);
+  }
+
+  async function handleEditSubmit() {
+    if (!editText.trim() || editCompleted === null || !userPost || !challenge) return;
+    setEditSubmitting(true);
+    // Update the post text/completed
+    await supabase.from("grace_challenge_posts")
+      .update({ post_text: editText, completed: editCompleted })
+      .eq("id", userPost.id);
+    // Delete all votes received on this post (forfeit existing votes)
+    await supabase.from("grace_challenge_hearts")
+      .delete()
+      .eq("post_id", userPost.id);
+    setIsEditing(false);
+    await loadPosts(challenge.id);
+    setEditSubmitting(false);
+  }
+
   const heartsLeft = HEARTS_PER_DAY - givenHearts.length;
   const usedAllHearts = givenHearts.length >= HEARTS_PER_DAY;
 
@@ -337,7 +364,52 @@ export default function GraceChallengeContent() {
                     </button>
                   </div>
                 ) : userPost ? (
-                  <p className="text-white/50 text-sm text-center mb-6">You shared your response today 💛</p>
+                  <div className="bg-white/10 backdrop-blur rounded-2xl p-5 mb-8 border border-white/20">
+                    {isEditing ? (
+                      <>
+                        <p className="text-yellow-300 text-xs mb-3 font-medium">⚠️ Editing will forfeit all votes you've received so far.</p>
+                        <div className="flex gap-3 mb-4">
+                          <button onClick={() => setEditCompleted(true)}
+                            className={`flex-1 py-2 rounded-xl text-sm font-medium border transition ${editCompleted === true ? "bg-white/30 text-white border-white/50" : "border-white/20 text-white/60"}`}>
+                            ✅ I did it
+                          </button>
+                          <button onClick={() => setEditCompleted(false)}
+                            className={`flex-1 py-2 rounded-xl text-sm font-medium border transition ${editCompleted === false ? "bg-white/30 text-white border-white/50" : "border-white/20 text-white/60"}`}>
+                            🌱 I chose not to
+                          </button>
+                        </div>
+                        <textarea
+                          value={editText} onChange={e => setEditText(e.target.value)}
+                          className="w-full bg-transparent border border-white/30 rounded-xl px-4 py-3 text-white placeholder-white/40 text-sm resize-none focus:outline-none focus:border-white/60 mb-3"
+                          rows={4}
+                        />
+                        <div className="flex gap-3">
+                          <button onClick={() => setIsEditing(false)}
+                            className="flex-1 border border-white/20 text-white/60 font-semibold py-2 rounded-xl text-sm transition hover:bg-white/10">
+                            Cancel
+                          </button>
+                          <button onClick={handleEditSubmit} disabled={!editText.trim() || editCompleted === null || editSubmitting}
+                            className="flex-1 bg-yellow-400/30 hover:bg-yellow-400/40 border border-yellow-400/40 text-white font-semibold py-2 rounded-xl text-sm transition disabled:opacity-40">
+                            {editSubmitting ? "Saving..." : "Save & Forfeit Votes"}
+                          </button>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="flex items-start justify-between mb-2">
+                          <p className="text-white/50 text-xs">{userPost.completed ? "✅ You did it" : "🌱 You chose not to"}</p>
+                          {!isAfterDeadline() && (
+                            <button onClick={startEditing}
+                              className="text-white/40 hover:text-white/70 text-xs border border-white/20 px-3 py-1 rounded-lg transition">
+                              Edit
+                            </button>
+                          )}
+                        </div>
+                        <p className="text-white/80 text-sm leading-relaxed">{userPost.post_text}</p>
+                        <p className="text-white/30 text-xs mt-3">Your response is live 💛</p>
+                      </>
+                    )}
+                  </div>
                 ) : null}
 
                 {/* Community responses */}

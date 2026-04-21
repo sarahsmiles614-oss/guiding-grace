@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="min-h-screen flex flex-col" style={{ backgroundImage: "url('https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/terrianneallen-sunset-3916244.jpg')", backgroundSize: "cover", backgroundPosition: "center" }}>
+    <div className="min-h-screen flex flex-col" style={{ backgroundImage: "url('https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/hoai-thu-pt-nv4FFbP8IuE-unsplash.jpg')", backgroundSize: "cover", backgroundPosition: "center" }}>
       <div className="min-h-screen flex flex-col bg-black/40">
 
         {/* Nav */}

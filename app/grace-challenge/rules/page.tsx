@@ -30,6 +30,11 @@ const rules = [
     body: "You must give all 3 of your hearts to receive any votes others gave you. If you don't use all 3, your received votes are forfeited. You can still vote even if you didn't submit a response.",
   },
   {
+    icon: "✏️",
+    title: "Editing Forfeits Your Votes",
+    body: "You can edit your entry at any time before the 7am EST deadline — but doing so will erase all votes you've received so far. Your entry re-enters the running and any new votes will count fresh.",
+  },
+  {
     icon: "🔒",
     title: "Anonymous Until 7am EST",
     body: "Voting is completely anonymous. You can't see how many hearts your entry has received until the deadline. Results are revealed every morning at 7am Eastern time.",
