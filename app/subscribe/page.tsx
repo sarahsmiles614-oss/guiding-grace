@@ -10,7 +10,6 @@ export default function SubscribePage() {
   const router = useRouter();
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [checking, setChecking] = useState(false);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
@@ -21,29 +20,11 @@ export default function SubscribePage() {
 
   async function handleCheckout(mode: "trial" | "monthly" | "yearly") {
     if (!user) {
-      // Send them to sign in first, then come back to subscribe
       localStorage.setItem("subscribe_intent", mode);
       router.push("/signin");
       return;
     }
-    setChecking(true);
-    try {
-      const res = await fetch("/api/create-checkout-session", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId: user.id, email: user.email, mode }),
-      });
-      const data = await res.json();
-      if (data.url) {
-        window.location.href = data.url;
-      } else {
-        alert("Could not start checkout. Please try again.");
-        setChecking(false);
-      }
-    } catch {
-      alert("Something went wrong. Please try again.");
-      setChecking(false);
-    }
+    router.push(`/checkout?mode=${mode}`);
   }
 
   // After returning from sign-in, auto-resume checkout
@@ -52,7 +33,7 @@ export default function SubscribePage() {
       const intent = localStorage.getItem("subscribe_intent");
       if (intent) {
         localStorage.removeItem("subscribe_intent");
-        handleCheckout(intent as "trial" | "monthly" | "yearly");
+        router.push(`/checkout?mode=${intent}`);
       }
     }
   }, [loading, user]);
@@ -70,17 +51,17 @@ export default function SubscribePage() {
             ))}
           </div>
 
-          <button onClick={() => handleCheckout("trial")} disabled={checking} className="w-full bg-white/20 hover:bg-white/30 backdrop-blur border border-white/40 text-white font-semibold py-4 rounded-xl transition disabled:opacity-60 text-lg mb-3">
-            {checking ? "Please wait..." : "✨ Start Free 3-Day Trial"}
+          <button onClick={() => handleCheckout("trial")} className="w-full bg-white/20 hover:bg-white/30 backdrop-blur border border-white/40 text-white font-semibold py-4 rounded-xl transition text-lg mb-3">
+            ✨ Start Free 3-Day Trial
           </button>
           <p className="text-white/40 text-xs mb-6">No credit card required · Cancel anytime</p>
 
           <div className="grid grid-cols-2 gap-3 mb-6">
-            <button onClick={() => handleCheckout("monthly")} disabled={checking} className="bg-white/10 hover:bg-white/20 border border-white/30 text-white font-medium py-3 rounded-xl transition disabled:opacity-60">
+            <button onClick={() => handleCheckout("monthly")} className="bg-white/10 hover:bg-white/20 border border-white/30 text-white font-medium py-3 rounded-xl transition">
               <p className="text-lg font-bold">$2.99</p>
               <p className="text-xs text-white/60">per month</p>
             </button>
-            <button onClick={() => handleCheckout("yearly")} disabled={checking} className="bg-white/10 hover:bg-white/20 border border-white/30 text-white font-medium py-3 rounded-xl transition disabled:opacity-60">
+            <button onClick={() => handleCheckout("yearly")} className="bg-white/10 hover:bg-white/20 border border-white/30 text-white font-medium py-3 rounded-xl transition">
               <p className="text-lg font-bold">$29.99</p>
               <p className="text-xs text-white/60">per year · save 16%</p>
             </button>
