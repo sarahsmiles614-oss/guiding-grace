@@ -297,10 +297,6 @@ export default function GraceChallengeContent() {
               </div>
             </div>
 
-            <div className="flex justify-center mb-6">
-              <img src="https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/image.jpg" alt="Grace Challenge" className="w-24 h-24 object-cover rounded-full shadow-lg border-2 border-white/30" />
-            </div>
-
             {loading ? (
               <p className="text-white/60 text-center py-12">Loading...</p>
             ) : !challenge ? (
