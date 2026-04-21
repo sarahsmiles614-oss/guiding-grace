@@ -121,7 +121,7 @@ function CheckoutContent() {
   useEffect(() => {
     async function init() {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) { router.push("/signin"); return; }
+      if (!user) { router.push("/"); return; }
 
       const res = await fetch("/api/create-subscription", {
         method: "POST",

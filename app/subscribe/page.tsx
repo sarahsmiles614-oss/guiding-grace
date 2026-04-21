@@ -21,7 +21,7 @@ export default function SubscribePage() {
   async function handleCheckout(mode: "trial" | "monthly" | "yearly") {
     if (!user) {
       localStorage.setItem("subscribe_intent", mode);
-      router.push("/signin");
+      router.push("/");
       return;
     }
     router.push(`/checkout?mode=${mode}`);
@@ -67,7 +67,7 @@ export default function SubscribePage() {
             </button>
           </div>
 
-          <p className="text-white/40 text-xs">Already have an account? <a href="/signin" className="text-white/70 underline">Sign in</a></p>
+          <p className="text-white/40 text-xs">Already have an account? <a href="/" className="text-white/70 underline">Sign in</a></p>
         </div>
       </main>
     </PageBackground>
