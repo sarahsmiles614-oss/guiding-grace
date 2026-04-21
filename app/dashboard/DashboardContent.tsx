@@ -54,53 +54,51 @@ export default function DashboardContent() {
 
   return (
     <PageBackground url="https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/julius_silver-lago-di-limides-3025780_1920.jpg">
-      <main className="flex-1 p-6">
-        <div className="max-w-2xl mx-auto">
-          <div className="flex justify-between items-center mb-8">
+      <main className="flex-1 p-6 md:p-12">
+        <div className="max-w-5xl mx-auto">
+          <div className="flex justify-between items-center mb-10">
             <h1 className="text-2xl font-bold text-white" style={{ textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>Guiding Grace</h1>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-6">
               <Link href="/account" className="text-white/70 hover:text-white text-sm">Account</Link>
               <button onClick={() => signOut().then(() => router.push("/"))} className="text-sm text-white/70 hover:text-white">Sign out</button>
             </div>
           </div>
 
           {user && (
-            <p className="text-white/80 mb-8" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
+            <p className="text-white/80 mb-10 text-lg" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
               Welcome, {user.user_metadata?.full_name?.split(" ")[0] || "friend"} 🌿
             </p>
           )}
 
           {/* Expired / no subscription banner */}
           {(subStatus === "expired" || subStatus === "none") && (
-            <div className="mb-8 rounded-2xl overflow-hidden bg-black/50 backdrop-blur-sm border border-white/20 p-6 text-center">
-              <p className="text-white text-lg font-semibold mb-1" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+            <div className="mb-10 rounded-2xl bg-black/50 backdrop-blur-sm border border-white/20 p-8 text-center max-w-lg mx-auto">
+              <p className="text-white text-xl font-semibold mb-2" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
                 {subStatus === "none" ? "No subscription found" : "Your trial has ended"}
               </p>
-              <p className="text-white/60 text-sm mb-5">
+              <p className="text-white/60 text-sm mb-6">
                 Subscribe to continue walking in grace and access all features.
               </p>
-              <div className="flex flex-col gap-3 max-w-xs mx-auto">
-                <Link href="/subscribe">
-                  <button className="w-full bg-white/20 hover:bg-white/30 border border-white/40 text-white font-semibold py-3 rounded-xl backdrop-blur-sm transition">
-                    ✨ Subscribe Now
-                  </button>
-                </Link>
-              </div>
+              <Link href="/subscribe">
+                <button className="bg-white/20 hover:bg-white/30 border border-white/40 text-white font-semibold py-3 px-8 rounded-xl backdrop-blur-sm transition">
+                  ✨ Subscribe Now
+                </button>
+              </Link>
             </div>
           )}
 
-          {/* Feature grid — dimmed and non-clickable if no active sub */}
-          <div className={`grid grid-cols-2 gap-6 sm:grid-cols-3 ${subStatus !== "active" ? "opacity-40 pointer-events-none select-none" : ""}`}>
+          {/* Feature grid */}
+          <div className={`grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8 md:gap-10 ${subStatus !== "active" ? "opacity-40 pointer-events-none select-none" : ""}`}>
             {features.map((f) => (
-              <Link key={f.href} href={f.href} className="flex flex-col items-center text-center hover:opacity-80 transition">
-                <span className="text-4xl mb-2">{f.icon}</span>
-                <span className="text-sm font-medium text-white" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>{f.label}</span>
+              <Link key={f.href} href={f.href} className="flex flex-col items-center text-center hover:opacity-80 transition group">
+                <span className="text-5xl mb-3 group-hover:scale-110 transition-transform">{f.icon}</span>
+                <span className="text-sm font-medium text-white leading-tight" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>{f.label}</span>
               </Link>
             ))}
           </div>
 
           {/* Share the app */}
-          <div className="mt-10 text-center">
+          <div className="mt-14 text-center">
             <p className="text-white/40 text-xs mb-3">Know someone who could use this?</p>
             <ShareButton
               title="Guiding Grace"
