@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import PageBackground from "@/components/PageBackground";
 
-const BG = "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/jensphotography-beach-7239311_1920.jpg";
+const BG = "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/daniel-gimbel-F194iNxMrDk-unsplash.jpg";
 
 export default function SubscribePage() {
   const router = useRouter();
