@@ -3,10 +3,20 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import PageBackground from "@/components/PageBackground";
+import { supabase } from "@/lib/supabase";
 
 export default function SuccessPage() {
   const router = useRouter();
   useEffect(() => {
+    // Kick off today's content generation in the background for the new user
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        fetch("/api/ensure-today", {
+          method: "POST",
+          headers: { Authorization: `Bearer ${session.access_token}` },
+        });
+      }
+    });
     const timer = setTimeout(() => router.push("/dashboard"), 5000);
     return () => clearTimeout(timer);
   }, [router]);

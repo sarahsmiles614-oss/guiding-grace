@@ -23,14 +23,35 @@ export default function DevotionsPage() {
   const [teaser, setTeaser] = useState("");
   const [teaserLoading, setTeaserLoading] = useState(false);
 
+  async function ensureToday() {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) return;
+    await fetch("/api/ensure-today", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${session.access_token}` },
+    });
+  }
+
   useEffect(() => {
     async function load() {
       const todayStr = getToday();
-      const { data } = await supabase
+      let { data } = await supabase
         .from("daily_devotions")
         .select("*")
         .eq("devotion_date", todayStr)
         .single();
+
+      // If no content yet, generate it then re-fetch
+      if (!data) {
+        await ensureToday();
+        const result = await supabase
+          .from("daily_devotions")
+          .select("*")
+          .eq("devotion_date", todayStr)
+          .single();
+        data = result.data;
+      }
+
       if (data) {
         setToday(data);
         fetchTeaser(data);

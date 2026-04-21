@@ -56,7 +56,21 @@ export default function GraceChallengeContent() {
 
   const loadChallenge = useCallback(async () => {
     const today = getToday();
-    const { data: c } = await supabase.from("grace_challenges").select("*").eq("challenge_date", today).single();
+    let { data: c } = await supabase.from("grace_challenges").select("*").eq("challenge_date", today).single();
+
+    // If no challenge yet, try generating then re-fetch
+    if (!c) {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        await fetch("/api/ensure-today", {
+          method: "POST",
+          headers: { Authorization: `Bearer ${session.access_token}` },
+        });
+        const result = await supabase.from("grace_challenges").select("*").eq("challenge_date", today).single();
+        c = result.data;
+      }
+    }
+
     if (c) {
       setChallenge(c);
       await loadPosts(c.id);
