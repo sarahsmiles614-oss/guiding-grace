@@ -19,10 +19,16 @@ export default function GraceChallengeContent() {
   const [revealed, setRevealed] = useState(false);
   const [heartBudget, setHeartBudget] = useState(5);
   const [totalHearts, setTotalHearts] = useState<Record<string, number>>({});
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [generating, setGenerating] = useState(false);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
-      if (user) { setUserId(user.id); setUserName(user.user_metadata?.full_name || "Friend"); }      
+      if (user) {
+        setUserId(user.id);
+        setUserName(user.user_metadata?.full_name || "Friend");
+        if (user.email === "sarahsmiles614@gmail.com") setIsAdmin(true);
+      }
     });
     loadChallenge();
   }, []);
@@ -92,6 +98,13 @@ export default function GraceChallengeContent() {
     }
   }
 
+  async function handleGenerate() {
+    setGenerating(true);
+    await fetch("/api/admin/generate-today", { method: "POST" });
+    await loadChallenge();
+    setGenerating(false);
+  }
+
   const heartsRemaining = heartBudget - givenHearts.length;
   const allHeartsUsed = givenHearts.length === heartBudget && heartBudget > 0;
   const sortedPosts = revealed ? [...posts].sort((a, b) => (totalHearts[b.id] || 0) - (totalHearts[a.id] || 0)) : posts;
@@ -112,7 +125,18 @@ export default function GraceChallengeContent() {
             </div>
 
             {!challenge ? (
-              <p className="text-white/60 text-center py-12">No challenge posted yet today. Check back soon. 🌅</p>
+              <div className="text-center py-12">
+                <p className="text-white/60 mb-4">No challenge posted yet today. Check back soon. 🌅</p>
+                {isAdmin && (
+                  <button
+                    onClick={handleGenerate}
+                    disabled={generating}
+                    className="bg-white/20 hover:bg-white/30 border border-white/30 text-white text-sm px-5 py-2 rounded-xl backdrop-blur-sm disabled:opacity-50"
+                  >
+                    {generating ? "Generating..." : "⚡ Generate Today's Challenge"}
+                  </button>
+                )}
+              </div>
             ) : (
               <>
                 <p className="text-white/50 text-xs uppercase tracking-widest mb-2">Today's Challenge</p>

@@ -1,17 +1,26 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
-const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
+const ADMIN_EMAILS = ["sarahsmiles614@gmail.com"];
 
-export async function GET(req: Request) {
-  const authHeader = req.headers.get("authorization");
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
+
+export async function POST() {
+  // Verify admin via Supabase auth
+  const anonClient = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
+  const { data: { user } } = await anonClient.auth.getUser();
+  if (!user || !ADMIN_EMAILS.includes(user.email ?? "")) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   const today = new Date().toISOString().split("T")[0];
 
-  // Check if BOTH already exist today — only skip if both are present
   const { data: existingDevotion } = await supabase.from("daily_devotions").select("id").eq("devotion_date", today).single();
   const { data: existingChallenge } = await supabase.from("grace_challenges").select("id").eq("challenge_date", today).single();
   if (existingDevotion && existingChallenge) {
@@ -19,9 +28,9 @@ export async function GET(req: Request) {
   }
 
   const date = new Date();
+  const fullDate = date.toLocaleString("en-US", { month: "long", day: "numeric", year: "numeric" });
   const month = date.toLocaleString("en-US", { month: "long" });
   const day = date.getDate();
-  const fullDate = date.toLocaleString("en-US", { month: "long", day: "numeric", year: "numeric" });
 
   const response = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
@@ -56,13 +65,9 @@ Return ONLY a JSON object with these exact fields, no markdown, no preamble:
   if (!text) return NextResponse.json({ error: "No response from Claude", raw: data }, { status: 500 });
 
   let parsed;
-  try {
-    parsed = JSON.parse(text);
-  } catch {
-    return NextResponse.json({ error: "Failed to parse response", raw: text }, { status: 500 });
-  }
+  try { parsed = JSON.parse(text); }
+  catch { return NextResponse.json({ error: "Failed to parse", raw: text }, { status: 500 }); }
 
-  // Insert whichever is missing
   if (!existingDevotion) {
     await supabase.from("daily_devotions").insert({
       devotion_date: today,
@@ -80,5 +85,5 @@ Return ONLY a JSON object with these exact fields, no markdown, no preamble:
     });
   }
 
-  return NextResponse.json({ message: "Generated successfully", devotion: parsed.title, challenge: parsed.challenge });
+  return NextResponse.json({ message: "Generated", challenge: parsed.challenge });
 }
