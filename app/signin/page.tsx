@@ -2,12 +2,20 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
+import Link from "next/link";
+
+type Mode = "google" | "email-signin" | "email-signup";
 
 export default function SignInPage() {
   const router = useRouter();
+  const [mode, setMode] = useState<Mode>("google");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
-  // If already signed in, go straight to dashboard
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
       if (user) router.push("/dashboard");
@@ -16,10 +24,45 @@ export default function SignInPage() {
 
   async function handleGoogleSignIn() {
     setLoading(true);
+    setError("");
     await supabase.auth.signInWithOAuth({
       provider: "google",
       options: { redirectTo: `${window.location.origin}/auth/callback` },
     });
+  }
+
+  async function handleEmailSignIn() {
+    if (!email || !password) return;
+    setLoading(true);
+    setError("");
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) {
+      setError(error.message);
+      setLoading(false);
+    } else {
+      router.push("/dashboard");
+    }
+  }
+
+  async function handleEmailSignUp() {
+    if (!email || !password || !name) return;
+    setLoading(true);
+    setError("");
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: { full_name: name },
+        emailRedirectTo: `${window.location.origin}/auth/callback`,
+      },
+    });
+    if (error) {
+      setError(error.message);
+      setLoading(false);
+    } else {
+      setSuccess("Check your email for a confirmation link to finish signing up.");
+      setLoading(false);
+    }
   }
 
   return (
@@ -38,26 +81,126 @@ export default function SignInPage() {
         >
           Guiding Grace
         </h1>
-        <p className="text-white/60 mb-10 text-sm">Welcome back</p>
+        <p className="text-white/60 mb-8 text-sm">Welcome back</p>
 
-        <button
-          onClick={handleGoogleSignIn}
-          disabled={loading}
-          className="w-full flex items-center justify-center gap-3 bg-white hover:bg-white/90 text-gray-800 font-semibold py-4 rounded-xl shadow-lg transition disabled:opacity-60"
-        >
-          <svg width="20" height="20" viewBox="0 0 48 48">
-            <path fill="#4285F4" d="M47.5 24.5c0-1.6-.1-3.2-.4-4.7H24v9h13.1c-.6 3-2.3 5.5-4.9 7.2v6h7.9c4.6-4.2 7.4-10.5 7.4-17.5z"/>
-            <path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.9-6c-2.1 1.4-4.8 2.3-8 2.3-6.1 0-11.3-4.1-13.2-9.7H2.7v6.2C6.7 42.9 14.8 48 24 48z"/>
-            <path fill="#FBBC05" d="M10.8 28.8c-.5-1.4-.7-2.8-.7-4.3s.3-3 .7-4.3v-6.2H2.7C1 17.4 0 20.6 0 24s1 6.6 2.7 9l8.1-4.2z"/>
-            <path fill="#EA4335" d="M24 9.5c3.4 0 6.5 1.2 8.9 3.5l6.7-6.7C35.9 2.4 30.5 0 24 0 14.8 0 6.7 5.1 2.7 12.8l8.1 4.2C12.7 13.6 17.9 9.5 24 9.5z"/>
-          </svg>
-          {loading ? "Signing in..." : "Continue with Google"}
-        </button>
+        {/* Mode tabs */}
+        <div className="flex bg-white/10 rounded-xl p-1 mb-6 border border-white/20">
+          <button
+            onClick={() => { setMode("google"); setError(""); setSuccess(""); }}
+            className={`flex-1 py-2 rounded-lg text-sm font-medium transition ${mode === "google" ? "bg-white/20 text-white" : "text-white/50 hover:text-white/80"}`}
+          >
+            Google
+          </button>
+          <button
+            onClick={() => { setMode("email-signin"); setError(""); setSuccess(""); }}
+            className={`flex-1 py-2 rounded-lg text-sm font-medium transition ${mode === "email-signin" ? "bg-white/20 text-white" : "text-white/50 hover:text-white/80"}`}
+          >
+            Sign In
+          </button>
+          <button
+            onClick={() => { setMode("email-signup"); setError(""); setSuccess(""); }}
+            className={`flex-1 py-2 rounded-lg text-sm font-medium transition ${mode === "email-signup" ? "bg-white/20 text-white" : "text-white/50 hover:text-white/80"}`}
+          >
+            Sign Up
+          </button>
+        </div>
 
-        <p className="text-white/40 text-xs mt-8">
-          Don&apos;t have an account?{" "}
-          <a href="/subscribe" className="text-white/70 underline">Start free trial</a>
-        </p>
+        {error && (
+          <p className="text-red-300 text-sm mb-4 bg-red-900/30 border border-red-400/30 rounded-xl px-4 py-2">{error}</p>
+        )}
+        {success && (
+          <p className="text-green-300 text-sm mb-4 bg-green-900/30 border border-green-400/30 rounded-xl px-4 py-2">{success}</p>
+        )}
+
+        {/* Google */}
+        {mode === "google" && (
+          <button
+            onClick={handleGoogleSignIn}
+            disabled={loading}
+            className="w-full flex items-center justify-center gap-3 bg-white hover:bg-white/90 text-gray-800 font-semibold py-4 rounded-xl shadow-lg transition disabled:opacity-60"
+          >
+            <svg width="20" height="20" viewBox="0 0 48 48">
+              <path fill="#4285F4" d="M47.5 24.5c0-1.6-.1-3.2-.4-4.7H24v9h13.1c-.6 3-2.3 5.5-4.9 7.2v6h7.9c4.6-4.2 7.4-10.5 7.4-17.5z"/>
+              <path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.9-6c-2.1 1.4-4.8 2.3-8 2.3-6.1 0-11.3-4.1-13.2-9.7H2.7v6.2C6.7 42.9 14.8 48 24 48z"/>
+              <path fill="#FBBC05" d="M10.8 28.8c-.5-1.4-.7-2.8-.7-4.3s.3-3 .7-4.3v-6.2H2.7C1 17.4 0 20.6 0 24s1 6.6 2.7 9l8.1-4.2z"/>
+              <path fill="#EA4335" d="M24 9.5c3.4 0 6.5 1.2 8.9 3.5l6.7-6.7C35.9 2.4 30.5 0 24 0 14.8 0 6.7 5.1 2.7 12.8l8.1 4.2C12.7 13.6 17.9 9.5 24 9.5z"/>
+            </svg>
+            {loading ? "Signing in..." : "Continue with Google"}
+          </button>
+        )}
+
+        {/* Email Sign In */}
+        {mode === "email-signin" && (
+          <div className="space-y-3">
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/40 text-sm focus:outline-none focus:border-white/50"
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              onKeyDown={e => e.key === "Enter" && handleEmailSignIn()}
+              className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/40 text-sm focus:outline-none focus:border-white/50"
+            />
+            <button
+              onClick={handleEmailSignIn}
+              disabled={!email || !password || loading}
+              className="w-full bg-white/20 hover:bg-white/30 border border-white/30 text-white font-semibold py-3 rounded-xl transition disabled:opacity-40"
+            >
+              {loading ? "Signing in..." : "Sign In"}
+            </button>
+          </div>
+        )}
+
+        {/* Email Sign Up */}
+        {mode === "email-signup" && (
+          <div className="space-y-3">
+            <input
+              type="text"
+              placeholder="Your name"
+              value={name}
+              onChange={e => setName(e.target.value)}
+              className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/40 text-sm focus:outline-none focus:border-white/50"
+            />
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/40 text-sm focus:outline-none focus:border-white/50"
+            />
+            <input
+              type="password"
+              placeholder="Password (min 6 characters)"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/40 text-sm focus:outline-none focus:border-white/50"
+            />
+            <button
+              onClick={handleEmailSignUp}
+              disabled={!email || !password || !name || loading}
+              className="w-full bg-white/20 hover:bg-white/30 border border-white/30 text-white font-semibold py-3 rounded-xl transition disabled:opacity-40"
+            >
+              {loading ? "Creating account..." : "Create Account"}
+            </button>
+            <p className="text-white/40 text-xs">
+              Already subscribed?{" "}
+              <button onClick={() => setMode("email-signin")} className="text-white/70 underline">Sign in instead</button>
+            </p>
+          </div>
+        )}
+
+        {mode === "google" && (
+          <p className="text-white/40 text-xs mt-8">
+            Don&apos;t have an account?{" "}
+            <Link href="/subscribe" className="text-white/70 underline">Start free trial</Link>
+          </p>
+        )}
       </div>
     </div>
   );
