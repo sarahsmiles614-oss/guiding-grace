@@ -1,15 +1,43 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import SubscriptionGuard from "@/components/SubscriptionGuard";
 import { supabase } from "@/lib/supabase";
 import PageBackground from "@/components/PageBackground";
+
+const HEARTS_PER_DAY = 3;
+
+function isAfterDeadline() {
+  const now = new Date();
+  const nyHour = parseInt(new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/New_York", hour: "numeric", hour12: false,
+  }).format(now));
+  return nyHour >= 7;
+}
+
+function todayEST() {
+  return new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/New_York", year: "numeric", month: "2-digit", day: "2-digit",
+  }).format(new Date()).split("/").reverse().join("-").replace(/(\d+)-(\d+)-(\d+)/, "$1-$3-$2")
+    // reformat MM/DD/YYYY → YYYY-MM-DD
+    .replace(/(\d{2})\/(\d{2})\/(\d{4})/, "$3-$1-$2");
+}
+
+function getToday() {
+  const d = new Date();
+  const ny = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/New_York", year: "numeric", month: "2-digit", day: "2-digit",
+  }).format(d);
+  const [m, day, y] = ny.split("/");
+  return `${y}-${m}-${day}`;
+}
 
 export default function GraceChallengeContent() {
   const [challenge, setChallenge] = useState<any>(null);
   const [posts, setPosts] = useState<any[]>([]);
   const [userId, setUserId] = useState<string | null>(null);
   const [userName, setUserName] = useState("");
+  const [isAdmin, setIsAdmin] = useState(false);
   const [userPost, setUserPost] = useState<any>(null);
   const [response, setResponse] = useState("");
   const [completed, setCompleted] = useState<boolean | null>(null);
@@ -17,10 +45,21 @@ export default function GraceChallengeContent() {
   const [givenHearts, setGivenHearts] = useState<string[]>([]);
   const [favorites, setFavorites] = useState<string[]>([]);
   const [revealed, setRevealed] = useState(false);
-  const [heartBudget, setHeartBudget] = useState(5);
-  const [totalHearts, setTotalHearts] = useState<Record<string, number>>({});
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [allTimeHearts, setAllTimeHearts] = useState<Record<string, number>>({});
+  const [winner, setWinner] = useState<any>(null);
   const [generating, setGenerating] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  const loadChallenge = useCallback(async () => {
+    setRevealed(isAfterDeadline());
+    const today = getToday();
+    const { data: c } = await supabase.from("grace_challenges").select("*").eq("challenge_date", today).single();
+    if (c) {
+      setChallenge(c);
+      await loadPosts(c.id);
+    }
+    setLoading(false);
+  }, []);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
@@ -31,46 +70,110 @@ export default function GraceChallengeContent() {
       }
     });
     loadChallenge();
-  }, []);
-
-  async function loadChallenge() {
-    const now = new Date();
-    setRevealed(now.getHours() >= 6 && now.getMinutes() >= 55);
-    const today = now.toISOString().split("T")[0];
-    const { data: c } = await supabase.from("grace_challenges").select("*").eq("challenge_date", today).single();
-    if (c) { setChallenge(c); await loadPosts(c.id); }
-  }
+  }, [loadChallenge]);
 
   async function loadPosts(challengeId: string) {
     const { data: { user } } = await supabase.auth.getUser();
-    const { data: p } = await supabase.from("grace_challenge_posts").select("*").eq("challenge_id", challengeId).order("created_at", { ascending: false });
-    if (p) {
-      setPosts(p);
-      if (user) {
-        const mine = p.find((x: any) => x.user_id === user.id);
-        if (mine) setUserPost(mine);
-        const { data: hearts } = await supabase.from("grace_challenge_hearts").select("post_id").eq("giver_user_id", user.id).eq("challenge_id", challengeId);
-        if (hearts) setGivenHearts(hearts.map((h: any) => h.post_id));
-        const { data: favs } = await supabase.from("grace_challenge_favorites").select("post_id").eq("user_id", user.id).eq("challenge_id", challengeId);
-        if (favs) setFavorites(favs.map((f: any) => f.post_id));
-        const otherPosts = p.filter((x: any) => x.user_id !== user.id);
-        setHeartBudget(Math.min(5, otherPosts.length));
-        if (revealed) {
-          const counts: Record<string, number> = {};
-          for (const post of p) {
-            const { count } = await supabase.from("grace_challenge_hearts").select("*", { count: "exact", head: true }).eq("post_id", post.id);
-            counts[post.id] = count || 0;
-          }
-          setTotalHearts(counts);
-        }
+    const { data: p } = await supabase
+      .from("grace_challenge_posts")
+      .select("*")
+      .eq("challenge_id", challengeId)
+      .order("created_at", { ascending: false });
+
+    if (!p) return;
+    setPosts(p);
+
+    // Load all-time hearts for displayed users
+    const userIds = [...new Set(p.map((x: any) => x.user_id))];
+    if (userIds.length > 0) {
+      const { data: totals } = await supabase
+        .from("user_heart_totals")
+        .select("user_id, lifetime_hearts")
+        .in("user_id", userIds);
+      if (totals) {
+        const map: Record<string, number> = {};
+        totals.forEach((t: any) => { map[t.user_id] = t.lifetime_hearts; });
+        setAllTimeHearts(map);
       }
     }
+
+    if (user) {
+      const mine = p.find((x: any) => x.user_id === user.id);
+      if (mine) setUserPost(mine);
+
+      const { data: hearts } = await supabase
+        .from("grace_challenge_hearts")
+        .select("post_id")
+        .eq("giver_user_id", user.id)
+        .eq("challenge_id", challengeId);
+      if (hearts) setGivenHearts(hearts.map((h: any) => h.post_id));
+
+      const { data: favs } = await supabase
+        .from("grace_challenge_favorites")
+        .select("post_id")
+        .eq("user_id", user.id)
+        .eq("challenge_id", challengeId);
+      if (favs) setFavorites(favs.map((f: any) => f.post_id));
+    }
+
+    // Calculate winner after deadline
+    if (isAfterDeadline() && p.length > 0) {
+      await calculateWinner(challengeId, p);
+    }
+  }
+
+  async function calculateWinner(challengeId: string, postList: any[]) {
+    // Get all hearts for today
+    const { data: allHearts } = await supabase
+      .from("grace_challenge_hearts")
+      .select("post_id, giver_user_id")
+      .eq("challenge_id", challengeId);
+    if (!allHearts) return;
+
+    // Count hearts given per giver
+    const heartsGivenByUser: Record<string, number> = {};
+    allHearts.forEach((h: any) => {
+      heartsGivenByUser[h.giver_user_id] = (heartsGivenByUser[h.giver_user_id] || 0) + 1;
+    });
+
+    // Number of posts each user could vote on (all posts except their own)
+    // For forfeit: required = min(3, others' post count)
+    const othersCountPerUser: Record<string, number> = {};
+    postList.forEach((post: any) => {
+      othersCountPerUser[post.user_id] = postList.filter((p: any) => p.user_id !== post.user_id).length;
+    });
+
+    // Count valid hearts per post (only from givers who used all required hearts)
+    const validHeartsPerPost: Record<string, number> = {};
+    allHearts.forEach((h: any) => {
+      const required = Math.min(HEARTS_PER_DAY, othersCountPerUser[h.giver_user_id] ?? postList.length - 1);
+      const given = heartsGivenByUser[h.giver_user_id] || 0;
+      if (given >= required) {
+        validHeartsPerPost[h.post_id] = (validHeartsPerPost[h.post_id] || 0) + 1;
+      }
+    });
+
+    // Find winning post
+    let topPost = null;
+    let topCount = 0;
+    postList.forEach((post: any) => {
+      const count = validHeartsPerPost[post.id] || 0;
+      if (count > topCount) { topCount = count; topPost = post; }
+    });
+
+    if (topPost && topCount > 0) setWinner(topPost);
   }
 
   async function handleSubmit() {
     if (!response.trim() || completed === null || !userId || !challenge) return;
     setSubmitting(true);
-    await supabase.from("grace_challenge_posts").insert({ challenge_id: challenge.id, user_id: userId, user_name: userName, post_text: response, completed });
+    await supabase.from("grace_challenge_posts").insert({
+      challenge_id: challenge.id,
+      user_id: userId,
+      user_name: userName,
+      post_text: response,
+      completed,
+    });
     await loadPosts(challenge.id);
     setSubmitting(false);
   }
@@ -78,11 +181,17 @@ export default function GraceChallengeContent() {
   async function toggleHeart(postId: string, postUserId: string) {
     if (!userId || postUserId === userId || !challenge) return;
     if (givenHearts.includes(postId)) {
-      await supabase.from("grace_challenge_hearts").delete().eq("giver_user_id", userId).eq("post_id", postId);
+      // Remove heart (change vote)
+      await supabase.from("grace_challenge_hearts")
+        .delete()
+        .eq("giver_user_id", userId)
+        .eq("post_id", postId);
       setGivenHearts(h => h.filter(x => x !== postId));
     } else {
-      if (givenHearts.length >= heartBudget) return;
-      await supabase.from("grace_challenge_hearts").insert({ giver_user_id: userId, post_id: postId, challenge_id: challenge.id });
+      if (givenHearts.length >= HEARTS_PER_DAY) return;
+      await supabase.from("grace_challenge_hearts").insert({
+        giver_user_id: userId, post_id: postId, challenge_id: challenge.id,
+      });
       setGivenHearts(h => [...h, postId]);
     }
   }
@@ -90,10 +199,13 @@ export default function GraceChallengeContent() {
   async function toggleFavorite(postId: string) {
     if (!userId || !challenge) return;
     if (favorites.includes(postId)) {
-      await supabase.from("grace_challenge_favorites").delete().eq("user_id", userId).eq("post_id", postId);
+      await supabase.from("grace_challenge_favorites")
+        .delete().eq("user_id", userId).eq("post_id", postId);
       setFavorites(f => f.filter(x => x !== postId));
     } else {
-      await supabase.from("grace_challenge_favorites").insert({ user_id: userId, post_id: postId, challenge_id: challenge.id });
+      await supabase.from("grace_challenge_favorites").insert({
+        user_id: userId, post_id: postId, challenge_id: challenge.id,
+      });
       setFavorites(f => [...f, postId]);
     }
   }
@@ -105,117 +217,158 @@ export default function GraceChallengeContent() {
     setGenerating(false);
   }
 
-  const heartsRemaining = heartBudget - givenHearts.length;
-  const allHeartsUsed = givenHearts.length === heartBudget && heartBudget > 0;
-  const sortedPosts = revealed ? [...posts].sort((a, b) => (totalHearts[b.id] || 0) - (totalHearts[a.id] || 0)) : posts;
-  const mostLoved = revealed && sortedPosts.length > 0 ? sortedPosts[0] : null;
+  const heartsLeft = HEARTS_PER_DAY - givenHearts.length;
+  const usedAllHearts = givenHearts.length >= HEARTS_PER_DAY;
+
+  const displayName = (post: any) => {
+    const total = allTimeHearts[post.user_id];
+    return total ? `${post.user_name} (${total})` : post.user_name;
+  };
 
   return (
     <SubscriptionGuard>
       <PageBackground url="https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/renegossner-alps-8728621_1920.jpg">
         <main className="flex-1 p-6">
           <div className="max-w-2xl mx-auto">
+
+            {/* Header */}
             <div className="flex justify-between items-center mb-4">
               <Link href="/dashboard" className="text-white/70 text-sm">← Dashboard</Link>
               <h1 className="text-lg font-bold text-white" style={{ textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>Daily Grace Challenge</h1>
-              <Link href="/grace-challenge/leaderboard" className="text-yellow-300 text-sm font-medium">🏆 Board</Link>
-            </div>
-            <div className="flex justify-center mb-6">
-              <img src="https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/image.jpg" alt="Grace Challenge" className="w-28 h-28 object-cover rounded-full shadow-lg border-2 border-white/30" />
+              <div className="flex items-center gap-3">
+                <Link href="/grace-challenge/rules" className="text-white/60 text-sm">Rules</Link>
+                <Link href="/grace-challenge/leaderboard" className="text-yellow-300 text-sm font-medium">🏆</Link>
+              </div>
             </div>
 
-            {!challenge ? (
+            <div className="flex justify-center mb-6">
+              <img src="https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/image.jpg" alt="Grace Challenge" className="w-24 h-24 object-cover rounded-full shadow-lg border-2 border-white/30" />
+            </div>
+
+            {loading ? (
+              <p className="text-white/60 text-center py-12">Loading...</p>
+            ) : !challenge ? (
               <div className="text-center py-12">
                 <p className="text-white/60 mb-4">No challenge posted yet today. Check back soon. 🌅</p>
                 {isAdmin && (
-                  <button
-                    onClick={handleGenerate}
-                    disabled={generating}
-                    className="bg-white/20 hover:bg-white/30 border border-white/30 text-white text-sm px-5 py-2 rounded-xl backdrop-blur-sm disabled:opacity-50"
-                  >
+                  <button onClick={handleGenerate} disabled={generating}
+                    className="bg-white/20 hover:bg-white/30 border border-white/30 text-white text-sm px-5 py-2 rounded-xl backdrop-blur-sm disabled:opacity-50">
                     {generating ? "Generating..." : "⚡ Generate Today's Challenge"}
                   </button>
                 )}
               </div>
             ) : (
               <>
+                {/* Challenge */}
                 <p className="text-white/50 text-xs uppercase tracking-widest mb-2">Today's Challenge</p>
-                <p className="text-2xl font-bold text-white mb-8 leading-relaxed" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 12px rgba(0,0,0,0.8)" }}>{challenge.challenge_text}</p>
+                <p className="text-2xl font-bold text-white mb-8 leading-relaxed"
+                  style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 12px rgba(0,0,0,0.8)" }}>
+                  {challenge.challenge_text}
+                </p>
 
-                {mostLoved && (
-                  <div className="mb-8">
-                    <p className="text-yellow-300 text-xs uppercase tracking-widest mb-1">Most Loved Today</p>
-                    <p className="text-white font-semibold" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.8)" }}>{mostLoved.user_name}</p>
-                    <p className="text-white/70 text-sm italic mt-1">"{mostLoved.post_text?.slice(0, 100)}{mostLoved.post_text?.length > 100 ? "..." : ""}"</p>
-                    <p className="text-white/50 text-xs mt-1">Your heart has been recognized today as being full of grace. 💛</p>
+                {/* Most Loved banner (after deadline) */}
+                {revealed && winner && (
+                  <div className="mb-8 bg-yellow-400/20 border border-yellow-400/40 rounded-2xl p-5 text-center backdrop-blur-sm">
+                    <p className="text-yellow-300 text-xs uppercase tracking-widest mb-2">🏆 Most Loved Today</p>
+                    <p className="text-white font-bold text-lg mb-1">{displayName(winner)}</p>
+                    <p className="text-white/70 text-sm italic mb-3">"{winner.post_text?.slice(0, 120)}{winner.post_text?.length > 120 ? "..." : ""}"</p>
+                    <p className="text-yellow-200/80 text-xs">Your community has voted — you have earned the Most Loved award for Guiding Grace today. 💛</p>
                   </div>
                 )}
 
-                {!userPost ? (
-                  <div className="bg-white/10 backdrop-blur rounded-2xl p-5 mb-8 border border-white/20">
-                    <p className="text-white/80 text-sm font-medium mb-3">Did you take on today's challenge?</p>
-                    <div className="flex gap-3 mb-4">
-                      <button onClick={() => setCompleted(true)} className={`flex-1 py-2 rounded-xl text-sm font-medium border transition ${completed === true ? "bg-white/30 text-white border-white/50" : "border-white/20 text-white/60"}`}>✅ I did it</button>
-                      <button onClick={() => setCompleted(false)} className={`flex-1 py-2 rounded-xl text-sm font-medium border transition ${completed === false ? "bg-white/30 text-white border-white/50" : "border-white/20 text-white/60"}`}>🌱 Not yet</button>
+                {/* Hearts status (before deadline) */}
+                {!revealed && (
+                  <div className="mb-6 bg-white/10 rounded-xl p-4 border border-white/20 backdrop-blur-sm">
+                    <div className="flex items-center justify-between mb-2">
+                      <p className="text-white/70 text-sm font-medium">Your Hearts</p>
+                      <Link href="/grace-challenge/favorites" className="text-yellow-300 text-xs">🔖 Favorites</Link>
                     </div>
-                    <textarea value={response} onChange={e => setResponse(e.target.value)} placeholder="Share how it went, or why it was hard..." className="w-full bg-transparent border border-white/30 rounded-xl px-4 py-3 text-white placeholder-white/40 text-sm resize-none focus:outline-none focus:border-white/60 mb-3" rows={4} />
-                    <button onClick={handleSubmit} disabled={!response.trim() || completed === null || submitting} className="w-full bg-white/20 hover:bg-white/30 border border-white/30 text-white font-semibold py-3 rounded-xl transition disabled:opacity-40">
+                    <div className="flex gap-2 mb-2">
+                      {Array.from({ length: HEARTS_PER_DAY }).map((_, i) => (
+                        <span key={i} className="text-2xl">{i < givenHearts.length ? "💛" : "🤍"}</span>
+                      ))}
+                    </div>
+                    {usedAllHearts ? (
+                      <p className="text-green-300 text-xs">✓ All 3 hearts given — your received votes will count!</p>
+                    ) : (
+                      <p className="text-white/50 text-xs">Give all 3 hearts or your received votes won't count. You can change your votes until 7am EST.</p>
+                    )}
+                  </div>
+                )}
+
+                {/* Submission form */}
+                {!userPost && !revealed ? (
+                  <div className="bg-white/10 backdrop-blur rounded-2xl p-5 mb-8 border border-white/20">
+                    <p className="text-white/80 text-sm font-medium mb-1">Share your response</p>
+                    <p className="text-white/40 text-xs mb-4">Did the challenge or didn't — both entries can be voted on.</p>
+                    <div className="flex gap-3 mb-4">
+                      <button onClick={() => setCompleted(true)}
+                        className={`flex-1 py-2 rounded-xl text-sm font-medium border transition ${completed === true ? "bg-white/30 text-white border-white/50" : "border-white/20 text-white/60"}`}>
+                        ✅ I did it
+                      </button>
+                      <button onClick={() => setCompleted(false)}
+                        className={`flex-1 py-2 rounded-xl text-sm font-medium border transition ${completed === false ? "bg-white/30 text-white border-white/50" : "border-white/20 text-white/60"}`}>
+                        🌱 I chose not to
+                      </button>
+                    </div>
+                    <textarea
+                      value={response} onChange={e => setResponse(e.target.value)}
+                      placeholder={completed === false ? "Share why you chose not to — honesty is grace too..." : "Share your story..."}
+                      className="w-full bg-transparent border border-white/30 rounded-xl px-4 py-3 text-white placeholder-white/40 text-sm resize-none focus:outline-none focus:border-white/60 mb-3"
+                      rows={4}
+                    />
+                    <button onClick={handleSubmit} disabled={!response.trim() || completed === null || submitting}
+                      className="w-full bg-white/20 hover:bg-white/30 border border-white/30 text-white font-semibold py-3 rounded-xl transition disabled:opacity-40">
                       {submitting ? "Sharing..." : "Share My Response 💛"}
                     </button>
                   </div>
-                ) : (
-                  <p className="text-white/60 text-sm text-center mb-8">You shared your response today 💛</p>
-                )}
+                ) : userPost ? (
+                  <p className="text-white/50 text-sm text-center mb-6">You shared your response today 💛</p>
+                ) : null}
 
-                {userPost && !revealed && heartBudget > 0 && (
-                  <div className="mb-8">
-                    <p className="text-white/60 text-sm mb-2">
-                      {allHeartsUsed ? "💛 All hearts given — your tally counts!" : `💛 ${heartsRemaining} heart${heartsRemaining !== 1 ? "s" : ""} remaining — give all ${heartBudget} or your received hearts won't count`}
-                    </p>
-                    <div className="flex gap-1">
-                      {Array.from({ length: heartBudget }).map((_, i) => (
-                        <span key={i} className="text-xl">{i < givenHearts.length ? "💛" : "🤍"}</span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {userPost && favorites.length > 0 && (
-                  <div className="mb-6">
-                    <Link href="/grace-challenge/favorites" className="text-yellow-300 text-sm underline">View your {favorites.length} saved favorite{favorites.length !== 1 ? "s" : ""} →</Link>
-                  </div>
-                )}
-
+                {/* Community responses */}
                 <p className="text-white/40 text-xs uppercase tracking-widest mb-4">
-                  {revealed ? "Results — Hearts Revealed" : "Community Responses — Hearts anonymous until 6:55am"}
+                  {revealed ? "Community Responses · Results Revealed" : `Community Responses · Voting closes at 7am EST`}
                 </p>
+
                 <div className="space-y-6">
-                  {sortedPosts.map(post => (
-                    <div key={post.id} className={`${mostLoved?.id === post.id && revealed ? "border-l-2 border-yellow-400 pl-4" : ""}`}>
+                  {posts.map(post => (
+                    <div key={post.id} className={`${winner?.id === post.id && revealed ? "border-l-2 border-yellow-400 pl-4" : ""}`}>
                       <div className="flex justify-between items-start mb-1">
-                        <p className="text-white/40 text-xs">{post.user_name} · {post.completed ? "✅ Completed" : "🌱 Still growing"}</p>
+                        <p className="text-white/40 text-xs">{displayName(post)} · {post.completed ? "✅ Did it" : "🌱 Chose not to"}</p>
                         <div className="flex items-center gap-2">
-                          {post.user_id !== userId && (
-                            <button onClick={() => toggleFavorite(post.id)} className="text-base hover:scale-110 transition">
+                          {post.user_id !== userId && !revealed && (
+                            <button
+                              onClick={() => toggleFavorite(post.id)}
+                              className="text-base hover:scale-110 transition"
+                              title="Save to favorites"
+                            >
                               {favorites.includes(post.id) ? "🔖" : "📄"}
                             </button>
                           )}
                           {post.user_id !== userId && !revealed && (
-                            <button onClick={() => toggleHeart(post.id, post.user_id)} disabled={!userPost || (!givenHearts.includes(post.id) && heartsRemaining === 0)} className={`text-xl transition ${!userPost || (!givenHearts.includes(post.id) && heartsRemaining === 0) ? "opacity-30 cursor-default" : "hover:scale-110"}`}>
+                            <button
+                              onClick={() => toggleHeart(post.id, post.user_id)}
+                              disabled={!givenHearts.includes(post.id) && heartsLeft === 0}
+                              className={`text-xl transition ${!givenHearts.includes(post.id) && heartsLeft === 0 ? "opacity-30 cursor-default" : "hover:scale-110"}`}
+                              title={givenHearts.includes(post.id) ? "Remove vote" : "Give a heart"}
+                            >
                               {givenHearts.includes(post.id) ? "💛" : "🤍"}
                             </button>
                           )}
-                          {revealed && (
-                            <div className="flex items-center gap-1">
-                              <span className="text-lg">💛</span>
-                              <span className="text-sm font-semibold text-white/70">{totalHearts[post.id] || 0}</span>
-                            </div>
+                          {revealed && post.user_id !== userId && (
+                            <p className="text-white/50 text-xs">results revealed</p>
                           )}
                         </div>
                       </div>
-                      <p className="text-white/80 text-sm leading-relaxed" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>{post.post_text}</p>
+                      <p className="text-white/80 text-sm leading-relaxed" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
+                        {post.post_text}
+                      </p>
                     </div>
                   ))}
+                  {posts.length === 0 && (
+                    <p className="text-white/40 text-sm text-center py-6">Be the first to share a response today.</p>
+                  )}
                 </div>
               </>
             )}
