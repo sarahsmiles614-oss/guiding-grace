@@ -283,7 +283,7 @@ export default function GraceChallengeContent() {
 
   return (
     <SubscriptionGuard>
-      <PageBackground url="https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/renegossner-alps-8728621_1920.jpg">
+      <PageBackground url="https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/eric-hong-sKV-vwMI_5U-unsplash.jpg">
         <main className="flex-1 p-6">
           <div className="max-w-2xl mx-auto">
 
@@ -316,8 +316,8 @@ export default function GraceChallengeContent() {
             ) : (
               <>
                 {/* Challenge */}
-                <p className="text-white/50 text-xs uppercase tracking-widest mb-2">Today's Challenge</p>
-                <p className="text-2xl font-bold text-white mb-8 leading-relaxed"
+                <p className="text-white/50 text-xs uppercase tracking-widest mb-2 text-center">Today's Challenge</p>
+                <p className="text-2xl font-bold text-white mb-8 leading-relaxed text-center"
                   style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 12px rgba(0,0,0,0.8)" }}>
                   {challenge.challenge_text}
                 </p>
