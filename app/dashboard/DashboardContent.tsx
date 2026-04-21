@@ -5,6 +5,7 @@ import { supabase } from "@/lib/supabase";
 import { signOut } from "@/lib/auth";
 import Link from "next/link";
 import PageBackground from "@/components/PageBackground";
+import ShareButton from "@/components/ShareButton";
 
 const ADMIN_EMAILS = ["sarahsmiles614@gmail.com"];
 
@@ -96,6 +97,18 @@ export default function DashboardContent() {
                 <span className="text-sm font-medium text-white" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>{f.label}</span>
               </Link>
             ))}
+          </div>
+
+          {/* Share the app */}
+          <div className="mt-10 text-center">
+            <p className="text-white/40 text-xs mb-3">Know someone who could use this?</p>
+            <ShareButton
+              title="Guiding Grace"
+              text="I've been using Guiding Grace for daily devotions and faith challenges — thought you might love it too."
+              url="https://guidinggrace.app"
+              label="🤍 Share Guiding Grace"
+              className="bg-white/10 hover:bg-white/20 border border-white/20 text-white/80 hover:text-white text-sm font-medium px-6 py-3 rounded-2xl backdrop-blur-sm transition"
+            />
           </div>
         </div>
       </main>

@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import SubscriptionGuard from "@/components/SubscriptionGuard";
 import PageBackground from "@/components/PageBackground";
+import ShareButton from "@/components/ShareButton";
 import { supabase } from "@/lib/supabase";
 
 function getToday() {
@@ -160,6 +161,17 @@ export default function DevotionsPage() {
                 <p className="text-white/90 italic text-lg mb-2" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.8)" }}>"{displayed.verse_text}"</p>
                 <p className="text-white/50 text-sm mb-8">— {displayed.verse_reference}</p>
                 <p className="text-white/80 leading-relaxed" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>{displayed.reflection}</p>
+
+                {/* Share devotion */}
+                <div className="mt-6 flex justify-center">
+                  <ShareButton
+                    title={`${displayed.title} — Guiding Grace`}
+                    text={`"${displayed.verse_text}" — ${displayed.verse_reference}\n\n${displayed.reflection}\n\nRead today's devotion on Guiding Grace:`}
+                    url="https://guidinggrace.app"
+                    label="🤍 Share This Devotion"
+                    className="bg-white/10 hover:bg-white/20 border border-white/20 text-white/70 hover:text-white text-sm px-6 py-2.5 rounded-2xl backdrop-blur-sm transition"
+                  />
+                </div>
 
                 {/* Grace Challenge CTA */}
                 <div className="mt-10 mb-4 bg-white/10 border border-white/20 rounded-2xl p-6 backdrop-blur-sm text-center">

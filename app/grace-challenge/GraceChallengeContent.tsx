@@ -4,6 +4,7 @@ import Link from "next/link";
 import SubscriptionGuard from "@/components/SubscriptionGuard";
 import { supabase } from "@/lib/supabase";
 import PageBackground from "@/components/PageBackground";
+import ShareButton from "@/components/ShareButton";
 
 const HEARTS_PER_DAY = 3;
 
@@ -425,6 +426,17 @@ export default function GraceChallengeContent() {
                     )}
                   </div>
                 ) : null}
+
+                {/* Share challenge */}
+                <div className="flex justify-center mb-6">
+                  <ShareButton
+                    title="Today's Grace Challenge — Guiding Grace"
+                    text={`Today's Grace Challenge: "${challenge.challenge_text}"\n\nJoin the community on Guiding Grace:`}
+                    url="https://guidinggrace.app"
+                    label="🤍 Share This Challenge"
+                    className="bg-white/10 hover:bg-white/20 border border-white/20 text-white/70 hover:text-white text-sm px-6 py-2.5 rounded-2xl backdrop-blur-sm transition"
+                  />
+                </div>
 
                 {/* Community responses */}
                 <p className="text-white/40 text-xs uppercase tracking-widest mb-4">
