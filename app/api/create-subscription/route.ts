@@ -22,17 +22,18 @@ export async function POST(req: NextRequest) {
       : process.env.STRIPE_PRICE_ID!;
 
     if (isTrial) {
-      // Trial — no payment needed upfront, create subscription directly
       const subscription = await stripe.subscriptions.create({
         customer: customer.id,
         items: [{ price: priceId }],
         trial_period_days: 3,
-        payment_settings: { save_default_payment_method: "on_subscription" },
+        payment_settings: {
+          save_default_payment_method: "on_subscription",
+          payment_method_types: ["card", "klarna", "link"],
+        },
         expand: ["latest_invoice.payment_intent", "pending_setup_intent"],
         metadata: { userId },
       });
 
-      // If there's a setup intent (card to save for after trial), return it
       const setupIntent = (subscription as any).pending_setup_intent;
       if (setupIntent?.client_secret) {
         return NextResponse.json({
@@ -43,16 +44,18 @@ export async function POST(req: NextRequest) {
         });
       }
 
-      // No card needed — subscription is live, just redirect
       return NextResponse.json({ type: "free_trial", subscriptionId: subscription.id });
     }
 
-    // Paid plan — create incomplete subscription and return payment intent secret
+    // Paid plan — create incomplete subscription
     const subscription = await stripe.subscriptions.create({
       customer: customer.id,
       items: [{ price: priceId }],
       payment_behavior: "default_incomplete",
-      payment_settings: { save_default_payment_method: "on_subscription" },
+      payment_settings: {
+        save_default_payment_method: "on_subscription",
+        payment_method_types: ["card", "klarna", "link"],
+      },
       expand: ["latest_invoice.payment_intent"],
       metadata: { userId },
     });
@@ -60,9 +63,17 @@ export async function POST(req: NextRequest) {
     const invoice = subscription.latest_invoice as Stripe.Invoice;
     const paymentIntent = invoice.payment_intent as Stripe.PaymentIntent;
 
+    // Update PaymentIntent to allow all automatic payment methods incl. Google Pay
+    await stripe.paymentIntents.update(paymentIntent.id, {
+      automatic_payment_methods: { enabled: true, allow_redirects: "always" },
+    });
+
+    // Re-fetch updated secret
+    const updatedIntent = await stripe.paymentIntents.retrieve(paymentIntent.id);
+
     return NextResponse.json({
       type: "payment",
-      clientSecret: paymentIntent.client_secret,
+      clientSecret: updatedIntent.client_secret,
       subscriptionId: subscription.id,
       customerId: customer.id,
     });
