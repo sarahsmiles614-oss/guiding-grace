@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/lib/AuthContext";
@@ -9,11 +9,14 @@ const inter = Inter({ subsets: ["latin"] });
 
 const LOGO = "/icon.jpg";
 
+export const viewport: Viewport = {
+  themeColor: "#1e0a3c",
+};
+
 export const metadata: Metadata = {
   title: "Guiding Grace — A Daily Faith Companion",
   description: "Daily devotions, scripture promises, grace challenges, and sacred spaces to strengthen your faith. Start your free 3-day trial today.",
   manifest: "/manifest.json",
-  themeColor: "#1e0a3c",
   metadataBase: new URL("https://guidinggrace.app"),
   keywords: ["daily devotions", "Christian app", "faith companion", "scripture", "grace challenge", "prayer", "Bible"],
   appleWebApp: {
