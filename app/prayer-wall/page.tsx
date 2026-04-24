@@ -132,7 +132,7 @@ export default function PrayerWallPage() {
             <p className="text-center text-xs text-white/50 mb-8 uppercase tracking-widest">Pray Until Something Happens</p>
 
             {/* Submit form */}
-            <div className="pw-no-print bg-white/10 backdrop-blur rounded-2xl p-5 mb-8 border border-white/20">
+            <div className="pw-no-print mb-8">
               <textarea
                 value={request}
                 onChange={(e) => setRequest(e.target.value)}

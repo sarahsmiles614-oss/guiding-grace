@@ -124,7 +124,7 @@ export default function TestimonyWallPage() {
             <p className="text-center text-sm text-white/60 mb-8">Share what God has done. Your story is someone else&apos;s hope. ✨</p>
 
             {/* Submit form */}
-            <div className="tw-no-print bg-white/10 backdrop-blur rounded-2xl p-5 mb-8 border border-white/20">
+            <div className="tw-no-print mb-8">
               <input value={title} onChange={e => setTitle(e.target.value)} placeholder="Title (optional)" className="w-full bg-transparent border border-white/30 rounded-xl px-4 py-3 text-white placeholder-white/40 text-sm mb-3 focus:outline-none focus:border-white/60" />
               <textarea value={story} onChange={e => setStory(e.target.value)} placeholder="Share your testimony..." className="w-full bg-transparent border border-white/30 rounded-xl px-4 py-3 text-white placeholder-white/40 text-sm resize-none focus:outline-none focus:border-white/60 mb-3" rows={4} />
               <button onClick={handleSubmit} disabled={!story.trim() || submitting} className="w-full bg-white/20 hover:bg-white/30 border border-white/30 text-white font-semibold py-3 rounded-xl transition disabled:opacity-40">
