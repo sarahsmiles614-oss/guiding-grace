@@ -96,7 +96,7 @@ export default function FavoritesPage() {
               <div className="w-16" />
             </div>
             {!revealed && (
-              <div className="mb-6 bg-white/10 rounded-xl p-4 border border-white/20 backdrop-blur-sm">
+              <div className="mb-6">
                 <div className="flex gap-2 mb-2">
                   {Array.from({ length: HEARTS_PER_DAY }).map((_, i) => (
                     <span key={i} className="text-2xl">{i < givenHearts.length ? "💛" : "🤍"}</span>
@@ -117,7 +117,7 @@ export default function FavoritesPage() {
             ) : (
               <div className="space-y-4">
                 {posts.map(post => (
-                  <div key={post.id} className="bg-white/10 rounded-xl p-4 border border-white/20 backdrop-blur-sm">
+                  <div key={post.id} className="py-4 border-b border-white/10">
                     <div className="flex justify-between items-start mb-2">
                       <p className="text-white/50 text-xs">{displayName(post)} · {post.completed ? "✅ Did it" : "🌱 Chose not to"}</p>
                       <div className="flex items-center gap-2">
