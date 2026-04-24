@@ -41,7 +41,7 @@ export default function GraceChallengeContent() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [userPost, setUserPost] = useState<any>(null);
   const [response, setResponse] = useState("");
-  const [completed, setCompleted] = useState<boolean | null>(null);
+  const [completed, setCompleted] = useState<boolean | null>(true);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const [givenHearts, setGivenHearts] = useState<string[]>([]);
@@ -53,7 +53,7 @@ export default function GraceChallengeContent() {
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState("");
-  const [editCompleted, setEditCompleted] = useState<boolean | null>(null);
+  const [editCompleted, setEditCompleted] = useState<boolean | null>(true);
   const [editSubmitting, setEditSubmitting] = useState(false);
 
   const loadChallenge = useCallback(async () => {
@@ -358,37 +358,17 @@ export default function GraceChallengeContent() {
                 {/* Submission form */}
                 {!userPost ? (
                   <div className="bg-white/10 backdrop-blur rounded-2xl p-5 mb-8 border border-white/20">
-                    <p className="text-white/80 text-sm font-medium mb-1">Share your response</p>
-                    <p className="text-white/40 text-xs mb-3">Both entries can be voted on — honesty is grace too.</p>
-
-                    {/* Step 1: required status pick */}
-                    <p className="text-white/50 text-xs mb-2 uppercase tracking-widest">Step 1 — Pick one</p>
-                    <div className="flex gap-3 mb-4">
-                      <button onClick={() => setCompleted(true)}
-                        className={`flex-1 py-2.5 rounded-xl text-sm font-semibold border-2 transition ${completed === true ? "bg-white/30 text-white border-white/60 shadow-lg" : "border-white/20 text-white/60 hover:border-white/40"}`}>
-                        ✅ I did it
-                      </button>
-                      <button onClick={() => setCompleted(false)}
-                        className={`flex-1 py-2.5 rounded-xl text-sm font-semibold border-2 transition ${completed === false ? "bg-white/30 text-white border-white/60 shadow-lg" : "border-white/20 text-white/60 hover:border-white/40"}`}>
-                        🌱 I chose not to
-                      </button>
-                    </div>
-
-                    {/* Step 2: response text */}
-                    <p className="text-white/50 text-xs mb-2 uppercase tracking-widest">Step 2 — Share your story</p>
+                    <p className="text-white/80 text-sm font-medium mb-3">Share your response</p>
                     <textarea
                       value={response} onChange={e => setResponse(e.target.value)}
-                      placeholder={completed === false ? "Share why you chose not to..." : completed === true ? "Share how it went..." : "Select above first..."}
-                      disabled={completed === null}
-                      className="w-full bg-transparent border border-white/30 rounded-xl px-4 py-3 text-white placeholder-white/40 text-sm resize-none focus:outline-none focus:border-white/60 mb-3 disabled:opacity-40"
+                      placeholder="Share how it went..."
+                      className="w-full bg-transparent border border-white/30 rounded-xl px-4 py-3 text-white placeholder-white/40 text-sm resize-none focus:outline-none focus:border-white/60 mb-3"
                       rows={4}
                     />
-
                     {submitError && (
                       <p className="text-red-300 text-sm bg-red-900/30 border border-red-400/20 rounded-xl px-4 py-2 mb-3">{submitError}</p>
                     )}
-
-                    <button onClick={handleSubmit} disabled={!response.trim() || completed === null || submitting}
+                    <button onClick={handleSubmit} disabled={!response.trim() || submitting}
                       className="w-full bg-white/20 hover:bg-white/30 border border-white/30 text-white font-semibold py-3 rounded-xl transition disabled:opacity-40">
                       {submitting ? "Posting..." : "Share My Response 💛"}
                     </button>
@@ -398,16 +378,6 @@ export default function GraceChallengeContent() {
                     {isEditing ? (
                       <>
                         <p className="text-yellow-300 text-xs mb-3 font-medium">⚠️ Editing will forfeit all votes you've received so far.</p>
-                        <div className="flex gap-3 mb-4">
-                          <button onClick={() => setEditCompleted(true)}
-                            className={`flex-1 py-2 rounded-xl text-sm font-medium border transition ${editCompleted === true ? "bg-white/30 text-white border-white/50" : "border-white/20 text-white/60"}`}>
-                            ✅ I did it
-                          </button>
-                          <button onClick={() => setEditCompleted(false)}
-                            className={`flex-1 py-2 rounded-xl text-sm font-medium border transition ${editCompleted === false ? "bg-white/30 text-white border-white/50" : "border-white/20 text-white/60"}`}>
-                            🌱 I chose not to
-                          </button>
-                        </div>
                         <textarea
                           value={editText} onChange={e => setEditText(e.target.value)}
                           className="w-full bg-transparent border border-white/30 rounded-xl px-4 py-3 text-white placeholder-white/40 text-sm resize-none focus:outline-none focus:border-white/60 mb-3"
@@ -427,7 +397,7 @@ export default function GraceChallengeContent() {
                     ) : (
                       <>
                         <div className="flex items-start justify-between mb-2">
-                          <p className="text-white/50 text-xs">{userPost.completed ? "✅ You did it" : "🌱 You chose not to"}</p>
+                          <p className="text-white/50 text-xs">Your response</p>
                           {!isAfterDeadline() && (
                             <button onClick={startEditing}
                               className="text-white/40 hover:text-white/70 text-xs border border-white/20 px-3 py-1 rounded-lg transition">
@@ -462,7 +432,7 @@ export default function GraceChallengeContent() {
                   {posts.map(post => (
                     <div key={post.id} className={`${winner?.id === post.id && revealed ? "border-l-2 border-yellow-400 pl-4" : ""}`}>
                       <div className="flex justify-between items-start mb-1">
-                        <p className="text-white/40 text-xs">{displayName(post)} · {post.completed ? "✅ Did it" : "🌱 Chose not to"}</p>
+                        <p className="text-white/40 text-xs">{displayName(post)}</p>
                         <div className="flex items-center gap-2">
                           {post.user_id !== userId && (
                             <button
