@@ -39,6 +39,7 @@ const backgrounds = [
   { label: "Shore", url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/lou-lou-b-photo-eD0TsB_E-pM-unsplash.jpg" },
   { label: "Light", url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/manuel-chinchilla-CMAM-ehX210-unsplash.jpg" },
   { label: "Clouds", url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/marcelkessler-heaven-4850411_1920.jpg" },
+  { label: "Desert", url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/saud-edum-cgapZpzd7v0-unsplash%20(1).jpg" },
 ];
 
 export default function HeavensHeartsPage() {
