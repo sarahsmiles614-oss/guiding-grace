@@ -115,20 +115,20 @@ export default function Home() {
               Daily devotions, scripture promises, and sacred spaces to nurture your faith journey.
             </p>
 
-            {/* Features grid */}
-            <div className="grid grid-cols-3 gap-3 max-w-xs mx-auto lg:mx-0">
+            {/* Features grid — 3×3, centered last row, equal spacing */}
+            <div className="mt-10 mb-10 grid grid-cols-3 gap-y-6 gap-x-4 w-full max-w-[300px] mx-auto lg:mx-0">
               {features.map(f => (
-                <div key={f.label} className="flex flex-col items-center lg:items-start text-center lg:text-left gap-1">
-                  <span className="text-2xl">{f.icon}</span>
-                  <span className="text-white/70 text-xs">{f.label}</span>
+                <div key={f.label} className="flex flex-col items-center gap-1.5">
+                  <span className="text-2xl leading-none">{f.icon}</span>
+                  <span className="text-white/70 text-xs font-medium text-center leading-tight">{f.label}</span>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Right: auth card */}
+          {/* Right: auth — no container, elements float over background */}
           <div className="w-full max-w-sm shrink-0">
-            <div className="bg-black/40 backdrop-blur-xl border border-white/15 rounded-3xl p-6 shadow-2xl">
+            <div>
 
               {forgotMode ? (
                 <div className="space-y-4">
@@ -153,16 +153,16 @@ export default function Home() {
               ) : (
                 <>
                   {/* Sign In / Create Account toggle */}
-                  <div className="flex bg-white/8 rounded-2xl p-1 mb-5 border border-white/10">
+                  <div className="flex gap-4 mb-6">
                     <button
                       onClick={() => { setIsNewUser(false); reset(); }}
-                      className={`flex-1 py-3 rounded-xl text-sm font-semibold transition ${!isNewUser ? "bg-white/20 text-white shadow" : "text-white/50 hover:text-white/80"}`}
+                      className={`text-sm font-semibold transition pb-1 ${!isNewUser ? "text-white border-b-2 border-white" : "text-white/40 hover:text-white/70"}`}
                     >
                       Sign In
                     </button>
                     <button
                       onClick={() => { setIsNewUser(true); reset(); }}
-                      className={`flex-1 py-3 rounded-xl text-sm font-semibold transition ${isNewUser ? "bg-white/20 text-white shadow" : "text-white/50 hover:text-white/80"}`}
+                      className={`text-sm font-semibold transition pb-1 ${isNewUser ? "text-white border-b-2 border-white" : "text-white/40 hover:text-white/70"}`}
                     >
                       Create Account
                     </button>
@@ -233,10 +233,10 @@ export default function Home() {
                   </div>
 
                   {/* Trial CTA */}
-                  <div className="mt-5 pt-4 border-t border-white/10 text-center">
+                  <div className="mt-5 text-center">
                     <p className="text-white/40 text-xs mb-3">No account yet?</p>
                     <Link href="/subscribe">
-                      <button className="w-full bg-white/10 hover:bg-white/20 border border-white/25 text-white font-semibold py-3.5 rounded-2xl backdrop-blur-sm transition text-sm">
+                      <button className="w-full bg-white/15 hover:bg-white/25 border border-white/25 text-white font-semibold py-3.5 rounded-2xl transition text-sm">
                         ✨ Start Free 3-Day Trial
                       </button>
                     </Link>
