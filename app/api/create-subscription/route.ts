@@ -59,7 +59,12 @@ export async function POST(req: NextRequest) {
     });
 
     const invoice = subscription.latest_invoice as any;
-    const paymentIntent = invoice.payment_intent as Stripe.PaymentIntent;
+    const paymentIntent = invoice?.payment_intent as Stripe.PaymentIntent | undefined;
+
+    if (!paymentIntent?.id) {
+      // No payment intent — subscription may be free or already active
+      return NextResponse.json({ type: "free_trial", subscriptionId: subscription.id });
+    }
 
     // Update PaymentIntent to allow all automatic payment methods incl. Google Pay
     await stripe.paymentIntents.update(paymentIntent.id, {
