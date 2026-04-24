@@ -83,7 +83,7 @@ export default function Home() {
     setLoading(false);
   }
 
-  const inputClass = "w-full bg-transparent border-b border-white/25 text-white placeholder-white/40 text-sm py-3 focus:outline-none focus:border-white/60 transition text-center";
+  const inputClass = "w-full bg-transparent border-b border-white/40 text-white placeholder-white/70 text-sm py-3 focus:outline-none focus:border-white/80 transition text-center";
 
   return (
     <div
