@@ -169,7 +169,7 @@ export default function AccountContent() {
           )}
 
           {/* Tabs */}
-          <div className="flex bg-white/10 rounded-xl p-1 mb-6 border border-white/20">
+          <div className="flex mb-6 border-b border-white/20">
             <button
               onClick={() => setTab("profile")}
               className={`flex-1 py-2 rounded-lg text-sm font-medium transition ${tab === "profile" ? "bg-white/20 text-white" : "text-white/50 hover:text-white/80"}`}
@@ -186,9 +186,9 @@ export default function AccountContent() {
 
           {/* Profile tab */}
           {tab === "profile" && user && (
-            <div className="space-y-4">
-              <div className="bg-white/10 border border-white/20 rounded-2xl p-5 backdrop-blur-sm">
-                <p className="text-white/50 text-xs uppercase tracking-widest mb-3">Display Name</p>
+            <div className="space-y-6 pt-4">
+              <div>
+                <p className="text-white/50 text-xs uppercase tracking-widest mb-3" style={{ textShadow: "0 1px 3px rgba(0,0,0,0.8)" }}>Display Name</p>
                 <div className="flex gap-2">
                   <input
                     type="text"
@@ -207,14 +207,14 @@ export default function AccountContent() {
                 </div>
               </div>
 
-              <div className="bg-white/10 border border-white/20 rounded-2xl p-5 backdrop-blur-sm">
-                <p className="text-white/50 text-xs uppercase tracking-widest mb-2">Email</p>
-                <p className="text-white text-sm">{user.email}</p>
+              <div>
+                <p className="text-white/50 text-xs uppercase tracking-widest mb-2" style={{ textShadow: "0 1px 3px rgba(0,0,0,0.8)" }}>Email</p>
+                <p className="text-white text-sm" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>{user.email}</p>
               </div>
 
-              <div className="bg-white/10 border border-white/20 rounded-2xl p-5 backdrop-blur-sm">
-                <p className="text-white/50 text-xs uppercase tracking-widest mb-2">Subscription</p>
-                <p className="text-white text-sm capitalize">{subLabel}</p>
+              <div>
+                <p className="text-white/50 text-xs uppercase tracking-widest mb-2" style={{ textShadow: "0 1px 3px rgba(0,0,0,0.8)" }}>Subscription</p>
+                <p className="text-white text-sm capitalize" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>{subLabel}</p>
                 {sub?.status !== "active" && sub?.status !== "trialing" && (
                   <Link href="/subscribe">
                     <button className="mt-3 bg-white/20 hover:bg-white/30 border border-white/30 text-white text-sm px-5 py-2 rounded-xl transition">
@@ -224,11 +224,10 @@ export default function AccountContent() {
                 )}
               </div>
 
-              <div className="bg-white/10 border border-white/20 rounded-2xl p-5 backdrop-blur-sm">
-                <p className="text-white/50 text-xs uppercase tracking-widest mb-3">Account</p>
+              <div>
                 <button
                   onClick={() => signOut().then(() => router.push("/"))}
-                  className="w-full border border-white/20 text-white/60 hover:text-white hover:border-white/40 font-medium py-3 rounded-xl text-sm transition"
+                  className="border border-white/20 text-white/60 hover:text-white hover:border-white/40 font-medium py-3 px-8 rounded-xl text-sm transition"
                 >
                   Sign Out
                 </button>
@@ -238,17 +237,17 @@ export default function AccountContent() {
 
           {/* Notifications tab */}
           {tab === "notifications" && (
-            <div className="space-y-4">
-              <p className="text-white/50 text-sm text-center mb-2">
+            <div className="space-y-6 pt-4">
+              <p className="text-white/50 text-sm text-center mb-2" style={{ textShadow: "0 1px 3px rgba(0,0,0,0.8)" }}>
                 Choose what you'd like to be reminded about and when.
               </p>
 
               {/* Daily Reminder */}
-              <div className="bg-white/10 border border-white/20 rounded-2xl p-5 backdrop-blur-sm">
+              <div>
                 <div className="flex items-center gap-3 mb-1">
                   <span className="text-2xl">📖</span>
                   <div className="flex-1">
-                    <p className="text-white text-sm font-medium">Daily Reminder</p>
+                    <p className="text-white text-sm font-medium" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>Daily Reminder</p>
                     <p className="text-white/50 text-xs">Morning devotion & scripture delivered to your email</p>
                   </div>
                   <Toggle on={prefs.daily_reminder} onToggle={() => set("daily_reminder", !prefs.daily_reminder)} />
@@ -265,11 +264,11 @@ export default function AccountContent() {
               </div>
 
               {/* Daily Challenge Reminder */}
-              <div className="bg-white/10 border border-white/20 rounded-2xl p-5 backdrop-blur-sm">
+              <div>
                 <div className="flex items-center gap-3 mb-1">
                   <span className="text-2xl">☀️</span>
                   <div className="flex-1">
-                    <p className="text-white text-sm font-medium">Daily Challenge Reminder</p>
+                    <p className="text-white text-sm font-medium" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>Daily Challenge Reminder</p>
                     <p className="text-white/50 text-xs">Get nudged to participate in today's Grace Challenge</p>
                   </div>
                   <Toggle on={prefs.challenge_reminder} onToggle={() => set("challenge_reminder", !prefs.challenge_reminder)} />
@@ -286,11 +285,11 @@ export default function AccountContent() {
               </div>
 
               {/* Community Updates */}
-              <div className="bg-white/10 border border-white/20 rounded-2xl p-5 backdrop-blur-sm">
+              <div>
                 <div className="flex items-center gap-3">
                   <span className="text-2xl">💛</span>
                   <div className="flex-1">
-                    <p className="text-white text-sm font-medium">Community Updates</p>
+                    <p className="text-white text-sm font-medium" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>Community Updates</p>
                     <p className="text-white/50 text-xs">Results reveals, Most Loved winner, and community highlights</p>
                   </div>
                   <Toggle on={prefs.community_updates} onToggle={() => set("community_updates", !prefs.community_updates)} />
