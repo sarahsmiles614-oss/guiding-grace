@@ -174,19 +174,19 @@ export default function DevotionsPage() {
                 </div>
 
                 {/* Grace Challenge CTA */}
-                <div className="mt-10 mb-4 bg-white/10 border border-white/20 rounded-2xl p-6 backdrop-blur-sm text-center">
-                  <p className="text-white/50 text-xs uppercase tracking-widest mb-3">Today's Grace Challenge</p>
+                <div className="mt-10 mb-4 text-center">
+                  <p className="text-white/50 text-xs uppercase tracking-widest mb-3" style={{ textShadow: "0 1px 3px rgba(0,0,0,0.8)" }}>Today's Grace Challenge</p>
                   {teaserLoading ? (
                     <p className="text-white/40 text-sm italic mb-5 animate-pulse">Finding your challenge nudge...</p>
                   ) : teaser ? (
-                    <p className="text-white/80 text-sm leading-relaxed mb-5">{teaser}</p>
+                    <p className="text-white/80 text-sm leading-relaxed mb-5" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>{teaser}</p>
                   ) : (
-                    <p className="text-white/80 text-sm leading-relaxed mb-5">
+                    <p className="text-white/80 text-sm leading-relaxed mb-5" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
                       This devotion has a matching real-world challenge waiting for you. Take what you just read and live it out today — your community is doing it alongside you.
                     </p>
                   )}
                   <Link href="/grace-challenge">
-                    <button className="bg-white/20 hover:bg-white/30 border border-white/30 text-white font-semibold px-8 py-3 rounded-xl backdrop-blur-sm transition">
+                    <button className="bg-white/20 hover:bg-white/30 border border-white/30 text-white font-semibold px-8 py-3 rounded-xl transition">
                       Take the Challenge 💛
                     </button>
                   </Link>

@@ -148,7 +148,7 @@ export default function PromisesPage() {
                     .map((p) => (
                       <div
                         key={p.id}
-                        className="cursor-pointer hover:bg-white/10 p-5 rounded-xl transition backdrop-blur-sm border border-white/10"
+                        className="cursor-pointer hover:opacity-80 p-2 transition"
                         onClick={() => { setCurrentPromise(p); window.scrollTo({ top: 0, behavior: "smooth" }); }}
                       >
                         <div className="flex items-start justify-between gap-3">

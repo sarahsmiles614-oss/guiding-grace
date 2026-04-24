@@ -74,7 +74,7 @@ export default function HeroesVillainsPage() {
 
             {selected ? (
               /* Detail View */
-              <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 md:p-10 border border-white/20">
+              <div className="p-2">
                 <button
                   onClick={handleBack}
                   className="text-white/60 hover:text-white text-sm mb-6 flex items-center gap-1"
@@ -115,8 +115,8 @@ export default function HeroesVillainsPage() {
 
                 {/* Did You Know */}
                 {selected.didYouKnow && (
-                  <div className="mb-6 p-5 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 rounded-xl border-l-4 border-cyan-400">
-                    <h3 className="text-cyan-200 text-xs font-bold mb-2 uppercase tracking-wide">✨ Did You Know?</h3>
+                  <div className="mb-6">
+                    <h3 className="text-cyan-200 text-xs font-bold mb-2 uppercase tracking-wide" style={{ textShadow: "0 1px 3px rgba(0,0,0,0.8)" }}>✨ Did You Know?</h3>
                     <p className="text-white/90 text-sm leading-relaxed italic" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.6)" }}>
                       {selected.didYouKnow}
                     </p>
@@ -124,7 +124,7 @@ export default function HeroesVillainsPage() {
                 )}
 
                 {/* Key Verse */}
-                <div className="mb-6 p-5 bg-white/10 rounded-xl border-l-4 border-amber-400">
+                <div className="mb-6">
                   <p
                     className="text-xl text-white italic mb-2 leading-relaxed"
                     style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 1px 4px rgba(0,0,0,0.6)" }}
@@ -148,8 +148,8 @@ export default function HeroesVillainsPage() {
 
                 {/* Reflection Question */}
                 {selected.reflectionQuestion && (
-                  <div className="p-5 bg-gradient-to-br from-rose-500/15 to-purple-500/15 rounded-xl border border-rose-400/30">
-                    <h3 className="text-rose-200 font-bold mb-2 text-sm">💭 Reflection</h3>
+                  <div className="mb-6">
+                    <h3 className="text-rose-200 font-bold mb-2 text-sm" style={{ textShadow: "0 1px 3px rgba(0,0,0,0.8)" }}>💭 Reflection</h3>
                     <p className="text-white/90 text-base leading-relaxed italic" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.6)" }}>
                       {selected.reflectionQuestion}
                     </p>
@@ -247,7 +247,7 @@ export default function HeroesVillainsPage() {
                     <button
                       key={c.id}
                       onClick={() => handleSelect(c)}
-                      className="bg-white/10 backdrop-blur-md rounded-xl p-5 border border-white/20 hover:bg-white/20 hover:border-white/30 transition text-left group"
+                      className="p-5 hover:opacity-80 transition text-left group"
                     >
                       <div className="flex items-start justify-between mb-2">
                         <div className="flex-1">
