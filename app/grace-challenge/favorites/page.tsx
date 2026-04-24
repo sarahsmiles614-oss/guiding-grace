@@ -5,7 +5,7 @@ import SubscriptionGuard from "@/components/SubscriptionGuard";
 import { supabase } from "@/lib/supabase";
 import PageBackground from "@/components/PageBackground";
 
-const HEARTS_PER_DAY = 3;
+const HEARTS_PER_DAY = 1;
 
 function isAfterDeadline() {
   const now = new Date();
@@ -103,7 +103,7 @@ export default function FavoritesPage() {
                   ))}
                 </div>
                 {usedAll
-                  ? <p className="text-green-300 text-xs">✓ All 3 hearts given — your received votes will count!</p>
+                  ? <p className="text-green-300 text-xs">✓ Heart given — your received votes will count!</p>
                   : <p className="text-white/50 text-xs">{heartsLeft} heart{heartsLeft !== 1 ? "s" : ""} left · You can change votes until 7am EST</p>
                 }
               </div>

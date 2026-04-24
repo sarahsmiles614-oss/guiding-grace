@@ -16,18 +16,18 @@ const rules = [
   },
   {
     icon: "💛",
-    title: "3 Hearts to Give",
-    body: "Every day you receive 3 hearts to award to other players' responses. You can't vote for yourself. You can change your votes as many times as you want until the 7am EST deadline.",
+    title: "1 Heart to Give",
+    body: "Every day you receive 1 heart to award to the response that moves you most. You can't vote for yourself. You can change your vote as many times as you want until the 7am EST deadline.",
   },
   {
     icon: "🔖",
     title: "Save Favorites While You Decide",
-    body: "Bookmark responses you're considering voting for. Revisit your Favorites page to make your final decisions before the deadline.",
+    body: "Bookmark responses you're considering voting for. Revisit your Favorites page to make your final decision before the deadline.",
   },
   {
     icon: "⚠️",
-    title: "Use All 3 or Forfeit",
-    body: "You must give all 3 of your hearts to receive any votes others gave you. If you don't use all 3, your received votes are forfeited. You can still vote even if you didn't submit a response.",
+    title: "Give Your Heart or Forfeit",
+    body: "You must give your heart to receive any votes others gave you. If you don't vote, your received votes are forfeited. You can still vote even if you didn't submit a response.",
   },
   {
     icon: "✏️",
@@ -74,7 +74,7 @@ export default function RulesPage() {
 
             <div className="space-y-4">
               {rules.map((rule, i) => (
-                <div key={i} className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-5">
+                <div key={i} className="py-4 border-b border-white/10">
                   <div className="flex items-start gap-4">
                     <span className="text-2xl mt-0.5 flex-shrink-0">{rule.icon}</span>
                     <div>

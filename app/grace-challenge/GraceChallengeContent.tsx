@@ -6,7 +6,7 @@ import { supabase } from "@/lib/supabase";
 import PageBackground from "@/components/PageBackground";
 import ShareButton from "@/components/ShareButton";
 
-const HEARTS_PER_DAY = 3;
+const HEARTS_PER_DAY = 1;
 
 function isAfterDeadline() {
   const now = new Date();
@@ -345,9 +345,9 @@ export default function GraceChallengeContent() {
                     ))}
                   </div>
                   {usedAllHearts ? (
-                    <p className="text-green-300 text-xs" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>✓ All 3 hearts given — your votes count!</p>
+                    <p className="text-green-300 text-xs" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>✓ Heart given — your votes count!</p>
                   ) : (
-                    <p className="text-white/40 text-xs" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>Give all 3 hearts or your received votes won't count. Closes 7am EST.</p>
+                    <p className="text-white/40 text-xs" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>Give your heart or your received votes won't count. Closes 7am EST.</p>
                   )}
                 </div>
 

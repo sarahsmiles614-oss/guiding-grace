@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
-const HEARTS_PER_DAY = 3;
+const HEARTS_PER_DAY = 1;
 
 export async function GET(req: Request) {
   const authHeader = req.headers.get("authorization");
