@@ -43,6 +43,7 @@ export default function GraceChallengeContent() {
   const [response, setResponse] = useState("");
   const [completed, setCompleted] = useState<boolean | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
   const [givenHearts, setGivenHearts] = useState<string[]>([]);
   const [favorites, setFavorites] = useState<string[]>([]);
   const [revealed, setRevealed] = useState(false);
@@ -200,13 +201,19 @@ export default function GraceChallengeContent() {
   async function handleSubmit() {
     if (!response.trim() || completed === null || !userId || !challenge) return;
     setSubmitting(true);
-    await supabase.from("grace_challenge_posts").insert({
+    setSubmitError("");
+    const { error } = await supabase.from("grace_challenge_posts").insert({
       challenge_id: challenge.id,
       user_id: userId,
       user_name: userName,
       post_text: response,
       completed,
     });
+    if (error) {
+      setSubmitError(error.message);
+      setSubmitting(false);
+      return;
+    }
     await loadPosts(challenge.id);
     setSubmitting(false);
   }
@@ -293,7 +300,8 @@ export default function GraceChallengeContent() {
               <h1 className="text-lg font-bold text-white" style={{ textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>Daily Grace Challenge</h1>
               <div className="flex items-center gap-3">
                 <Link href="/grace-challenge/rules" className="text-white/60 text-sm">Rules</Link>
-                <Link href="/grace-challenge/leaderboard" className="text-yellow-300 text-sm font-medium">🏆</Link>
+                <Link href="/grace-challenge/favorites" className="text-white/70 hover:text-white text-sm">🔖</Link>
+                <Link href="/grace-challenge/leaderboard" className="text-yellow-300 hover:text-yellow-200 text-sm font-medium">🏆</Link>
               </div>
             </div>
 
@@ -333,7 +341,6 @@ export default function GraceChallengeContent() {
                   <div className="mb-6 bg-white/10 rounded-xl p-4 border border-white/20 backdrop-blur-sm">
                     <div className="flex items-center justify-between mb-2">
                       <p className="text-white/70 text-sm font-medium">Your Hearts</p>
-                      <Link href="/grace-challenge/favorites" className="text-yellow-300 text-xs">🔖 Favorites</Link>
                     </div>
                     <div className="flex gap-2 mb-2">
                       {Array.from({ length: HEARTS_PER_DAY }).map((_, i) => (
@@ -352,26 +359,38 @@ export default function GraceChallengeContent() {
                 {!userPost ? (
                   <div className="bg-white/10 backdrop-blur rounded-2xl p-5 mb-8 border border-white/20">
                     <p className="text-white/80 text-sm font-medium mb-1">Share your response</p>
-                    <p className="text-white/40 text-xs mb-4">Did the challenge or didn't — both entries can be voted on.</p>
+                    <p className="text-white/40 text-xs mb-3">Both entries can be voted on — honesty is grace too.</p>
+
+                    {/* Step 1: required status pick */}
+                    <p className="text-white/50 text-xs mb-2 uppercase tracking-widest">Step 1 — Pick one</p>
                     <div className="flex gap-3 mb-4">
                       <button onClick={() => setCompleted(true)}
-                        className={`flex-1 py-2 rounded-xl text-sm font-medium border transition ${completed === true ? "bg-white/30 text-white border-white/50" : "border-white/20 text-white/60"}`}>
+                        className={`flex-1 py-2.5 rounded-xl text-sm font-semibold border-2 transition ${completed === true ? "bg-white/30 text-white border-white/60 shadow-lg" : "border-white/20 text-white/60 hover:border-white/40"}`}>
                         ✅ I did it
                       </button>
                       <button onClick={() => setCompleted(false)}
-                        className={`flex-1 py-2 rounded-xl text-sm font-medium border transition ${completed === false ? "bg-white/30 text-white border-white/50" : "border-white/20 text-white/60"}`}>
+                        className={`flex-1 py-2.5 rounded-xl text-sm font-semibold border-2 transition ${completed === false ? "bg-white/30 text-white border-white/60 shadow-lg" : "border-white/20 text-white/60 hover:border-white/40"}`}>
                         🌱 I chose not to
                       </button>
                     </div>
+
+                    {/* Step 2: response text */}
+                    <p className="text-white/50 text-xs mb-2 uppercase tracking-widest">Step 2 — Share your story</p>
                     <textarea
                       value={response} onChange={e => setResponse(e.target.value)}
-                      placeholder={completed === false ? "Share why you chose not to — honesty is grace too..." : "Share your story..."}
-                      className="w-full bg-transparent border border-white/30 rounded-xl px-4 py-3 text-white placeholder-white/40 text-sm resize-none focus:outline-none focus:border-white/60 mb-3"
+                      placeholder={completed === false ? "Share why you chose not to..." : completed === true ? "Share how it went..." : "Select above first..."}
+                      disabled={completed === null}
+                      className="w-full bg-transparent border border-white/30 rounded-xl px-4 py-3 text-white placeholder-white/40 text-sm resize-none focus:outline-none focus:border-white/60 mb-3 disabled:opacity-40"
                       rows={4}
                     />
+
+                    {submitError && (
+                      <p className="text-red-300 text-sm bg-red-900/30 border border-red-400/20 rounded-xl px-4 py-2 mb-3">{submitError}</p>
+                    )}
+
                     <button onClick={handleSubmit} disabled={!response.trim() || completed === null || submitting}
                       className="w-full bg-white/20 hover:bg-white/30 border border-white/30 text-white font-semibold py-3 rounded-xl transition disabled:opacity-40">
-                      {submitting ? "Sharing..." : "Share My Response 💛"}
+                      {submitting ? "Posting..." : "Share My Response 💛"}
                     </button>
                   </div>
                 ) : userPost ? (
