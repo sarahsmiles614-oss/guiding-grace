@@ -45,7 +45,7 @@ export default function Home() {
 
   async function handleGoogle() {
     setLoading(true); reset();
-    await supabase.auth.signInWithOAuth({ provider: "google", options: { redirectTo: getCallbackUrl() } });
+    await supabase.auth.signInWithOAuth({ provider: "google", options: { redirectTo: getCallbackUrl(), queryParams: { prompt: "select_account" } } });
   }
 
   async function handleFacebook() {
