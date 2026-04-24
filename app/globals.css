@@ -6,10 +6,29 @@
   margin: 0;
 }
 
+html {
+  font-size: 17px;
+}
+
 html, body {
   max-width: 100vw;
   overflow-x: hidden;
 }
+
+body {
+  font-family: var(--font-body), Georgia, 'Times New Roman', serif;
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading), Georgia, 'Times New Roman', serif;
+  line-height: 1.25;
+}
+
+/* Tailwind utility aliases for the loaded fonts */
+.font-body    { font-family: var(--font-body), Georgia, serif; }
+.font-heading { font-family: var(--font-heading), Georgia, serif; }
 
 /* Shame Recycle Bin Animations */
 @keyframes fireGlow {
