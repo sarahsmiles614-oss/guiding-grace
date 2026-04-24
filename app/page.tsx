@@ -148,7 +148,7 @@ export default function Home() {
                 </button>
                 <button
                   onClick={() => { setForgotMode(false); reset(); }}
-                  className="w-full text-white/40 hover:text-white/70 text-sm py-2 transition"
+                  className="w-full text-white/70 hover:text-white text-sm py-2 transition"
                 >
                   ← Back to sign in
                 </button>
@@ -159,13 +159,13 @@ export default function Home() {
                 <div className="flex justify-center gap-8 mb-7">
                   <button
                     onClick={() => { setIsNewUser(false); reset(); }}
-                    className={`text-sm font-semibold pb-1 transition ${!isNewUser ? "text-white border-b-2 border-white" : "text-white/35 hover:text-white/60"}`}
+                    className={`text-sm font-semibold pb-1 transition ${!isNewUser ? "text-white border-b-2 border-white" : "text-white/60 hover:text-white/80"}`}
                   >
                     Sign In
                   </button>
                   <button
                     onClick={() => { setIsNewUser(true); reset(); }}
-                    className={`text-sm font-semibold pb-1 transition ${isNewUser ? "text-white border-b-2 border-white" : "text-white/35 hover:text-white/60"}`}
+                    className={`text-sm font-semibold pb-1 transition ${isNewUser ? "text-white border-b-2 border-white" : "text-white/60 hover:text-white/80"}`}
                   >
                     Create Account
                   </button>
@@ -200,7 +200,7 @@ export default function Home() {
                 {/* Divider */}
                 <div className="flex items-center gap-3 mb-5">
                   <div className="flex-1 h-px bg-white/15" />
-                  <span className="text-white/30 text-xs">or email</span>
+                  <span className="text-white/60 text-xs">or email</span>
                   <div className="flex-1 h-px bg-white/15" />
                 </div>
 
@@ -237,7 +237,7 @@ export default function Home() {
                 {!isNewUser && (
                   <button
                     onClick={() => { setForgotMode(true); reset(); }}
-                    className="w-full text-white/30 hover:text-white/60 text-xs py-2 transition"
+                    className="w-full text-white/60 hover:text-white text-xs py-2 transition"
                   >
                     Forgot your password?
                   </button>
@@ -250,7 +250,7 @@ export default function Home() {
                       ✨ Start Free 3-Day Trial
                     </button>
                   </Link>
-                  <p className="text-white/25 text-xs mt-1">No credit card required · Cancel anytime</p>
+                  <p className="text-white/60 text-xs mt-1">No credit card required · Cancel anytime</p>
                 </div>
               </>
             )}
