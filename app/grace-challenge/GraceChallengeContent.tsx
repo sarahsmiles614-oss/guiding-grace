@@ -290,7 +290,7 @@ export default function GraceChallengeContent() {
 
   return (
     <SubscriptionGuard>
-      <PageBackground url="https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/eric-hong-sKV-vwMI_5U-unsplash.jpg">
+      <PageBackground url="https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/saud-edum-cgapZpzd7v0-unsplash%20(1).jpg">
         <main className="flex-1 p-6">
           <div className="max-w-2xl mx-auto">
 
