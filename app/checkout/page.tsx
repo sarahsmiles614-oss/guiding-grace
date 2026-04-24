@@ -82,7 +82,7 @@ function CheckoutForm({ type, mode }: { type: "payment" | "setup"; mode: string 
         <PaymentElement
           options={{
             layout: "tabs",
-            paymentMethodOrder: ["card", "klarna", "link"],
+            paymentMethodOrder: ["card", "link"],
           }}
         />
       </div>

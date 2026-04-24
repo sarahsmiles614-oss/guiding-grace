@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
         trial_period_days: 3,
         payment_settings: {
           save_default_payment_method: "on_subscription",
-          payment_method_types: ["card"],
+          payment_method_types: ["card", "link"],
         },
         expand: ["latest_invoice.payment_intent", "pending_setup_intent"],
         metadata: { userId },
@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
       payment_behavior: "default_incomplete",
       payment_settings: {
         save_default_payment_method: "on_subscription",
-        payment_method_types: ["card"],
+        payment_method_types: ["card", "link"],
       },
       expand: ["latest_invoice.payment_intent"],
       metadata: { userId },
