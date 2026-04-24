@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useRef, useMemo, useCallback } from "react";
+import { useState, useEffect, useRef, useMemo, useCallback, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import SubscriptionGuard from "@/components/SubscriptionGuard";
@@ -59,6 +59,14 @@ const COLOR_SWATCHES: { id: HighlightColor; swatch: string; label: string }[] = 
 const SPEEDS: Speed[] = [0.75, 1, 1.25];
 
 export default function Bible365Page() {
+  return (
+    <Suspense fallback={null}>
+      <Bible365Inner />
+    </Suspense>
+  );
+}
+
+function Bible365Inner() {
   const plan = getBiblePlan();
   const searchParams = useSearchParams();
 
