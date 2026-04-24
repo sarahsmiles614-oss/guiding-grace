@@ -296,23 +296,23 @@ export default function GraceChallengeContent() {
 
             {/* Header */}
             <div className="flex justify-between items-center mb-4">
-              <Link href="/dashboard" className="text-white/70 text-sm">← Dashboard</Link>
-              <h1 className="text-lg font-bold text-white" style={{ textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>Daily Grace Challenge</h1>
+              <Link href="/dashboard" className="text-white/90 text-sm" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>← Dashboard</Link>
+              <h1 className="text-xl font-bold text-white" style={{ textShadow: "0 2px 10px rgba(0,0,0,0.9)" }}>Daily Grace Challenge</h1>
               <div className="flex items-center gap-3">
-                <Link href="/grace-challenge/rules" className="text-white/60 text-sm">Rules</Link>
-                <Link href="/grace-challenge/favorites" className="text-white/70 hover:text-white text-sm">🔖</Link>
+                <Link href="/grace-challenge/rules" className="text-white/90 text-sm" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>Rules</Link>
+                <Link href="/grace-challenge/favorites" className="text-white hover:text-white/80 text-sm">🔖</Link>
                 <Link href="/grace-challenge/leaderboard" className="text-yellow-300 hover:text-yellow-200 text-sm font-medium">🏆</Link>
               </div>
             </div>
 
             {loading ? (
-              <p className="text-white/60 text-center py-12">Loading...</p>
+              <p className="text-white text-center py-12">Loading...</p>
             ) : !challenge ? (
               <div className="text-center py-12">
-                <p className="text-white/60 mb-4">No challenge posted yet today. Check back soon. 🌅</p>
+                <p className="text-white mb-4">No challenge posted yet today. Check back soon. 🌅</p>
                 {isAdmin && (
                   <button onClick={handleGenerate} disabled={generating}
-                    className="bg-white/20 hover:bg-white/30 border border-white/30 text-white text-sm px-5 py-2 rounded-xl backdrop-blur-sm disabled:opacity-50">
+                    className="bg-white/20 hover:bg-white/30 border border-white/30 text-white px-5 py-2 rounded-xl disabled:opacity-50">
                     {generating ? "Generating..." : "⚡ Generate Today's Challenge"}
                   </button>
                 )}
@@ -320,52 +320,52 @@ export default function GraceChallengeContent() {
             ) : (
               <>
                 {/* Challenge */}
-                <p className="text-white/50 text-xs uppercase tracking-widest mb-2 text-center">Today's Challenge</p>
-                <p className="text-2xl font-bold text-white mb-8 leading-relaxed text-center"
-                  style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 12px rgba(0,0,0,0.8)" }}>
+                <p className="text-white/90 text-sm uppercase tracking-widest mb-3 text-center" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>Today's Challenge</p>
+                <p className="text-3xl font-bold text-white mb-8 leading-relaxed text-center"
+                  style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 16px rgba(0,0,0,0.9)" }}>
                   {challenge.challenge_text}
                 </p>
 
                 {/* Most Loved banner */}
                 {revealed && winner && (
                   <div className="mb-8 text-center">
-                    <p className="text-yellow-300 text-xs uppercase tracking-widest mb-2">🏆 Most Loved Today</p>
-                    <p className="text-white font-bold text-lg mb-1" style={{ textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>{displayName(winner)}</p>
-                    <p className="text-white/70 text-sm italic mb-1" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>"{winner.post_text?.slice(0, 120)}{winner.post_text?.length > 120 ? "..." : ""}"</p>
-                    <p className="text-yellow-200/70 text-xs">Your community has voted. 💛</p>
+                    <p className="text-yellow-300 text-sm uppercase tracking-widest mb-2" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>🏆 Most Loved Today</p>
+                    <p className="text-white font-bold text-xl mb-2" style={{ textShadow: "0 2px 8px rgba(0,0,0,0.9)" }}>{displayName(winner)}</p>
+                    <p className="text-white/90 text-base italic mb-1" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>"{winner.post_text?.slice(0, 120)}{winner.post_text?.length > 120 ? "..." : ""}"</p>
+                    <p className="text-yellow-200 text-sm" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>Your community has voted. 💛</p>
                   </div>
                 )}
 
                 {/* Hearts status */}
                 <div className="mb-6">
-                  <p className="text-white/50 text-xs mb-2" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>Your Hearts</p>
+                  <p className="text-white/90 text-sm mb-2" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>Your Hearts</p>
                   <div className="flex gap-2 mb-1">
                     {Array.from({ length: HEARTS_PER_DAY }).map((_, i) => (
                       <span key={i} className="text-2xl">{i < givenHearts.length ? "💛" : "🤍"}</span>
                     ))}
                   </div>
                   {usedAllHearts ? (
-                    <p className="text-green-300 text-xs" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>✓ Heart given — your votes count!</p>
+                    <p className="text-green-300 text-sm" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>✓ Heart given — your votes count!</p>
                   ) : (
-                    <p className="text-white/40 text-xs" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>Give your heart or your received votes won't count. Closes 7am EST.</p>
+                    <p className="text-white/80 text-sm" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>Give your heart or your received votes won't count. Closes 7am EST.</p>
                   )}
                 </div>
 
                 {/* Submission form */}
                 {!userPost ? (
                   <div className="mb-8">
-                    <p className="text-white/60 text-xs uppercase tracking-widest mb-3" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>Your Response</p>
+                    <p className="text-white/90 text-sm uppercase tracking-widest mb-3" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>Your Response</p>
                     <textarea
                       value={response} onChange={e => setResponse(e.target.value)}
                       placeholder="Share how it went..."
-                      className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/40 text-sm resize-none focus:outline-none focus:border-white/50 mb-3"
+                      className="w-full bg-white/10 border border-white/30 rounded-xl px-4 py-3 text-white placeholder-white/60 text-base resize-none focus:outline-none focus:border-white/60 mb-3"
                       rows={4}
                     />
                     {submitError && (
-                      <p className="text-red-300 text-sm mb-3" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>{submitError}</p>
+                      <p className="text-red-300 text-sm mb-3" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>{submitError}</p>
                     )}
                     <button onClick={handleSubmit} disabled={!response.trim() || submitting}
-                      className="w-full bg-white/20 hover:bg-white/30 text-white font-semibold py-3 rounded-xl transition disabled:opacity-40">
+                      className="w-full bg-white/25 hover:bg-white/35 text-white font-semibold py-3 rounded-xl transition disabled:opacity-40 text-base">
                       {submitting ? "Posting..." : "Share My Response 💛"}
                     </button>
                   </div>
@@ -373,19 +373,19 @@ export default function GraceChallengeContent() {
                   <div className="mb-8">
                     {isEditing ? (
                       <>
-                        <p className="text-yellow-300 text-xs mb-3" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>⚠️ Editing forfeits votes received so far.</p>
+                        <p className="text-yellow-300 text-sm mb-3" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>⚠️ Editing forfeits votes received so far.</p>
                         <textarea
                           value={editText} onChange={e => setEditText(e.target.value)}
-                          className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white text-sm resize-none focus:outline-none focus:border-white/50 mb-3"
+                          className="w-full bg-white/10 border border-white/30 rounded-xl px-4 py-3 text-white text-base resize-none focus:outline-none focus:border-white/60 mb-3"
                           rows={4}
                         />
                         <div className="flex gap-3">
                           <button onClick={() => setIsEditing(false)}
-                            className="flex-1 text-white/60 font-semibold py-2 rounded-xl text-sm transition hover:text-white">
+                            className="flex-1 text-white/80 font-semibold py-2 rounded-xl transition hover:text-white">
                             Cancel
                           </button>
                           <button onClick={handleEditSubmit} disabled={!editText.trim() || editCompleted === null || editSubmitting}
-                            className="flex-1 bg-yellow-400/30 hover:bg-yellow-400/40 text-white font-semibold py-2 rounded-xl text-sm transition disabled:opacity-40">
+                            className="flex-1 bg-yellow-400/30 hover:bg-yellow-400/40 text-white font-semibold py-2 rounded-xl transition disabled:opacity-40">
                             {editSubmitting ? "Saving..." : "Save & Forfeit Votes"}
                           </button>
                         </div>
@@ -393,13 +393,13 @@ export default function GraceChallengeContent() {
                     ) : (
                       <>
                         <div className="flex items-start justify-between mb-2">
-                          <p className="text-white/40 text-xs">Your response</p>
+                          <p className="text-white/80 text-sm">Your response</p>
                           {!isAfterDeadline() && (
-                            <button onClick={startEditing} className="text-white/40 hover:text-white/70 text-xs transition">Edit</button>
+                            <button onClick={startEditing} className="text-white/70 hover:text-white text-sm transition">Edit</button>
                           )}
                         </div>
-                        <p className="text-white/80 text-sm leading-relaxed" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>{userPost.post_text}</p>
-                        <p className="text-white/30 text-xs mt-3">Your response is live 💛</p>
+                        <p className="text-white text-base leading-relaxed" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>{userPost.post_text}</p>
+                        <p className="text-white/70 text-sm mt-3">Your response is live 💛</p>
                       </>
                     )}
                   </div>
@@ -412,12 +412,12 @@ export default function GraceChallengeContent() {
                     text={`Today's Grace Challenge: "${challenge.challenge_text}"\n\nJoin the community on Guiding Grace:`}
                     url="https://guidinggrace.app"
                     label="🤍 Share This Challenge"
-                    className="text-white/60 hover:text-white text-sm transition"
+                    className="text-white/80 hover:text-white text-sm transition"
                   />
                 </div>
 
                 {/* Community responses */}
-                <p className="text-white/40 text-xs uppercase tracking-widest mb-4">
+                <p className="text-white/80 text-sm uppercase tracking-widest mb-4" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>
                   Community Responses · Voting closes at 7am EST
                 </p>
 
@@ -425,7 +425,7 @@ export default function GraceChallengeContent() {
                   {posts.map(post => (
                     <div key={post.id} className={`${winner?.id === post.id && revealed ? "border-l-2 border-yellow-400 pl-4" : ""}`}>
                       <div className="flex justify-between items-start mb-1">
-                        <p className="text-white/40 text-xs">{displayName(post)}</p>
+                        <p className="text-white/80 text-sm" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>{displayName(post)}</p>
                         <div className="flex items-center gap-2">
                           {post.user_id !== userId && (
                             <button
@@ -440,7 +440,7 @@ export default function GraceChallengeContent() {
                             <button
                               onClick={() => toggleHeart(post.id, post.user_id)}
                               disabled={!givenHearts.includes(post.id) && heartsLeft === 0}
-                              className={`text-xl transition ${!givenHearts.includes(post.id) && heartsLeft === 0 ? "opacity-30 cursor-default" : "hover:scale-110"}`}
+                              className={`text-xl transition ${!givenHearts.includes(post.id) && heartsLeft === 0 ? "opacity-40 cursor-default" : "hover:scale-110"}`}
                               title={givenHearts.includes(post.id) ? "Remove vote" : "Give a heart"}
                             >
                               {givenHearts.includes(post.id) ? "💛" : "🤍"}
@@ -448,13 +448,13 @@ export default function GraceChallengeContent() {
                           )}
                         </div>
                       </div>
-                      <p className="text-white/80 text-sm leading-relaxed" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
+                      <p className="text-white text-base leading-relaxed" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>
                         {post.post_text}
                       </p>
                     </div>
                   ))}
                   {posts.length === 0 && (
-                    <p className="text-white/40 text-sm text-center py-6">Be the first to share a response today.</p>
+                    <p className="text-white/80 text-base text-center py-6">Be the first to share a response today.</p>
                   )}
                 </div>
               </>
