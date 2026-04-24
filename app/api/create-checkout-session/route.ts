@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
 
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
-      automatic_payment_methods: { enabled: true },
+      payment_method_types: ["card"],
       payment_method_collection: isTrial ? "if_required" : "always",
       customer: customer.id,
       line_items: [{ price: isYearly ? process.env.STRIPE_YEARLY_PRICE_ID! : process.env.STRIPE_PRICE_ID!, quantity: 1 }],
