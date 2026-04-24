@@ -308,7 +308,7 @@ export default function Bible365Page() {
   // ── Render ─────────────────────────────────────────────────────────────────
   return (
     <SubscriptionGuard>
-      <PageBackground url="https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/julius_silver-lago-di-limides-3025780_1920.jpg">
+      <PageBackground url="https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/saud-edum-cgapZpzd7v0-unsplash%20(1).jpg">
         <main className="flex-1 p-6 pb-24">
           <div className="max-w-2xl mx-auto">
 
