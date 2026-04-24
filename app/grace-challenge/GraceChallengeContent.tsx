@@ -326,70 +326,66 @@ export default function GraceChallengeContent() {
                   {challenge.challenge_text}
                 </p>
 
-                {/* Most Loved banner (after deadline) */}
+                {/* Most Loved banner */}
                 {revealed && winner && (
-                  <div className="mb-8 bg-yellow-400/20 border border-yellow-400/40 rounded-2xl p-5 text-center backdrop-blur-sm">
+                  <div className="mb-8 text-center">
                     <p className="text-yellow-300 text-xs uppercase tracking-widest mb-2">🏆 Most Loved Today</p>
-                    <p className="text-white font-bold text-lg mb-1">{displayName(winner)}</p>
-                    <p className="text-white/70 text-sm italic mb-3">"{winner.post_text?.slice(0, 120)}{winner.post_text?.length > 120 ? "..." : ""}"</p>
-                    <p className="text-yellow-200/80 text-xs">Your community has voted — you have earned the Most Loved award for Guiding Grace today. 💛</p>
+                    <p className="text-white font-bold text-lg mb-1" style={{ textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>{displayName(winner)}</p>
+                    <p className="text-white/70 text-sm italic mb-1" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>"{winner.post_text?.slice(0, 120)}{winner.post_text?.length > 120 ? "..." : ""}"</p>
+                    <p className="text-yellow-200/70 text-xs">Your community has voted. 💛</p>
                   </div>
                 )}
 
-                {/* Hearts status — always visible for today's voting */}
-                {(
-                  <div className="mb-6 bg-white/10 rounded-xl p-4 border border-white/20 backdrop-blur-sm">
-                    <div className="flex items-center justify-between mb-2">
-                      <p className="text-white/70 text-sm font-medium">Your Hearts</p>
-                    </div>
-                    <div className="flex gap-2 mb-2">
-                      {Array.from({ length: HEARTS_PER_DAY }).map((_, i) => (
-                        <span key={i} className="text-2xl">{i < givenHearts.length ? "💛" : "🤍"}</span>
-                      ))}
-                    </div>
-                    {usedAllHearts ? (
-                      <p className="text-green-300 text-xs">✓ All 3 hearts given — your received votes will count!</p>
-                    ) : (
-                      <p className="text-white/50 text-xs">Give all 3 hearts or your received votes won't count. You can change your votes until 7am EST.</p>
-                    )}
+                {/* Hearts status */}
+                <div className="mb-6">
+                  <p className="text-white/50 text-xs mb-2" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>Your Hearts</p>
+                  <div className="flex gap-2 mb-1">
+                    {Array.from({ length: HEARTS_PER_DAY }).map((_, i) => (
+                      <span key={i} className="text-2xl">{i < givenHearts.length ? "💛" : "🤍"}</span>
+                    ))}
                   </div>
-                )}
+                  {usedAllHearts ? (
+                    <p className="text-green-300 text-xs" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>✓ All 3 hearts given — your votes count!</p>
+                  ) : (
+                    <p className="text-white/40 text-xs" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>Give all 3 hearts or your received votes won't count. Closes 7am EST.</p>
+                  )}
+                </div>
 
                 {/* Submission form */}
                 {!userPost ? (
-                  <div className="bg-white/10 backdrop-blur rounded-2xl p-5 mb-8 border border-white/20">
-                    <p className="text-white/80 text-sm font-medium mb-3">Share your response</p>
+                  <div className="mb-8">
+                    <p className="text-white/60 text-xs uppercase tracking-widest mb-3" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>Your Response</p>
                     <textarea
                       value={response} onChange={e => setResponse(e.target.value)}
                       placeholder="Share how it went..."
-                      className="w-full bg-transparent border border-white/30 rounded-xl px-4 py-3 text-white placeholder-white/40 text-sm resize-none focus:outline-none focus:border-white/60 mb-3"
+                      className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/40 text-sm resize-none focus:outline-none focus:border-white/50 mb-3"
                       rows={4}
                     />
                     {submitError && (
-                      <p className="text-red-300 text-sm bg-red-900/30 border border-red-400/20 rounded-xl px-4 py-2 mb-3">{submitError}</p>
+                      <p className="text-red-300 text-sm mb-3" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>{submitError}</p>
                     )}
                     <button onClick={handleSubmit} disabled={!response.trim() || submitting}
-                      className="w-full bg-white/20 hover:bg-white/30 border border-white/30 text-white font-semibold py-3 rounded-xl transition disabled:opacity-40">
+                      className="w-full bg-white/20 hover:bg-white/30 text-white font-semibold py-3 rounded-xl transition disabled:opacity-40">
                       {submitting ? "Posting..." : "Share My Response 💛"}
                     </button>
                   </div>
                 ) : userPost ? (
-                  <div className="bg-white/10 backdrop-blur rounded-2xl p-5 mb-8 border border-white/20">
+                  <div className="mb-8">
                     {isEditing ? (
                       <>
-                        <p className="text-yellow-300 text-xs mb-3 font-medium">⚠️ Editing will forfeit all votes you've received so far.</p>
+                        <p className="text-yellow-300 text-xs mb-3" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>⚠️ Editing forfeits votes received so far.</p>
                         <textarea
                           value={editText} onChange={e => setEditText(e.target.value)}
-                          className="w-full bg-transparent border border-white/30 rounded-xl px-4 py-3 text-white placeholder-white/40 text-sm resize-none focus:outline-none focus:border-white/60 mb-3"
+                          className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white text-sm resize-none focus:outline-none focus:border-white/50 mb-3"
                           rows={4}
                         />
                         <div className="flex gap-3">
                           <button onClick={() => setIsEditing(false)}
-                            className="flex-1 border border-white/20 text-white/60 font-semibold py-2 rounded-xl text-sm transition hover:bg-white/10">
+                            className="flex-1 text-white/60 font-semibold py-2 rounded-xl text-sm transition hover:text-white">
                             Cancel
                           </button>
                           <button onClick={handleEditSubmit} disabled={!editText.trim() || editCompleted === null || editSubmitting}
-                            className="flex-1 bg-yellow-400/30 hover:bg-yellow-400/40 border border-yellow-400/40 text-white font-semibold py-2 rounded-xl text-sm transition disabled:opacity-40">
+                            className="flex-1 bg-yellow-400/30 hover:bg-yellow-400/40 text-white font-semibold py-2 rounded-xl text-sm transition disabled:opacity-40">
                             {editSubmitting ? "Saving..." : "Save & Forfeit Votes"}
                           </button>
                         </div>
@@ -397,15 +393,12 @@ export default function GraceChallengeContent() {
                     ) : (
                       <>
                         <div className="flex items-start justify-between mb-2">
-                          <p className="text-white/50 text-xs">Your response</p>
+                          <p className="text-white/40 text-xs">Your response</p>
                           {!isAfterDeadline() && (
-                            <button onClick={startEditing}
-                              className="text-white/40 hover:text-white/70 text-xs border border-white/20 px-3 py-1 rounded-lg transition">
-                              Edit
-                            </button>
+                            <button onClick={startEditing} className="text-white/40 hover:text-white/70 text-xs transition">Edit</button>
                           )}
                         </div>
-                        <p className="text-white/80 text-sm leading-relaxed">{userPost.post_text}</p>
+                        <p className="text-white/80 text-sm leading-relaxed" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>{userPost.post_text}</p>
                         <p className="text-white/30 text-xs mt-3">Your response is live 💛</p>
                       </>
                     )}
@@ -419,7 +412,7 @@ export default function GraceChallengeContent() {
                     text={`Today's Grace Challenge: "${challenge.challenge_text}"\n\nJoin the community on Guiding Grace:`}
                     url="https://guidinggrace.app"
                     label="🤍 Share This Challenge"
-                    className="bg-white/10 hover:bg-white/20 border border-white/20 text-white/70 hover:text-white text-sm px-6 py-2.5 rounded-2xl backdrop-blur-sm transition"
+                    className="text-white/60 hover:text-white text-sm transition"
                   />
                 </div>
 
