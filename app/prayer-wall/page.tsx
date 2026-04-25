@@ -57,6 +57,11 @@ export default function PrayerWallPage() {
     setPrayers((prev) => prev.map((p) => p.id === id ? { ...p, is_answered: !current } : p));
   }
 
+  async function handleDelete(id: string) {
+    await supabase.from("prayer_requests").delete().eq("id", id);
+    setPrayers((prev) => prev.filter((p) => p.id !== id));
+  }
+
   async function handleEdit(id: string) {
     if (!editText.trim()) return;
     await supabase.from("prayer_requests").update({ prayer_text: editText }).eq("id", id);
@@ -205,6 +210,12 @@ export default function PrayerWallPage() {
                           className="text-xs text-white/40 hover:text-white/70 transition"
                         >
                           {p.is_answered ? "Unmark answered" : "Mark answered ✓"}
+                        </button>
+                        <button
+                          onClick={() => { if (confirm("Remove this prayer?")) handleDelete(p.id); }}
+                          className="text-xs text-red-400/50 hover:text-red-300 transition"
+                        >
+                          Remove
                         </button>
                       </>
                     )}
