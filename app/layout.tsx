@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://guidinggrace.app",
   },
-  title: "Guiding Grace — A Daily Faith Companion",
+  title: "Guiding Grace — Daily Devotions & Faith Companion",
   description: "Daily devotions, scripture promises, grace challenges, and sacred spaces to strengthen your faith. Start your free 3-day trial today.",
   manifest: "/manifest.json",
   metadataBase: new URL("https://guidinggrace.app"),
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     title: "Guiding Grace",
   },
   openGraph: {
-    title: "Guiding Grace — A Daily Faith Companion",
+    title: "Guiding Grace — Daily Devotions & Faith Companion",
     description: "Daily devotions, scripture promises, grace challenges, and sacred spaces to strengthen your faith.",
     url: "https://guidinggrace.app",
     siteName: "Guiding Grace",
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary",
-    title: "Guiding Grace — A Daily Faith Companion",
+    title: "Guiding Grace — Daily Devotions & Faith Companion",
     description: "Daily devotions, scripture promises, and grace challenges to strengthen your faith.",
     images: ["/icon.jpg"],
   },
