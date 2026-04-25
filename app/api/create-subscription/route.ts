@@ -69,19 +69,19 @@ export async function POST(req: NextRequest) {
       payment_settings: {
         save_default_payment_method: "on_subscription",
       },
-      expand: ["latest_invoice.payment_intent"],
       metadata: { userId },
     });
 
-    const invoice = subscription.latest_invoice as any;
-    const rawIntent = invoice?.payment_intent;
-
-    // Resolve whether we got a full object or just a string ID
-    let paymentIntentId = resolveId(rawIntent);
+    // Explicitly retrieve the invoice so we always get the full object
+    const invoiceId = resolveId(subscription.latest_invoice);
+    if (!invoiceId) {
+      return NextResponse.json({ error: "No invoice found on subscription." }, { status: 500 });
+    }
+    const invoice = await stripe.invoices.retrieve(invoiceId);
+    const paymentIntentId = resolveId(invoice.payment_intent);
 
     if (!paymentIntentId) {
-      // Shouldn't happen for a paid plan, but handle gracefully
-      return NextResponse.json({ error: "Could not create payment intent. Please try again." }, { status: 500 });
+      return NextResponse.json({ error: "No payment intent on invoice." }, { status: 500 });
     }
 
     // Update PaymentIntent to allow all automatic payment methods
