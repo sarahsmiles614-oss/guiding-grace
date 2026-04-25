@@ -115,7 +115,7 @@ export default function DevotionsPage() {
     <SubscriptionGuard>
       <PageBackground url="https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/edenmoon-rainbow-5145675_1920.jpg">
         <main className="flex-1 p-6">
-          <div className="max-w-2xl mx-auto">
+          <div className="max-w-2xl mx-auto text-center">
             <div className="flex justify-between items-center mb-6">
               <Link href="/dashboard" className="text-white/70 text-sm">← Dashboard</Link>
               <h1 className="text-lg font-bold text-white" style={{ textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>Daily Devotions</h1>
@@ -156,11 +156,11 @@ export default function DevotionsPage() {
               <p className="text-white/60 text-center py-12">No devotion posted yet today. Check back soon. 🌅</p>
             ) : (
               <>
-                <p className="text-white/50 text-xs uppercase tracking-widest mb-2">{formatDate(displayed.devotion_date)}</p>
-                <h2 className="text-3xl font-bold text-white mb-6" style={{ textShadow: "0 2px 12px rgba(0,0,0,0.8)", fontFamily: "'Playfair Display', Georgia, serif" }}>{displayed.title}</h2>
-                <p className="text-white/90 italic text-lg mb-2" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.8)" }}>"{displayed.verse_text}"</p>
-                <p className="text-white/50 text-sm mb-8">— {displayed.verse_reference}</p>
-                <p className="text-white/80 leading-relaxed" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>{displayed.reflection}</p>
+                <p className="text-white/50 text-xs uppercase tracking-widest mb-2 text-center">{formatDate(displayed.devotion_date)}</p>
+                <h2 className="text-3xl font-bold text-white mb-6 text-center" style={{ textShadow: "0 2px 12px rgba(0,0,0,0.8)", fontFamily: "'Playfair Display', Georgia, serif" }}>{displayed.title}</h2>
+                <p className="text-white/90 italic text-lg mb-2 text-center" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.8)" }}>"{displayed.verse_text}"</p>
+                <p className="text-white/50 text-sm mb-8 text-center">— {displayed.verse_reference}</p>
+                <p className="text-white/80 leading-relaxed text-center" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>{displayed.reflection}</p>
 
                 {/* Share devotion */}
                 <div className="mt-6 flex justify-center">

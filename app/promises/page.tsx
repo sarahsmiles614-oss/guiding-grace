@@ -119,28 +119,30 @@ export default function PromisesPage() {
               </div>
 
               <blockquote
-                className="text-2xl md:text-3xl text-white font-serif italic leading-relaxed mb-3 max-w-3xl mx-auto"
+                className="text-2xl md:text-3xl text-white font-serif italic leading-relaxed mb-3 max-w-3xl mx-auto text-center"
                 style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 8px rgba(0,0,0,0.7)" }}
               >
                 &ldquo;{currentPromise.scripture}&rdquo;
               </blockquote>
 
-              <p className="text-lg text-amber-200 font-semibold mb-5" style={{ textShadow: "0 2px 6px rgba(0,0,0,0.6)" }}>
+              <p className="text-lg text-amber-200 font-semibold mb-5 text-center" style={{ textShadow: "0 2px 6px rgba(0,0,0,0.6)" }}>
                 — {currentPromise.reference}
               </p>
 
               {currentPromise.reflection && (
-                <p className="text-white/90 text-base leading-relaxed max-w-2xl mx-auto mb-5" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.6)" }}>
+                <p className="text-white/90 text-base leading-relaxed max-w-2xl mx-auto mb-5 text-center" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.6)" }}>
                   {currentPromise.reflection}
                 </p>
               )}
 
-              <button
-                onClick={generateNewPromise}
-                className="px-8 py-3 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold text-sm rounded-full transition"
-              >
-                ✨ New Promise
-              </button>
+              <div className="flex justify-center">
+                <button
+                  onClick={generateNewPromise}
+                  className="px-8 py-3 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold text-sm rounded-full transition"
+                >
+                  ✨ New Promise
+                </button>
+              </div>
 
               <button
                 onClick={() => setShowStudio(true)}
@@ -166,26 +168,22 @@ export default function PromisesPage() {
                     .map((p) => (
                       <div
                         key={p.id}
-                        className="cursor-pointer hover:opacity-80 p-2 transition"
+                        className="cursor-pointer hover:opacity-80 p-2 transition text-center"
                         onClick={() => { setCurrentPromise(p); window.scrollTo({ top: 0, behavior: "smooth" }); }}
                       >
-                        <div className="flex items-start justify-between gap-3">
-                          <div className="flex-1">
-                            <span className="text-xs font-bold text-white/60 uppercase tracking-wide block mb-1">{p.category}</span>
-                            <p className="text-white font-serif italic leading-relaxed mb-1 line-clamp-2" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.6)" }}>
-                              &ldquo;{p.scripture}&rdquo;
-                            </p>
-                            <p className="text-amber-200 text-sm font-medium" style={{ textShadow: "0 1px 3px rgba(0,0,0,0.5)" }}>
-                              {p.reference}
-                            </p>
-                          </div>
-                          <button
-                            onClick={(e) => { e.stopPropagation(); toggleFavorite(p.id); }}
-                            className="text-xl flex-shrink-0"
-                          >
-                            💜
-                          </button>
-                        </div>
+                        <span className="text-xs font-bold text-white/60 uppercase tracking-wide block mb-1">{p.category}</span>
+                        <p className="text-white font-serif italic leading-relaxed mb-1 line-clamp-2" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.6)" }}>
+                          &ldquo;{p.scripture}&rdquo;
+                        </p>
+                        <p className="text-amber-200 text-sm font-medium mb-2" style={{ textShadow: "0 1px 3px rgba(0,0,0,0.5)" }}>
+                          {p.reference}
+                        </p>
+                        <button
+                          onClick={(e) => { e.stopPropagation(); toggleFavorite(p.id); }}
+                          className="text-xl"
+                        >
+                          💜
+                        </button>
                       </div>
                     ))}
                 </div>
