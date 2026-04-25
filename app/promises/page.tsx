@@ -5,6 +5,7 @@ import SubscriptionGuard from "@/components/SubscriptionGuard";
 import { supabase } from "@/lib/supabase";
 import { promises, categories } from "@/lib/promises";
 import PageBackground from "@/components/PageBackground";
+import ShareStudio from "@/components/ShareStudio";
 
 export default function PromisesPage() {
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -13,6 +14,7 @@ export default function PromisesPage() {
   const [currentPromise, setCurrentPromise] = useState(
     () => promises[Math.floor(Math.random() * promises.length)]
   );
+  const [showStudio, setShowStudio] = useState(false);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
@@ -58,6 +60,14 @@ export default function PromisesPage() {
   }
 
   return (
+    <>
+    {showStudio && (
+      <ShareStudio
+        scripture={currentPromise.scripture}
+        reference={currentPromise.reference}
+        onClose={() => setShowStudio(false)}
+      />
+    )}
     <SubscriptionGuard>
       <PageBackground url="https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/gersweb-god-2012104.jpg">
         <main className="flex-1 p-6">
@@ -100,12 +110,21 @@ export default function PromisesPage() {
                 <span className="px-4 py-1.5 text-white text-xs font-bold backdrop-blur-sm bg-white/20 rounded-full">
                   {currentPromise.category}
                 </span>
-                <button
-                  onClick={() => toggleFavorite(currentPromise.id)}
-                  className="transition-transform hover:scale-110 text-2xl"
-                >
-                  {favorites.includes(currentPromise.id) ? "💜" : "🤍"}
-                </button>
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => setShowStudio(true)}
+                    className="transition-transform hover:scale-110 text-2xl"
+                    title="Share this promise"
+                  >
+                    🎨
+                  </button>
+                  <button
+                    onClick={() => toggleFavorite(currentPromise.id)}
+                    className="transition-transform hover:scale-110 text-2xl"
+                  >
+                    {favorites.includes(currentPromise.id) ? "💜" : "🤍"}
+                  </button>
+                </div>
               </div>
 
               <blockquote
@@ -177,5 +196,6 @@ export default function PromisesPage() {
         </main>
       </PageBackground>
     </SubscriptionGuard>
+    </>
   );
 }
