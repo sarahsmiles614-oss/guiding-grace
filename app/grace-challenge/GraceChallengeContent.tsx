@@ -260,6 +260,18 @@ export default function GraceChallengeContent() {
     setBlockedIds(prev => new Set([...prev, blockedUserId]));
   }
 
+  async function handleReport(contentId: string, contentText: string, reportedUserId: string) {
+    if (!userId || !confirm("Report this content as inappropriate?")) return;
+    await supabase.from("content_reports").insert({
+      reporter_id: userId,
+      reported_user_id: reportedUserId,
+      content_type: "grace_challenge",
+      content_id: contentId,
+      content_text: contentText,
+    });
+    alert("Thank you — this has been reported for review.");
+  }
+
   async function handleGenerate() {
     setGenerating(true);
     await fetch("/api/admin/generate-today", { method: "POST" });
@@ -459,6 +471,15 @@ export default function GraceChallengeContent() {
                               title="Block user"
                             >
                               Block
+                            </button>
+                          )}
+                          {post.user_id !== userId && (
+                            <button
+                              onClick={() => handleReport(post.id, post.post_text, post.user_id)}
+                              className="text-xs text-white/30 hover:text-red-300 transition"
+                              title="Report content"
+                            >
+                              Report
                             </button>
                           )}
                           {post.user_id !== userId && (

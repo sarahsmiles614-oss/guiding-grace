@@ -70,6 +70,18 @@ export default function PrayerWallPage() {
     setBlockedIds(prev => new Set([...prev, blockedUserId]));
   }
 
+  async function handleReport(contentId: string, contentText: string, reportedUserId: string) {
+    if (!userId || !confirm("Report this content as inappropriate?")) return;
+    await supabase.from("content_reports").insert({
+      reporter_id: userId,
+      reported_user_id: reportedUserId,
+      content_type: "prayer",
+      content_id: contentId,
+      content_text: contentText,
+    });
+    alert("Thank you — this has been reported for review.");
+  }
+
   async function handleDelete(id: string) {
     await supabase.from("prayer_requests").delete().eq("id", id);
     setPrayers((prev) => prev.filter((p) => p.id !== id));
@@ -217,6 +229,14 @@ export default function PrayerWallPage() {
                         className="text-xs text-white/30 hover:text-red-300 transition"
                       >
                         Block
+                      </button>
+                    )}
+                    {p.user_id !== userId && (
+                      <button
+                        onClick={() => handleReport(p.id, p.prayer_text, p.user_id)}
+                        className="text-xs text-white/30 hover:text-red-300 transition"
+                      >
+                        Report
                       </button>
                     )}
 
