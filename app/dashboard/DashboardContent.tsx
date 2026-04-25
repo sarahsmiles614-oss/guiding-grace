@@ -45,9 +45,9 @@ export default function DashboardContent() {
     { label: "Bible in 365 Days", href: "/bible-365", icon: "🎧", desc: "Read or listen through the entire Bible in one year" },
     { label: "His Promises", href: "/promises", icon: "🕊️", desc: "Discover scripture promises by category, save your favorites, and share beautifully customized verse cards." },
     { label: "Shame Recycle Bin", href: "/shame-recycle", icon: "🗑️", desc: "Release guilt and shame — let it burn away" },
-    { label: "Heaven's Hearts", href: "/heavens-hearts", icon: "💜", desc: "Light a candle in memory of someone you love" },
+    { label: "Heaven's Hearts", href: "/heavens-hearts", icon: "💜", desc: "Honor your deceased loved ones with a beautiful, customizable memorial wall" },
     { label: "Nightly Reflections", href: "/nightly-reflections", icon: "🌙", desc: "End your day with gratitude and surrender" },
-    { label: "Heroes & Villains", href: "/heroes-villains", icon: "⚔️", desc: "Pray for those who inspire you — and those who challenge you" },
+    { label: "Heroes & Villains", href: "/heroes-villains", icon: "⚔️", desc: "Explore the stories of the bold heroes and notorious villains of the Bible" },
     { label: "P.U.S.H. Prayer Wall", href: "/prayer-wall", icon: "🙏", desc: "Pray Until Something Happens — post and pray together" },
     { label: "Truth Testimonies", href: "/testimony-wall", icon: "✨", desc: "Share what God has done in your life" },
   ];
