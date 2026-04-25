@@ -51,6 +51,7 @@ export default function GraceChallengeContent() {
   const [winner, setWinner] = useState<any>(null);
   const [generating, setGenerating] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [blockedIds, setBlockedIds] = useState<Set<string>>(new Set());
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState("");
   const [editCompleted, setEditCompleted] = useState<boolean | null>(true);
@@ -88,6 +89,9 @@ export default function GraceChallengeContent() {
         setUserId(user.id);
         setUserName(user.user_metadata?.full_name || "Friend");
         if (user.email === "sarahsmiles614@gmail.com") setIsAdmin(true);
+        supabase.from("blocked_users").select("blocked_id").eq("blocker_id", user.id).then(({ data }) => {
+          if (data) setBlockedIds(new Set(data.map((r: any) => r.blocked_id)));
+        });
       }
     });
     loadChallenge();
@@ -248,6 +252,12 @@ export default function GraceChallengeContent() {
       });
       setFavorites(f => [...f, postId]);
     }
+  }
+
+  async function handleBlock(blockedUserId: string) {
+    if (!userId || !confirm("Block this user? Their posts will no longer appear for you.")) return;
+    await supabase.from("blocked_users").insert({ blocker_id: userId, blocked_id: blockedUserId });
+    setBlockedIds(prev => new Set([...prev, blockedUserId]));
   }
 
   async function handleGenerate() {
@@ -428,7 +438,7 @@ export default function GraceChallengeContent() {
                 </p>
 
                 <div className="space-y-6">
-                  {posts.map(post => (
+                  {posts.filter(post => !blockedIds.has(post.user_id)).map(post => (
                     <div key={post.id} className={`${winner?.id === post.id && revealed ? "border-l-2 border-yellow-400 pl-4" : ""}`}>
                       <div className="flex justify-between items-start mb-1">
                         <p className="text-white/80 text-sm text-center flex-1" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>{displayName(post)}</p>
@@ -440,6 +450,15 @@ export default function GraceChallengeContent() {
                               title="Save to favorites"
                             >
                               {favorites.includes(post.id) ? "⭐" : "☆"}
+                            </button>
+                          )}
+                          {post.user_id !== userId && (
+                            <button
+                              onClick={() => handleBlock(post.user_id)}
+                              className="text-xs text-white/30 hover:text-red-300 transition"
+                              title="Block user"
+                            >
+                              Block
                             </button>
                           )}
                           {post.user_id !== userId && (

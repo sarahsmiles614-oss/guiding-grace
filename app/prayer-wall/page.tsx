@@ -14,10 +14,17 @@ export default function PrayerWallPage() {
   const [submitting, setSubmitting] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editText, setEditText] = useState("");
+  const [blockedIds, setBlockedIds] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
-      if (user) { setUserId(user.id); setUserName(user.user_metadata?.full_name || "Friend"); }
+      if (user) {
+        setUserId(user.id);
+        setUserName(user.user_metadata?.full_name || "Friend");
+        supabase.from("blocked_users").select("blocked_id").eq("blocker_id", user.id).then(({ data }) => {
+          if (data) setBlockedIds(new Set(data.map((r: any) => r.blocked_id)));
+        });
+      }
     });
     loadPrayers();
   }, []);
@@ -55,6 +62,12 @@ export default function PrayerWallPage() {
   async function handleToggleAnswered(id: string, current: boolean) {
     await supabase.from("prayer_requests").update({ is_answered: !current }).eq("id", id);
     setPrayers((prev) => prev.map((p) => p.id === id ? { ...p, is_answered: !current } : p));
+  }
+
+  async function handleBlock(blockedUserId: string) {
+    if (!userId || !confirm("Block this user? Their posts will no longer appear for you.")) return;
+    await supabase.from("blocked_users").insert({ blocker_id: userId, blocked_id: blockedUserId });
+    setBlockedIds(prev => new Set([...prev, blockedUserId]));
   }
 
   async function handleDelete(id: string) {
@@ -158,7 +171,7 @@ export default function PrayerWallPage() {
             {/* Prayer list */}
             <div className="flex-1 overflow-y-auto space-y-10 pr-1"
               style={{ scrollbarWidth: "none" }}>
-              {prayers.map((p) => (
+              {prayers.filter(p => !blockedIds.has(p.user_id)).map((p) => (
                 <div key={p.id} className={`${p.is_answered ? "opacity-60" : ""}`}>
                   {p.is_answered && (
                     <div className="mb-1">
@@ -197,6 +210,15 @@ export default function PrayerWallPage() {
                     >
                       ↑ Share
                     </button>
+
+                    {p.user_id !== userId && (
+                      <button
+                        onClick={() => handleBlock(p.user_id)}
+                        className="text-xs text-white/30 hover:text-red-300 transition"
+                      >
+                        Block
+                      </button>
+                    )}
 
                     {p.user_id === userId && editingId !== p.id && (
                       <>

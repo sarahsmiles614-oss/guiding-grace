@@ -14,6 +14,7 @@ export default function TestimonyWallPage() {
   const [userName, setUserName] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [userHearts, setUserHearts] = useState<string[]>([]);
+  const [blockedIds, setBlockedIds] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
@@ -22,6 +23,9 @@ export default function TestimonyWallPage() {
         setUserName(user.user_metadata?.full_name || "Friend");
         supabase.from("testimony_hearts").select("testimony_id").eq("user_id", user.id).then(({ data }) => {
           if (data) setUserHearts(data.map((r: any) => r.testimony_id));
+        });
+        supabase.from("blocked_users").select("blocked_id").eq("blocker_id", user.id).then(({ data }) => {
+          if (data) setBlockedIds(new Set(data.map((r: any) => r.blocked_id)));
         });
       }
     });
@@ -71,6 +75,12 @@ export default function TestimonyWallPage() {
     a.download = "testimonies.txt";
     a.click();
     URL.revokeObjectURL(url);
+  }
+
+  async function handleBlock(blockedUserId: string) {
+    if (!userId || !confirm("Block this user? Their posts will no longer appear for you.")) return;
+    await supabase.from("blocked_users").insert({ blocker_id: userId, blocked_id: blockedUserId });
+    setBlockedIds(prev => new Set([...prev, blockedUserId]));
   }
 
   async function shareItem(t: any) {
@@ -133,7 +143,7 @@ export default function TestimonyWallPage() {
             </div>
 
             <div className="space-y-8">
-              {testimonies.map(t => (
+              {testimonies.filter(t => !blockedIds.has(t.user_id)).map(t => (
                 <div key={t.id}>
                   <p className="text-white/40 text-xs mb-1">{t.user_name}</p>
                   {t.testimony_title && <p className="font-semibold text-white mb-1" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.8)" }}>{t.testimony_title}</p>}
@@ -149,6 +159,14 @@ export default function TestimonyWallPage() {
                     >
                       ↑ Share
                     </button>
+                    {t.user_id !== userId && (
+                      <button
+                        onClick={() => handleBlock(t.user_id)}
+                        className="text-xs text-white/30 hover:text-red-300 transition"
+                      >
+                        Block
+                      </button>
+                    )}
                   </div>
                 </div>
               ))}
