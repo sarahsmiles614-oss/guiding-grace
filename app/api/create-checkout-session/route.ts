@@ -20,8 +20,12 @@ export async function POST(req: NextRequest) {
       mode: "subscription",
       customer: customer.id,
       line_items: [{ price: isYearly ? process.env.STRIPE_YEARLY_PRICE_ID! : process.env.STRIPE_PRICE_ID!, quantity: 1 }],
+      payment_method_collection: isTrial ? "if_required" : "always",
       subscription_data: {
-        ...(isTrial ? { trial_period_days: 3 } : {}),
+        ...(isTrial ? {
+          trial_period_days: 3,
+          trial_settings: { end_behavior: { missing_payment_method: "cancel" } },
+        } : {}),
         metadata: { userId },
       },
       metadata: { userId },
