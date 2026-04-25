@@ -69,7 +69,7 @@ export default function PrayerWallPage() {
     const lines = prayers.map((p) => {
       const answered = p.is_answered ? " ✓ Answered" : "";
       const count = p.prayer_count > 0 ? ` [${p.prayer_count} praying]` : "";
-      return `${p.user_name}${answered}${count}\n${p.prayer_text}`;
+      return `${answered}${count}\n${p.prayer_text}`.trim();
     });
     const content = `P.U.S.H. Prayer Wall — Guiding Grace\n${new Date().toLocaleDateString()}\n${"—".repeat(40)}\n\n${lines.join("\n\n")}`;
     const blob = new Blob([content], { type: "text/plain" });
@@ -81,8 +81,8 @@ export default function PrayerWallPage() {
     URL.revokeObjectURL(url);
   }
 
-  async function shareItem(text: string, author: string) {
-    const shareText = `"${text}" — ${author} | Pray with us on Guiding Grace`;
+  async function shareItem(text: string) {
+    const shareText = `"${text}" | Pray with us on Guiding Grace`;
     if (navigator.share) {
       try { await navigator.share({ title: "Prayer Request", text: shareText, url: "https://guidinggrace.app/prayer-wall" }); } catch {}
     } else {
@@ -159,10 +159,11 @@ export default function PrayerWallPage() {
             <div className="space-y-6">
               {prayers.map((p) => (
                 <div key={p.id} className={`${p.is_answered ? "opacity-60" : ""}`}>
-                  <div className="flex items-start justify-between gap-2 mb-1">
-                    <p className="text-white/40 text-xs">{p.user_name}</p>
-                    {p.is_answered && <span className="text-xs text-green-400 font-semibold">✓ Answered</span>}
-                  </div>
+                  {p.is_answered && (
+                    <div className="mb-1">
+                      <span className="text-xs text-green-400 font-semibold">✓ Answered</span>
+                    </div>
+                  )}
 
                   {editingId === p.id ? (
                     <div className="mb-2">
@@ -190,7 +191,7 @@ export default function PrayerWallPage() {
                     </button>
 
                     <button
-                      onClick={() => shareItem(p.prayer_text, p.user_name)}
+                      onClick={() => shareItem(p.prayer_text)}
                       className="text-xs text-white/40 hover:text-white/70 transition"
                     >
                       ↑ Share
