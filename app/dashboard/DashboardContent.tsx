@@ -43,7 +43,7 @@ export default function DashboardContent() {
   const features = [
     { label: "Daily Devotions", href: "/devotions", icon: "📖", desc: "Scripture & reflection delivered every morning" },
     { label: "Bible in 365 Days", href: "/bible-365", icon: "🎧", desc: "Read or listen through the entire Bible in one year" },
-    { label: "His Promises", href: "/promises", icon: "🕊️", desc: "A treasury of God's promises to hold onto" },
+    { label: "His Promises", href: "/promises", icon: "🕊️", desc: "Discover scripture promises by category, save your favorites, and share beautifully customized verse cards." },
     { label: "Shame Recycle Bin", href: "/shame-recycle", icon: "🗑️", desc: "Release guilt and shame — let it burn away" },
     { label: "Heaven's Hearts", href: "/heavens-hearts", icon: "💜", desc: "Light a candle in memory of someone you love" },
     { label: "Nightly Reflections", href: "/nightly-reflections", icon: "🌙", desc: "End your day with gratitude and surrender" },

@@ -110,21 +110,12 @@ export default function PromisesPage() {
                 <span className="px-4 py-1.5 text-white text-xs font-bold backdrop-blur-sm bg-white/20 rounded-full">
                   {currentPromise.category}
                 </span>
-                <div className="flex items-center gap-3">
-                  <button
-                    onClick={() => setShowStudio(true)}
-                    className="transition-transform hover:scale-110 text-2xl"
-                    title="Share this promise"
-                  >
-                    🎨
-                  </button>
-                  <button
-                    onClick={() => toggleFavorite(currentPromise.id)}
-                    className="transition-transform hover:scale-110 text-2xl"
-                  >
-                    {favorites.includes(currentPromise.id) ? "💜" : "🤍"}
-                  </button>
-                </div>
+                <button
+                  onClick={() => toggleFavorite(currentPromise.id)}
+                  className="transition-transform hover:scale-110 text-2xl"
+                >
+                  {favorites.includes(currentPromise.id) ? "💜" : "🤍"}
+                </button>
               </div>
 
               <blockquote
@@ -149,6 +140,14 @@ export default function PromisesPage() {
                 className="px-8 py-3 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold text-sm rounded-full transition"
               >
                 ✨ New Promise
+              </button>
+
+              <button
+                onClick={() => setShowStudio(true)}
+                className="flex items-center justify-center gap-2 mt-5 mx-auto hover:opacity-80 transition"
+              >
+                <span className="text-xl leading-none">🎨</span>
+                <span className="text-white font-semibold text-sm" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.8)" }}>Customize &amp; Share</span>
               </button>
             </div>
 
