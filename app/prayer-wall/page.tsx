@@ -103,8 +103,8 @@ export default function PrayerWallPage() {
         }
       `}} />
       <PageBackground url="https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/imagenesiacristianas-ai-generated-8762262.jpg">
-        <main className="flex-1 p-6">
-          <div className="max-w-2xl mx-auto">
+        <main className="flex-1 flex flex-col p-6 overflow-hidden" style={{ height: "100dvh" }}>
+          <div className="max-w-2xl mx-auto w-full flex flex-col flex-1 overflow-hidden">
             <div className="flex justify-between items-center mb-6">
               <Link href="/dashboard" className="pw-no-print text-white/70 text-sm">← Dashboard</Link>
               <h1 className="text-lg font-bold text-white" style={{ textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>P.U.S.H. Prayer Wall</h1>
@@ -156,7 +156,8 @@ export default function PrayerWallPage() {
             </div>
 
             {/* Prayer list */}
-            <div className="space-y-10">
+            <div className="flex-1 overflow-y-auto space-y-10 pr-1"
+              style={{ scrollbarWidth: "none" }}>
               {prayers.map((p) => (
                 <div key={p.id} className={`${p.is_answered ? "opacity-60" : ""}`}>
                   {p.is_answered && (
