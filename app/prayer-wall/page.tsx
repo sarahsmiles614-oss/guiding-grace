@@ -9,7 +9,6 @@ import ShareButton from "@/components/ShareButton";
 export default function PrayerWallPage() {
   const [prayers, setPrayers] = useState<any[]>([]);
   const [request, setRequest] = useState("");
-  const [anonymous, setAnonymous] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
   const [userName, setUserName] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -140,11 +139,7 @@ export default function PrayerWallPage() {
                 className="w-full bg-transparent border border-white/30 rounded-xl px-4 py-3 text-white placeholder-white/40 text-sm resize-none focus:outline-none focus:border-white/60 mb-3"
                 rows={3}
               />
-              <div className="flex items-center justify-between">
-                <label className="flex items-center gap-2 text-sm text-white/60 cursor-pointer">
-                  <input type="checkbox" checked={anonymous} onChange={(e) => setAnonymous(e.target.checked)} className="accent-white" />
-                  Post anonymously
-                </label>
+              <div className="flex justify-end">
                 <button
                   onClick={handleSubmit}
                   disabled={!request.trim() || submitting}
