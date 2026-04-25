@@ -4,21 +4,28 @@ import { useState } from "react";
 const BASE = "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/";
 
 const BG_OPTIONS = [
-  { label: "Cross",    url: BASE + "jeffjacobs1990-cross-3643027_1920.jpg" },
-  { label: "Mountain", url: BASE + "julius_silver-lago-di-limides-3025780_1920.jpg" },
-  { label: "Desert",   url: BASE + "saud-edum-cgapZpzd7v0-unsplash%20(1).jpg" },
-  { label: "Sunset",   url: BASE + "mateus-campos-felipe-88D7C4c6en8-unsplash.jpg" },
-  { label: "Heaven",   url: BASE + "geralt-heaven-3335585_1920.jpg" },
-  { label: "Shore",    url: BASE + "lou-lou-b-photo-eD0TsB_E-pM-unsplash.jpg" },
-  { label: "Light",    url: BASE + "gersweb-god-2012104.jpg" },
-  { label: "Clouds",   url: BASE + "marcelkessler-heaven-4850411_1920.jpg" },
-  { label: "Garden",   url: BASE + "daniel-gimbel-F194iNxMrDk-unsplash.jpg" },
+  { label: "Cross",     url: BASE + "jeffjacobs1990-cross-3643027_1920.jpg" },
+  { label: "Mountain",  url: BASE + "julius_silver-lago-di-limides-3025780_1920.jpg" },
+  { label: "Desert",    url: BASE + "saud-edum-cgapZpzd7v0-unsplash%20(1).jpg" },
+  { label: "Sunset",    url: BASE + "mateus-campos-felipe-88D7C4c6en8-unsplash.jpg" },
+  { label: "Heaven",    url: BASE + "geralt-heaven-3335585_1920.jpg" },
+  { label: "Shore",     url: BASE + "lou-lou-b-photo-eD0TsB_E-pM-unsplash.jpg" },
+  { label: "Light",     url: BASE + "gersweb-god-2012104.jpg" },
+  { label: "Clouds",    url: BASE + "marcelkessler-heaven-4850411_1920.jpg" },
+  { label: "Garden",    url: BASE + "daniel-gimbel-F194iNxMrDk-unsplash.jpg" },
+  { label: "Forest",    url: BASE + "hoai-thu-pt-nv4FFbP8IuE-unsplash.jpg" },
+  { label: "Radiance",  url: BASE + "manuel-chinchilla-CMAM-ehX210-unsplash.jpg" },
+  { label: "Dawn",      url: BASE + "11703009-web-4063635_1920.jpg" },
+  { label: "Starlight", url: BASE + "rezaaskarii-sweden-6834164.jpg" },
+  { label: "Rainbow",   url: BASE + "edenmoon-rainbow-5145675_1920.jpg" },
+  { label: "Beach",     url: BASE + "faserra-beach-1578966_1920.jpg" },
+  { label: "Alps",      url: BASE + "renegossner-alps-8728621_1920.jpg" },
 ];
 
 const FONT_OPTIONS = [
-  { label: "Classic", value: "classic", family: "'Playfair Display', Georgia, serif",     italic: true  },
-  { label: "Modern",  value: "modern",  family: "system-ui, -apple-system, sans-serif",   italic: false },
-  { label: "Grace",   value: "grace",   family: "'Dancing Script', cursive",               italic: false },
+  { label: "Classic", value: "classic", family: "'Playfair Display', Georgia, serif",   italic: true  },
+  { label: "Modern",  value: "modern",  family: "system-ui, -apple-system, sans-serif", italic: false },
+  { label: "Grace",   value: "grace",   family: "'Dancing Script', cursive",             italic: false },
 ];
 
 interface Props {
@@ -51,7 +58,6 @@ export default function ShareStudio({ scripture, reference, onClose }: Props) {
   const [error, setError] = useState("");
 
   async function generateCanvas(): Promise<HTMLCanvasElement> {
-    // Fetch as blob to avoid canvas CORS taint
     const resp = await fetch(selectedBg.url);
     const blob = await resp.blob();
     const objectUrl = URL.createObjectURL(blob);
@@ -70,13 +76,11 @@ export default function ShareStudio({ scripture, reference, onClose }: Props) {
     canvas.height = H;
     const ctx = canvas.getContext("2d")!;
 
-    // Cover-crop background
     const scale = Math.max(W / img.width, H / img.height);
     const sw = W / scale, sh = H / scale;
     const sx = (img.width - sw) / 2, sy = (img.height - sh) / 2;
     ctx.drawImage(img, sx, sy, sw, sh, 0, 0, W, H);
 
-    // Dark gradient overlay
     const grad = ctx.createLinearGradient(0, 0, 0, H);
     grad.addColorStop(0,   "rgba(0,0,0,0.25)");
     grad.addColorStop(0.4, "rgba(0,0,0,0.55)");
@@ -84,11 +88,9 @@ export default function ShareStudio({ scripture, reference, onClose }: Props) {
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, W, H);
 
-    // Load font
     const fontFamily = selectedFont.family;
     try { await document.fonts.load(`${selectedFont.italic ? "italic " : ""}80px ${fontFamily}`); } catch {}
 
-    // Scripture text
     const verseSize = 76;
     ctx.font = `${selectedFont.italic ? "italic " : ""}${verseSize}px ${fontFamily}`;
     ctx.fillStyle = "white";
@@ -103,13 +105,11 @@ export default function ShareStudio({ scripture, reference, onClose }: Props) {
     const startY = (H - textH) / 2 - 40;
     lines.forEach((line, i) => ctx.fillText(line, W / 2, startY + i * lineH));
 
-    // Reference
     ctx.shadowBlur = 16;
     ctx.font = `600 50px system-ui, -apple-system, sans-serif`;
     ctx.fillStyle = "#FDE68A";
     ctx.fillText(`\u2014 ${reference}`, W / 2, startY + textH + 90);
 
-    // Watermark
     ctx.shadowBlur = 0;
     ctx.font = `400 34px system-ui, -apple-system, sans-serif`;
     ctx.fillStyle = "rgba(255,255,255,0.4)";
@@ -127,7 +127,7 @@ export default function ShareStudio({ scripture, reference, onClose }: Props) {
       link.download = "gods-promise.png";
       link.href = canvas.toDataURL("image/png");
       link.click();
-    } catch (e: any) {
+    } catch {
       setError("Couldn't generate image. Please try again.");
     } finally {
       setGenerating(false);
@@ -144,14 +144,13 @@ export default function ShareStudio({ scripture, reference, onClose }: Props) {
       if (navigator.canShare?.({ files: [file] })) {
         await navigator.share({ files: [file], title: "God's Promise", text: `"${scripture}" — ${reference}` });
       } else {
-        // Fallback to download
         const link = document.createElement("a");
         link.download = "gods-promise.png";
         link.href = canvas.toDataURL("image/png");
         link.click();
       }
     } catch (e: any) {
-      if (e?.name !== "AbortError") setError("Share failed. Image saved instead.");
+      if (e?.name !== "AbortError") setError("Share failed. Try Save Image instead.");
     } finally {
       setGenerating(false);
     }
@@ -159,21 +158,22 @@ export default function ShareStudio({ scripture, reference, onClose }: Props) {
 
   return (
     <div className="fixed inset-0 z-50 flex flex-col overflow-hidden">
-      {/* Blurred background matching selected scene */}
-      <div className="absolute inset-0 bg-cover bg-center"
+      <div className="absolute inset-0 bg-cover bg-center transition-all duration-500"
         style={{ backgroundImage: `url('${selectedBg.url}')` }} />
       <div className="absolute inset-0 bg-black/60 backdrop-blur-md" />
 
       <div className="relative z-10 flex flex-col h-full">
 
         {/* Header */}
-        <div className="flex justify-between items-center px-6 pt-10 pb-4 flex-shrink-0">
-          <p className="text-white font-semibold text-base tracking-wide"
-            style={{ textShadow: "0 1px 8px rgba(0,0,0,0.8)" }}>
-            Share Studio
-          </p>
+        <div className="flex justify-between items-center px-6 pt-10 pb-2 flex-shrink-0">
+          <div>
+            <p className="text-white font-semibold text-base" style={{ textShadow: "0 1px 8px rgba(0,0,0,0.8)" }}>
+              Share Studio
+            </p>
+            <p className="text-white/45 text-xs mt-0.5">Customize your verse card</p>
+          </div>
           <button onClick={onClose}
-            className="text-white/60 hover:text-white text-xl w-9 h-9 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition">
+            className="text-white/60 hover:text-white text-lg w-9 h-9 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition">
             ✕
           </button>
         </div>
@@ -182,14 +182,15 @@ export default function ShareStudio({ scripture, reference, onClose }: Props) {
         <div className="flex-1 overflow-y-auto px-6 pb-4">
 
           {/* Card Preview */}
-          <div className="mx-auto mb-7 rounded-3xl overflow-hidden shadow-2xl flex-shrink-0"
+          <div className="mx-auto my-5 rounded-3xl overflow-hidden shadow-2xl"
             style={{
-              width: "min(260px, 72vw)",
+              width: "min(240px, 65vw)",
               aspectRatio: "9/16",
               backgroundImage: `url('${selectedBg.url}')`,
               backgroundSize: "cover",
               backgroundPosition: "center",
               position: "relative",
+              transition: "background-image 0.3s ease",
             }}>
             <div className="absolute inset-0"
               style={{ background: "linear-gradient(to bottom, rgba(0,0,0,0.22) 0%, rgba(0,0,0,0.52) 40%, rgba(0,0,0,0.65) 100%)" }} />
@@ -198,51 +199,68 @@ export default function ShareStudio({ scripture, reference, onClose }: Props) {
                 style={{
                   fontFamily: selectedFont.family,
                   fontStyle: selectedFont.italic ? "italic" : "normal",
-                  fontSize: "clamp(12px, 3.8vw, 17px)",
+                  fontSize: "clamp(11px, 3.5vw, 16px)",
                   textShadow: "0 2px 12px rgba(0,0,0,0.95)",
                 }}>
                 &ldquo;{scripture}&rdquo;
               </p>
               <p className="text-amber-200 font-semibold"
-                style={{
-                  fontSize: "clamp(10px, 2.8vw, 13px)",
-                  textShadow: "0 1px 8px rgba(0,0,0,0.9)",
-                }}>
+                style={{ fontSize: "clamp(10px, 2.6vw, 13px)", textShadow: "0 1px 8px rgba(0,0,0,0.9)" }}>
                 &mdash; {reference}
               </p>
             </div>
             <p className="absolute bottom-3 w-full text-center text-white/35"
-              style={{ fontSize: "clamp(8px, 2vw, 10px)" }}>
+              style={{ fontSize: "clamp(8px, 1.8vw, 10px)" }}>
               Guiding Grace
             </p>
           </div>
 
-          {/* Background swatches */}
-          <p className="text-white/40 text-xs uppercase tracking-widest mb-3">Background</p>
-          <div className="flex gap-3 overflow-x-auto pb-3 mb-6" style={{ scrollbarWidth: "none" }}>
-            {BG_OPTIONS.map((bg) => (
-              <button key={bg.label} onClick={() => setSelectedBg(bg)}
-                className="flex-shrink-0 flex flex-col items-center gap-1.5">
-                <div className={`w-14 h-14 rounded-2xl bg-cover bg-center transition duration-150 ${selectedBg.label === bg.label ? "ring-2 ring-white scale-110" : "opacity-60 hover:opacity-90"}`}
-                  style={{ backgroundImage: `url('${bg.url}')` }} />
-                <span className="text-white/50 text-xs">{bg.label}</span>
-              </button>
-            ))}
+          {/* Background section */}
+          <div className="mb-6">
+            <div className="flex items-center justify-between mb-3">
+              <p className="text-white text-sm font-semibold" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
+                🌄 Choose Your Scene
+              </p>
+              <p className="text-white/40 text-xs">Tap any image</p>
+            </div>
+            <div className="grid grid-cols-4 gap-2.5">
+              {BG_OPTIONS.map((bg) => (
+                <button key={bg.label} onClick={() => setSelectedBg(bg)}
+                  className="flex flex-col items-center gap-1.5 group">
+                  <div
+                    className={`w-full rounded-2xl bg-cover bg-center transition duration-150 ${selectedBg.label === bg.label ? "ring-2 ring-white ring-offset-1 ring-offset-transparent scale-105" : "opacity-55 hover:opacity-90 group-hover:scale-102"}`}
+                    style={{ backgroundImage: `url('${bg.url}')`, aspectRatio: "1/1" }}
+                  />
+                  <span className={`text-xs transition ${selectedBg.label === bg.label ? "text-white font-semibold" : "text-white/45"}`}>
+                    {bg.label}
+                  </span>
+                </button>
+              ))}
+            </div>
           </div>
 
-          {/* Font swatches */}
-          <p className="text-white/40 text-xs uppercase tracking-widest mb-3">Font</p>
-          <div className="grid grid-cols-3 gap-3 mb-6">
-            {FONT_OPTIONS.map((font) => (
-              <button key={font.value} onClick={() => setSelectedFont(font)}
-                className={`py-4 px-3 rounded-2xl border text-center transition ${selectedFont.value === font.value ? "border-white bg-white/20" : "border-white/15 bg-white/5 hover:bg-white/10"}`}>
-                <p className="text-white text-lg mb-1 leading-none"
-                  style={{ fontFamily: font.family, fontStyle: font.italic ? "italic" : "normal" }}>
-                  Aa
-                </p>
-                <p className="text-white/55 text-xs">{font.label}</p>
-              </button>
-            ))}
+          {/* Font section */}
+          <div className="mb-6">
+            <div className="flex items-center justify-between mb-3">
+              <p className="text-white text-sm font-semibold" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
+                ✍️ Font Style
+              </p>
+              <p className="text-white/40 text-xs">Tap to change</p>
+            </div>
+            <div className="grid grid-cols-3 gap-3">
+              {FONT_OPTIONS.map((font) => (
+                <button key={font.value} onClick={() => setSelectedFont(font)}
+                  className={`py-4 px-3 rounded-2xl border text-center transition ${selectedFont.value === font.value ? "border-white bg-white/20" : "border-white/15 bg-white/5 hover:bg-white/10"}`}>
+                  <p className="text-white text-xl mb-1 leading-none"
+                    style={{ fontFamily: font.family, fontStyle: font.italic ? "italic" : "normal" }}>
+                    Aa
+                  </p>
+                  <p className={`text-xs transition ${selectedFont.value === font.value ? "text-white font-semibold" : "text-white/50"}`}>
+                    {font.label}
+                  </p>
+                </button>
+              ))}
+            </div>
           </div>
 
           {error && (
