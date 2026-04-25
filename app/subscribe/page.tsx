@@ -10,6 +10,7 @@ export default function SubscribePage() {
   const router = useRouter();
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [showSignInPrompt, setShowSignInPrompt] = useState(false);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
@@ -21,7 +22,7 @@ export default function SubscribePage() {
   async function handleCheckout(mode: "trial" | "monthly" | "yearly") {
     if (!user) {
       localStorage.setItem("subscribe_intent", mode);
-      router.push("/");
+      setShowSignInPrompt(true);
       return;
     }
     router.push(`/checkout?mode=${mode}`);
@@ -55,6 +56,17 @@ export default function SubscribePage() {
             ✨ Start Free 3-Day Trial
           </button>
           <p className="text-white/40 text-xs mb-6">No credit card required · Cancel anytime</p>
+
+          {showSignInPrompt && (
+            <div className="mb-6 bg-white/10 border border-white/20 rounded-xl p-4 text-center">
+              <p className="text-white text-sm font-semibold mb-1">Sign in to continue</p>
+              <p className="text-white/60 text-xs mb-3">You need an account to start your free trial.</p>
+              <div className="flex gap-3 justify-center">
+                <a href="/" className="bg-white/20 hover:bg-white/30 border border-white/30 text-white text-sm font-semibold px-5 py-2 rounded-xl transition">Sign In</a>
+                <a href="/?signup=1" className="bg-white/20 hover:bg-white/30 border border-white/30 text-white text-sm font-semibold px-5 py-2 rounded-xl transition">Create Account</a>
+              </div>
+            </div>
+          )}
 
           <div className="grid grid-cols-2 gap-3 mb-6">
             <button onClick={() => handleCheckout("monthly")} className="bg-white/10 hover:bg-white/20 border border-white/30 text-white font-medium py-3 rounded-xl transition">
