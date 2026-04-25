@@ -67,6 +67,48 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="Guiding Grace" />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify([
+        {
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "url": "https://guidinggrace.app",
+          "name": "Guiding Grace — Daily Devotions & Faith Companion",
+          "inLanguage": "en",
+          "description": "Daily devotions, scripture promises, grace challenges, and sacred spaces to strengthen your faith. Start your free 3-day trial today.",
+          "isPartOf": {
+            "@type": "WebSite",
+            "url": "https://guidinggrace.app",
+            "name": "Guiding Grace"
+          }
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "url": "https://guidinggrace.app",
+          "name": "Guiding Grace",
+          "description": "Guiding Grace offers daily devotions, scripture promises, grace challenges, and sacred spaces to nurture your faith journey."
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "Service",
+          "name": "Daily Faith Companion",
+          "description": "A daily faith companion featuring daily devotions, scripture promises, grace challenges, and sacred spaces to nurture your faith journey.",
+          "areaServed": "Worldwide",
+          "provider": {
+            "@type": "Organization",
+            "url": "https://guidinggrace.app",
+            "name": "Guiding Grace"
+          },
+          "offers": {
+            "@type": "Offer",
+            "url": "https://guidinggrace.app",
+            "price": "0",
+            "priceCurrency": "USD",
+            "description": "Start Free 3-Day Trial",
+            "availability": "https://schema.org/InStock"
+          }
+        }
+      ]) }} />
       </head>
       <body className={`${lora.variable} ${playfair.variable} font-body`}>
         <ServiceWorkerRegistration />
