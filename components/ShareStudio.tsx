@@ -27,9 +27,12 @@ const BG_OPTIONS = [
 ];
 
 const FONT_OPTIONS = [
-  { label: "Classic", value: "classic", family: "'Playfair Display', Georgia, serif",   italic: true  },
-  { label: "Modern",  value: "modern",  family: "system-ui, -apple-system, sans-serif", italic: false },
-  { label: "Grace",   value: "grace",   family: "'Dancing Script', cursive",             italic: false },
+  { label: "Classic",  value: "classic",  family: "'Playfair Display', Georgia, serif",     italic: true  },
+  { label: "Modern",   value: "modern",   family: "'Josefin Sans', system-ui, sans-serif",  italic: false },
+  { label: "Grace",    value: "grace",    family: "'Dancing Script', cursive",               italic: false },
+  { label: "Regal",    value: "regal",    family: "'Cinzel', Georgia, serif",                italic: false },
+  { label: "Elegant",  value: "elegant",  family: "'Cormorant Garamond', Georgia, serif",    italic: true  },
+  { label: "Lora",     value: "lora",     family: "'Lora', Georgia, serif",                  italic: true  },
 ];
 
 interface Props {
