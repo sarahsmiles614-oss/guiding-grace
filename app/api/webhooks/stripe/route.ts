@@ -37,12 +37,13 @@ export async function POST(req: Request) {
     }, { onConflict: "user_id" });
   }
 
-  if (event.type === "customer.subscription.updated" || event.type === "customer.subscription.deleted") {
+  if (event.type === "customer.subscription.created" || event.type === "customer.subscription.updated" || event.type === "customer.subscription.deleted") {
     const sub = event.data.object as Stripe.Subscription;
     const uid = sub.metadata?.userId;
     if (uid) {
       await supabase.from("subscriptions").upsert({
         user_id: uid,
+        stripe_customer_id: sub.customer,
         stripe_subscription_id: sub.id,
         status: sub.status,
         trial_end_date: safeDate(sub.trial_end),
