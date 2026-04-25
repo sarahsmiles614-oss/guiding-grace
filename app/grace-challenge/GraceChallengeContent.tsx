@@ -295,14 +295,20 @@ export default function GraceChallengeContent() {
           <div className="max-w-2xl mx-auto">
 
             {/* Header */}
-            <div className="flex justify-between items-center mb-4">
-              <Link href="/dashboard" className="text-white/90 text-sm" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>← Dashboard</Link>
+            <div className="flex justify-between items-center mb-5">
+              <Link href="/dashboard" className="text-white/80 text-sm hover:text-white transition" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>← Dashboard</Link>
               <h1 className="text-xl font-bold text-white" style={{ textShadow: "0 2px 10px rgba(0,0,0,0.9)" }}>Daily Grace Challenge</h1>
-              <div className="flex items-center gap-3">
-                <Link href="/grace-challenge/rules" className="text-white/90 text-sm" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>Rules</Link>
-                <Link href="/grace-challenge/favorites" className="text-white hover:text-white/80 text-sm">🔖</Link>
-                <Link href="/grace-challenge/leaderboard" className="text-yellow-300 hover:text-yellow-200 text-sm font-medium">🏆</Link>
-              </div>
+              <Link href="/grace-challenge/rules" className="text-white/80 text-sm hover:text-white transition" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>Rules</Link>
+            </div>
+
+            {/* Nav buttons */}
+            <div className="flex gap-3 mb-8">
+              <Link href="/grace-challenge/leaderboard" className="flex-1 flex items-center justify-center gap-2 bg-yellow-400/20 hover:bg-yellow-400/30 border border-yellow-300/40 text-yellow-200 font-semibold text-sm py-3 rounded-2xl transition" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
+                🏆 Leaderboard
+              </Link>
+              <Link href="/grace-challenge/favorites" className="flex-1 flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 border border-white/20 text-white/80 hover:text-white font-semibold text-sm py-3 rounded-2xl transition" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
+                ⭐ Saved Responses
+              </Link>
             </div>
 
             {loading ? (
@@ -433,7 +439,7 @@ export default function GraceChallengeContent() {
                               className="text-base hover:scale-110 transition"
                               title="Save to favorites"
                             >
-                              {favorites.includes(post.id) ? "🔖" : "📄"}
+                              {favorites.includes(post.id) ? "⭐" : "☆"}
                             </button>
                           )}
                           {post.user_id !== userId && (
