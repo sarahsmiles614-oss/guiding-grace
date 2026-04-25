@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import SubscriptionGuard from "@/components/SubscriptionGuard";
 import { supabase } from "@/lib/supabase";
+import { isSafe, MODERATION_ERROR } from "@/lib/moderation";
 import PageBackground from "@/components/PageBackground";
 import ShareButton from "@/components/ShareButton";
 
@@ -39,6 +40,7 @@ export default function TestimonyWallPage() {
 
   async function handleSubmit() {
     if (!story.trim() || !userId) return;
+    if (!isSafe(story) || !isSafe(title)) { alert(MODERATION_ERROR); return; }
     setSubmitting(true);
     await supabase.from("testimonies").insert({ user_id: userId, user_name: userName, testimony_title: title, testimony_text: story });
     setStory(""); setTitle("");

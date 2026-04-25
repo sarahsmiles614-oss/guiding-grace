@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import SubscriptionGuard from "@/components/SubscriptionGuard";
 import { supabase } from "@/lib/supabase";
+import { isSafe, MODERATION_ERROR } from "@/lib/moderation";
 import PageBackground from "@/components/PageBackground";
 import ShareButton from "@/components/ShareButton";
 
@@ -204,6 +205,7 @@ export default function GraceChallengeContent() {
 
   async function handleSubmit() {
     if (!response.trim() || completed === null || !userId || !challenge) return;
+    if (!isSafe(response)) { setSubmitError(MODERATION_ERROR); return; }
     setSubmitting(true);
     setSubmitError("");
     const { error } = await supabase.from("grace_challenge_posts").insert({
@@ -288,6 +290,7 @@ export default function GraceChallengeContent() {
 
   async function handleEditSubmit() {
     if (!editText.trim() || editCompleted === null || !userPost || !challenge) return;
+    if (!isSafe(editText)) { alert(MODERATION_ERROR); return; }
     setEditSubmitting(true);
     // Update the post text/completed
     await supabase.from("grace_challenge_posts")

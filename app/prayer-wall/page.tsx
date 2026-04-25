@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import SubscriptionGuard from "@/components/SubscriptionGuard";
 import { supabase } from "@/lib/supabase";
+import { isSafe, MODERATION_ERROR } from "@/lib/moderation";
 import PageBackground from "@/components/PageBackground";
 import ShareButton from "@/components/ShareButton";
 
@@ -40,6 +41,7 @@ export default function PrayerWallPage() {
 
   async function handleSubmit() {
     if (!request.trim() || !userId) return;
+    if (!isSafe(request)) { alert(MODERATION_ERROR); return; }
     setSubmitting(true);
     await supabase.from("prayer_requests").insert({
       user_id: userId,
@@ -89,6 +91,7 @@ export default function PrayerWallPage() {
 
   async function handleEdit(id: string) {
     if (!editText.trim()) return;
+    if (!isSafe(editText)) { alert(MODERATION_ERROR); return; }
     await supabase.from("prayer_requests").update({ prayer_text: editText }).eq("id", id);
     setPrayers((prev) => prev.map((p) => p.id === id ? { ...p, prayer_text: editText } : p));
     setEditingId(null);
