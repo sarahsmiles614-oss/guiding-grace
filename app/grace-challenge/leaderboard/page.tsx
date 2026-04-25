@@ -177,8 +177,8 @@ export default function LeaderboardPage() {
           </div>
         )}
 
-        <main className="flex-1 px-6 pt-8 pb-20">
-          <div className="max-w-lg mx-auto">
+        <main className="flex-1 px-6 pt-8 pb-20 flex flex-col items-center">
+          <div className="max-w-lg w-full">
 
             {/* Header */}
             <div className="flex justify-between items-center mb-10">

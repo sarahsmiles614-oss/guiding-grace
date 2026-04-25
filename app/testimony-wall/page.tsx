@@ -91,8 +91,8 @@ export default function TestimonyWallPage() {
         }
       `}} />
       <PageBackground url="https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/faserra-beach-1578966_1920.jpg">
-        <main className="flex-1 p-6">
-          <div className="max-w-2xl mx-auto">
+        <main className="flex-1 p-6 flex flex-col items-center">
+          <div className="max-w-2xl w-full">
             <div className="flex justify-between items-center mb-6">
               <Link href="/dashboard" className="tw-no-print text-white/70 text-sm">← Dashboard</Link>
               <h1 className="text-lg font-bold text-white" style={{ textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>Truth Testimonies</h1>

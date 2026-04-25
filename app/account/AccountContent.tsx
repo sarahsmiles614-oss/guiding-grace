@@ -139,8 +139,8 @@ export default function AccountContent() {
 
   return (
     <PageBackground url="https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/gersweb-god-2012104.jpg">
-      <main className="flex-1 p-6 pb-16">
-        <div className="max-w-md mx-auto">
+      <main className="flex-1 p-6 pb-16 flex flex-col items-center">
+        <div className="max-w-md w-full">
 
           {/* Header */}
           <div className="flex justify-between items-center mb-8">
