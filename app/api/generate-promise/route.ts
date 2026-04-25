@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 
+export const dynamic = "force-dynamic";
+
 export async function POST(req: Request) {
   const { category, recentRefs = [] } = await req.json();
 
@@ -20,6 +22,7 @@ export async function POST(req: Request) {
     "Pick a verse from Genesis, Exodus, or Deuteronomy.",
   ];
   const nudge = nudges[Math.floor(Math.random() * nudges.length)];
+  const seed = Math.floor(Math.random() * 100000);
 
   const response = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
@@ -35,7 +38,7 @@ export async function POST(req: Request) {
       messages: [
         {
           role: "user",
-          content: `Generate a Bible scripture promise for the category "${cat}" for a Christian faith app called Guiding Grace.
+          content: `[${seed}] Generate a Bible scripture promise for the category "${cat}" for a Christian faith app called Guiding Grace.
 
 ${nudge} Choose a verse that is meaningful, comforting, and directly relevant to "${cat}". Use the NIV translation.
 

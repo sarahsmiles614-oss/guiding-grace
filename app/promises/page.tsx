@@ -56,7 +56,8 @@ export default function PromisesPage() {
       const res = await fetch("/api/generate-promise", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ category, recentRefs: seenRefs }),
+        cache: "no-store",
+        body: JSON.stringify({ category, recentRefs: seenRefs, t: Date.now() }),
       });
       const data = await res.json();
       if (data.scripture) {
