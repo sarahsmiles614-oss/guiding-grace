@@ -13,10 +13,11 @@ export async function POST(req: NextRequest) {
     const isTrial = mode === "trial" || !mode;
     const isYearly = mode === "yearly";
 
+    const successUrl = "https://guidinggrace.app/success";
+    const cancelUrl = "https://guidinggrace.app/subscribe";
+
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
-      payment_method_types: ["card"],
-      payment_method_collection: isTrial ? "if_required" : "always",
       customer: customer.id,
       line_items: [{ price: isYearly ? process.env.STRIPE_YEARLY_PRICE_ID! : process.env.STRIPE_PRICE_ID!, quantity: 1 }],
       subscription_data: {
@@ -24,9 +25,9 @@ export async function POST(req: NextRequest) {
         metadata: { userId },
       },
       metadata: { userId },
-      success_url: "https://guidinggrace.app/success",
-      cancel_url: "https://guidinggrace.app/subscribe",
-    });
+      success_url: successUrl,
+      cancel_url: cancelUrl,
+    } as any);
     return NextResponse.json({ url: session.url });
   } catch (err: any) {
     console.error("Stripe error:", err.message);

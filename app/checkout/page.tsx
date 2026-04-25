@@ -123,13 +123,12 @@ function CheckoutContent() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) { router.push("/"); return; }
 
-      const res = await fetch("/api/create-subscription", {
+      const res = await fetch("/api/create-checkout-session", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           userId: user.id,
           email: user.email,
-          name: user.user_metadata?.full_name || "",
           mode,
         }),
       });
@@ -137,13 +136,8 @@ function CheckoutContent() {
       const data = await res.json();
       if (data.error) { setError(data.error); setLoading(false); return; }
 
-      setIntentType(data.type);
-      if (data.type === "free_trial") {
-        router.push("/success");
-        return;
-      }
-      setClientSecret(data.clientSecret);
-      setLoading(false);
+      // Redirect to Stripe hosted checkout
+      window.location.href = data.url;
     }
     init();
   }, [mode, router]);
