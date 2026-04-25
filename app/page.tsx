@@ -20,7 +20,9 @@ const features = [
 
 export default function Home() {
   const router = useRouter();
-  const [isNewUser, setIsNewUser] = useState(false);
+  const [isNewUser, setIsNewUser] = useState(
+    typeof window !== "undefined" && new URLSearchParams(window.location.search).get("signup") === "1"
+  );
   const [forgotMode, setForgotMode] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

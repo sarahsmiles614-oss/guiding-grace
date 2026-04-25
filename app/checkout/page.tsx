@@ -120,8 +120,12 @@ function CheckoutContent() {
 
   useEffect(() => {
     async function init() {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) { router.push("/"); return; }
+      // Try session cache first, then fresh check — avoids auth race after sign-in redirect
+      let user = (await supabase.auth.getSession()).data.session?.user ?? null;
+      if (!user) {
+        user = (await supabase.auth.getUser()).data.user ?? null;
+      }
+      if (!user) { router.push(`/subscribe`); return; }
 
       const res = await fetch("/api/create-checkout-session", {
         method: "POST",
