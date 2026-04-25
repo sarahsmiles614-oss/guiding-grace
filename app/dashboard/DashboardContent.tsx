@@ -65,7 +65,7 @@ export default function DashboardContent() {
           </div>
 
           {user && (
-            <p className="text-white mb-10 text-lg" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
+            <p className="text-white mb-10 text-lg text-center" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
               Welcome, {user.user_metadata?.full_name?.split(" ")[0] || "friend"} 🌿
             </p>
           )}
@@ -114,7 +114,7 @@ export default function DashboardContent() {
           </div>
 
           {/* Feature grid */}
-          <p className="text-white text-xs uppercase tracking-widest mb-6">Everything Inside</p>
+          <p className="text-white text-xs uppercase tracking-widest mb-6 text-center">Everything Inside</p>
           <div className={`grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 ${subStatus !== "active" ? "opacity-40 pointer-events-none select-none" : ""}`}>
             {features.map((f) => (
               <Link key={f.href} href={f.href} className="group hover:opacity-80 transition p-2">
