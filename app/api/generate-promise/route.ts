@@ -13,7 +13,6 @@ export async function POST(req: Request) {
     ...recentRefs,
   ].join(", ");
 
-  // Random nudge so identical prompts yield different results
   const nudges = [
     "Pick from the Psalms.", "Pick from the Epistles.", "Pick from the Prophets.",
     "Pick from the Gospels.", "Pick from the Old Testament wisdom books.",
@@ -38,32 +37,37 @@ export async function POST(req: Request) {
       messages: [
         {
           role: "user",
-          content: `[${seed}] Generate a Bible scripture promise for the category "${cat}" for a Christian faith app called Guiding Grace.
+          content: `[${seed}] Generate a Bible scripture promise for the category "${cat}".
 
-${nudge} Choose a verse that is meaningful, comforting, and directly relevant to "${cat}". Use the NIV translation.
+${nudge} Use the NIV translation. DO NOT use: ${avoidList}.
 
-DO NOT use any of these verses: ${avoidList}.
-
-Return ONLY a valid JSON object with no markdown, no preamble:
-{
-  "category": "${cat}",
-  "scripture": "The full verse text",
-  "reference": "Book Chapter:Verse",
-  "reflection": "2-3 warm, personal sentences applying this promise to the reader's life today."
-}`,
+Respond with ONLY this JSON, no extra text:
+{"category":"${cat}","scripture":"verse text here","reference":"Book Chapter:Verse","reflection":"2-3 sentences here"}`,
+        },
+        // Prime Claude to start the JSON directly
+        {
+          role: "assistant",
+          content: "{",
         },
       ],
     }),
   });
 
   const data = await response.json();
-  const text = data.content?.[0]?.text?.trim();
-  if (!text) return NextResponse.json({ error: "No response from Claude" }, { status: 500 });
+  const partial = data.content?.[0]?.text?.trim();
+  if (!partial) return NextResponse.json({ error: "No response from Claude" }, { status: 500 });
+
+  // Claude started after our "{" — prepend it back
+  const text = "{" + partial;
+
+  // Extract JSON even if there's surrounding text
+  const match = text.match(/\{[\s\S]*\}/);
+  if (!match) return NextResponse.json({ error: "Could not extract JSON", raw: text }, { status: 500 });
 
   try {
-    const parsed = JSON.parse(text);
+    const parsed = JSON.parse(match[0]);
     return NextResponse.json(parsed);
   } catch {
-    return NextResponse.json({ error: "Failed to parse response", raw: text }, { status: 500 });
+    return NextResponse.json({ error: "Failed to parse JSON", raw: text }, { status: 500 });
   }
 }

@@ -27,6 +27,7 @@ export default function PromisesPage() {
   const [showStudio, setShowStudio] = useState(false);
   const [generating, setGenerating] = useState(false);
   const [seenRefs, setSeenRefs] = useState<string[]>([]);
+  const [genError, setGenError] = useState("");
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
@@ -52,6 +53,7 @@ export default function PromisesPage() {
 
   async function generateAIPromise(category: string) {
     setGenerating(true);
+    setGenError("");
     try {
       const res = await fetch("/api/generate-promise", {
         method: "POST",
@@ -63,7 +65,11 @@ export default function PromisesPage() {
       if (data.scripture) {
         setCurrentPromise({ ...data, id: `ai-${Date.now()}`, isAI: true });
         setSeenRefs(prev => [...prev.slice(-9), data.reference]);
+      } else {
+        setGenError("Couldn't load a new promise. Try again.");
       }
+    } catch {
+      setGenError("Couldn't load a new promise. Try again.");
     } finally {
       setGenerating(false);
     }
@@ -232,6 +238,7 @@ export default function PromisesPage() {
                   >
                     {generating ? "Generating..." : "✨ New Promise"}
                   </button>
+                  {genError && <p className="text-red-300 text-xs mt-2">{genError}</p>}
                 </div>
 
                 <button
