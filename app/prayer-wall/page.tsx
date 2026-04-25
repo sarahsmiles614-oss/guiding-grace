@@ -156,7 +156,7 @@ export default function PrayerWallPage() {
             </div>
 
             {/* Prayer list */}
-            <div className="space-y-6">
+            <div className="space-y-10">
               {prayers.map((p) => (
                 <div key={p.id} className={`${p.is_answered ? "opacity-60" : ""}`}>
                   {p.is_answered && (
