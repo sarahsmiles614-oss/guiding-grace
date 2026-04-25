@@ -291,8 +291,8 @@ export default function GraceChallengeContent() {
   return (
     <SubscriptionGuard>
       <PageBackground url="https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/saud-edum-cgapZpzd7v0-unsplash%20(1).jpg">
-        <main className="flex-1 p-6 w-full">
-          <div className="max-w-2xl w-full mx-auto">
+        <main className="flex-1 p-6 flex flex-col items-center">
+          <div className="w-full max-w-2xl">
 
             {/* Header */}
             <div className="flex justify-between items-center mb-5">

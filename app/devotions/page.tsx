@@ -114,8 +114,8 @@ export default function DevotionsPage() {
   return (
     <SubscriptionGuard>
       <PageBackground url="https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/edenmoon-rainbow-5145675_1920.jpg">
-        <main className="flex-1 p-6 w-full">
-          <div className="max-w-2xl w-full mx-auto text-center">
+        <main className="flex-1 p-6 flex flex-col items-center">
+          <div className="w-full max-w-2xl text-center">
             <div className="flex justify-between items-center mb-6">
               <Link href="/dashboard" className="text-white/70 text-sm">← Dashboard</Link>
               <h1 className="text-lg font-bold text-white" style={{ textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>Daily Devotions</h1>

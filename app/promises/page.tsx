@@ -70,8 +70,8 @@ export default function PromisesPage() {
     )}
     <SubscriptionGuard>
       <PageBackground url="https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/gersweb-god-2012104.jpg">
-        <main className="flex-1 p-6 w-full">
-          <div className="max-w-4xl w-full mx-auto">
+        <main className="flex-1 p-6 flex flex-col items-center">
+          <div className="w-full max-w-4xl">
             <div className="flex justify-between items-center mb-6">
               <Link href="/dashboard" className="text-white/70 text-sm hover:text-white">← Dashboard</Link>
               <h1
