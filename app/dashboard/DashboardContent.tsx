@@ -53,7 +53,7 @@ export default function DashboardContent() {
   ];
 
   return (
-    <PageBackground url="https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/julius_silver-lago-di-limides-3025780_1920.jpg">
+    <PageBackground url="https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/sign/Images%20also/thibault-mokuenko-pY-bhzf_ZDk-unsplash.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV85MzA0YmFjMS1lYTk0LTQzODItYjE3YS1hNDU4OTgwZDllYTEiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJJbWFnZXMgYWxzby90aGliYXVsdC1tb2t1ZW5rby1wWS1iaHpmX1pEay11bnNwbGFzaC5qcGciLCJpYXQiOjE3NzcwODU0MjMsImV4cCI6MTg1NDg0NTQyM30.pyRROLomZi4S8_Gu7aVOheZJexH5vsyWF2CTG4ryhHw">
       <main className="flex-1 p-6 md:p-12">
         <div className="max-w-5xl mx-auto">
           <div className="flex justify-between items-center mb-10">
