@@ -59,13 +59,13 @@ export default function DashboardContent() {
           <div className="flex justify-between items-center mb-10">
             <h1 className="text-2xl font-bold text-white" style={{ textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>Guiding Grace</h1>
             <div className="flex items-center gap-6">
-              <Link href="/account" className="text-white/70 hover:text-white text-sm">Account</Link>
-              <button onClick={() => signOut().then(() => router.push("/"))} className="text-sm text-white/70 hover:text-white">Sign out</button>
+              <Link href="/account" className="text-white hover:text-white/80 text-sm">Account</Link>
+              <button onClick={() => signOut().then(() => router.push("/"))} className="text-sm text-white hover:text-white/80">Sign out</button>
             </div>
           </div>
 
           {user && (
-            <p className="text-white/80 mb-10 text-lg" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
+            <p className="text-white mb-10 text-lg" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
               Welcome, {user.user_metadata?.full_name?.split(" ")[0] || "friend"} 🌿
             </p>
           )}
@@ -76,7 +76,7 @@ export default function DashboardContent() {
               <p className="text-white text-xl font-semibold mb-2" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>
                 {subStatus === "none" ? "No subscription found" : "Your trial has ended"}
               </p>
-              <p className="text-white/80 text-sm mb-6" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
+              <p className="text-white text-sm mb-6" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
                 Subscribe to continue walking in grace and access all features.
               </p>
               <Link href="/subscribe">
@@ -101,7 +101,7 @@ export default function DashboardContent() {
                     <h2 className="text-white text-xl font-bold mb-2" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>
                       Daily Grace Challenge
                     </h2>
-                    <p className="text-white/90 text-sm leading-relaxed mb-4" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
+                    <p className="text-white text-sm leading-relaxed mb-4" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
                       A fresh real-world challenge drops every morning — inspired by the daily devotion. Share your story, vote for responses that move you, and see who the community honors as Most Loved. It's faith in action, together.
                     </p>
                     <span className="text-yellow-200 text-xs font-semibold" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
@@ -114,20 +114,20 @@ export default function DashboardContent() {
           </div>
 
           {/* Feature grid */}
-          <p className="text-white/70 text-xs uppercase tracking-widest mb-6">Everything Inside</p>
+          <p className="text-white text-xs uppercase tracking-widest mb-6">Everything Inside</p>
           <div className={`grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 ${subStatus !== "active" ? "opacity-40 pointer-events-none select-none" : ""}`}>
             {features.map((f) => (
               <Link key={f.href} href={f.href} className="group hover:opacity-80 transition p-2">
                 <span className="text-3xl mb-3 block group-hover:scale-110 transition-transform">{f.icon}</span>
                 <p className="text-white text-sm font-semibold mb-1 leading-tight" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>{f.label}</p>
-                <p className="text-white/80 text-xs leading-relaxed" style={{ textShadow: "0 1px 3px rgba(0,0,0,0.8)" }}>{f.desc}</p>
+                <p className="text-white text-xs leading-relaxed" style={{ textShadow: "0 1px 3px rgba(0,0,0,0.8)" }}>{f.desc}</p>
               </Link>
             ))}
           </div>
 
           {/* Share the app */}
           <div className="mt-14 text-center">
-            <p className="text-white/70 text-xs mb-3">Know someone who could use this?</p>
+            <p className="text-white text-xs mb-3">Know someone who could use this?</p>
             <ShareButton
               title="Guiding Grace"
               text="I've been using Guiding Grace for daily devotions and faith challenges — thought you might love it too."
