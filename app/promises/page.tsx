@@ -26,6 +26,7 @@ export default function PromisesPage() {
   );
   const [showStudio, setShowStudio] = useState(false);
   const [generating, setGenerating] = useState(false);
+  const [seenRefs, setSeenRefs] = useState<string[]>([]);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
@@ -55,11 +56,12 @@ export default function PromisesPage() {
       const res = await fetch("/api/generate-promise", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ category }),
+        body: JSON.stringify({ category, recentRefs: seenRefs }),
       });
       const data = await res.json();
       if (data.scripture) {
         setCurrentPromise({ ...data, id: `ai-${Date.now()}`, isAI: true });
+        setSeenRefs(prev => [...prev.slice(-9), data.reference]);
       }
     } finally {
       setGenerating(false);
