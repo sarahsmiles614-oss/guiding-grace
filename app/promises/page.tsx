@@ -70,8 +70,8 @@ export default function PromisesPage() {
     )}
     <SubscriptionGuard>
       <PageBackground url="https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/gersweb-god-2012104.jpg">
-        <main className="flex-1 p-6">
-          <div className="max-w-4xl mx-auto">
+        <main className="flex-1 p-6 w-full">
+          <div className="max-w-4xl w-full mx-auto">
             <div className="flex justify-between items-center mb-6">
               <Link href="/dashboard" className="text-white/70 text-sm hover:text-white">← Dashboard</Link>
               <h1
@@ -118,12 +118,12 @@ export default function PromisesPage() {
                 </button>
               </div>
 
-              <blockquote
-                className="text-2xl md:text-3xl text-white font-serif italic leading-relaxed mb-3 max-w-3xl mx-auto text-center"
+              <p
+                className="text-2xl md:text-3xl text-white font-serif italic leading-relaxed mb-3 max-w-3xl w-full mx-auto text-center"
                 style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 8px rgba(0,0,0,0.7)" }}
               >
                 &ldquo;{currentPromise.scripture}&rdquo;
-              </blockquote>
+              </p>
 
               <p className="text-lg text-amber-200 font-semibold mb-5 text-center" style={{ textShadow: "0 2px 6px rgba(0,0,0,0.6)" }}>
                 — {currentPromise.reference}
@@ -146,7 +146,7 @@ export default function PromisesPage() {
 
               <button
                 onClick={() => setShowStudio(true)}
-                className="flex items-center justify-center gap-2 mt-5 mx-auto hover:opacity-80 transition"
+                className="flex items-center justify-center gap-2 mt-5 mx-auto w-fit hover:opacity-80 transition"
               >
                 <span className="text-xl leading-none">🎨</span>
                 <span className="text-white font-semibold text-sm" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.8)" }}>Customize &amp; Share</span>
