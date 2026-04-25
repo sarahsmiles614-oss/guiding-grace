@@ -14,6 +14,12 @@ function getToday() {
   return `${y}-${m}-${d}`;
 }
 
+function daysBetween(dateStr1: string, dateStr2: string) {
+  const a = new Date(dateStr1 + "T12:00:00");
+  const b = new Date(dateStr2 + "T12:00:00");
+  return Math.round((b.getTime() - a.getTime()) / (1000 * 60 * 60 * 24));
+}
+
 export default function DevotionsPage() {
   const [today, setToday] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -24,6 +30,12 @@ export default function DevotionsPage() {
   const [teaser, setTeaser] = useState("");
   const [teaserLoading, setTeaserLoading] = useState(false);
 
+  // Streak state
+  const [streak, setStreak] = useState<number | null>(null);
+  const [showGrace, setShowGrace] = useState(false);
+  const [graceStreak, setGraceStreak] = useState(0);
+  const [userId, setUserId] = useState<string | null>(null);
+
   async function ensureToday() {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) return;
@@ -33,8 +45,81 @@ export default function DevotionsPage() {
     });
   }
 
+  async function updateStreak(uid: string) {
+    const today = getToday();
+
+    const { data: existing } = await supabase
+      .from("devotion_streaks")
+      .select("streak_count, last_visit_date")
+      .eq("user_id", uid)
+      .single();
+
+    if (!existing) {
+      await supabase.from("devotion_streaks").insert({
+        user_id: uid, streak_count: 1, last_visit_date: today,
+      });
+      setStreak(1);
+      return;
+    }
+
+    const diff = daysBetween(existing.last_visit_date, today);
+
+    if (diff === 0) {
+      setStreak(existing.streak_count);
+      return;
+    }
+
+    if (diff === 1) {
+      const newStreak = existing.streak_count + 1;
+      await supabase.from("devotion_streaks")
+        .update({ streak_count: newStreak, last_visit_date: today })
+        .eq("user_id", uid);
+      setStreak(newStreak);
+      return;
+    }
+
+    if (diff === 2) {
+      // Missed exactly one day — offer grace
+      setGraceStreak(existing.streak_count);
+      setShowGrace(true);
+      setStreak(existing.streak_count);
+      return;
+    }
+
+    // Missed 2+ days — reset
+    await supabase.from("devotion_streaks")
+      .update({ streak_count: 1, last_visit_date: today })
+      .eq("user_id", uid);
+    setStreak(1);
+  }
+
+  async function handleGraceAccept() {
+    if (!userId) return;
+    const today = getToday();
+    await supabase.from("devotion_streaks")
+      .update({ last_visit_date: today })
+      .eq("user_id", userId);
+    setShowGrace(false);
+  }
+
+  async function handleGraceDecline() {
+    if (!userId) return;
+    const today = getToday();
+    await supabase.from("devotion_streaks")
+      .update({ streak_count: 1, last_visit_date: today })
+      .eq("user_id", userId);
+    setStreak(1);
+    setShowGrace(false);
+  }
+
   useEffect(() => {
     async function load() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        setUserId(user.id);
+        updateStreak(user.id);
+      }
+
       const todayStr = getToday();
       let { data } = await supabase
         .from("daily_devotions")
@@ -42,7 +127,6 @@ export default function DevotionsPage() {
         .eq("devotion_date", todayStr)
         .single();
 
-      // If no content yet, generate it then re-fetch
       if (!data) {
         await ensureToday();
         const result = await supabase
@@ -79,7 +163,7 @@ export default function DevotionsPage() {
       const data = await res.json();
       if (data.teaser) setTeaser(data.teaser);
     } catch {
-      // silently fail — fallback text shown instead
+      // silently fail
     }
     setTeaserLoading(false);
   }
@@ -121,6 +205,46 @@ export default function DevotionsPage() {
               <h1 className="text-lg font-bold text-white" style={{ textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>Daily Devotions</h1>
               <div className="w-16" />
             </div>
+
+            {/* Streak counter */}
+            {streak !== null && (
+              <div className="mb-6 flex justify-center">
+                <div className="flex items-center gap-2 bg-white/10 border border-white/20 backdrop-blur-sm px-5 py-2.5 rounded-2xl">
+                  <span className="text-xl">🔥</span>
+                  <div className="text-left">
+                    <p className="text-white font-bold text-sm leading-tight">{streak} day{streak !== 1 ? "s" : ""} in a row</p>
+                    <p className="text-white/50 text-xs">Keep showing up 🌿</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Grace day dialog */}
+            {showGrace && (
+              <div className="mb-6 bg-amber-500/20 border border-amber-400/40 backdrop-blur-sm rounded-2xl p-5 text-center">
+                <p className="text-2xl mb-2">🙏</p>
+                <p className="text-white font-semibold mb-1" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
+                  You missed a day
+                </p>
+                <p className="text-white/80 text-sm mb-4" style={{ textShadow: "0 1px 3px rgba(0,0,0,0.7)" }}>
+                  Your {graceStreak}-day streak is still within reach. Use your grace day to save it?
+                </p>
+                <div className="flex gap-3 justify-center">
+                  <button
+                    onClick={handleGraceAccept}
+                    className="bg-amber-400/30 hover:bg-amber-400/50 border border-amber-300/50 text-white font-semibold px-6 py-2 rounded-xl text-sm transition"
+                  >
+                    Save My Streak 🙏
+                  </button>
+                  <button
+                    onClick={handleGraceDecline}
+                    className="text-white/50 hover:text-white/80 text-sm px-4 py-2 rounded-xl border border-white/10 transition"
+                  >
+                    Start Over
+                  </button>
+                </div>
+              </div>
+            )}
 
             {/* Date search */}
             <div className="flex gap-2 mb-8">
