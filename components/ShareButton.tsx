@@ -23,13 +23,29 @@ export default function ShareButton({
       try {
         await navigator.share({ title, text, url });
       } catch {
-        // User cancelled — do nothing
+        // User cancelled or share failed — fall through to clipboard
       }
-    } else {
-      // Desktop fallback: copy link
-      await navigator.clipboard.writeText(url);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2500);
+    }
+    // Desktop (or share failed): copy to clipboard
+    if (!navigator.share) {
+      try {
+        await navigator.clipboard.writeText(url);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2500);
+      } catch {
+        // Clipboard blocked — use legacy execCommand fallback
+        const el = document.createElement("textarea");
+        el.value = url;
+        el.style.position = "fixed";
+        el.style.opacity = "0";
+        document.body.appendChild(el);
+        el.focus();
+        el.select();
+        document.execCommand("copy");
+        document.body.removeChild(el);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2500);
+      }
     }
   }
 
