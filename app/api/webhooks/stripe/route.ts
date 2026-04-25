@@ -27,13 +27,16 @@ export async function POST(req: Request) {
     const userId = session?.metadata?.userId;
     if (!userId) return NextResponse.json({ received: true });
     const sub = await stripe.subscriptions.retrieve(session.subscription);
+    const trialEnd = safeDate(sub.trial_end);
+    const periodEnd = safeDate((sub as any).current_period_end);
     await supabase.from("subscriptions").upsert({
       user_id: userId,
       stripe_customer_id: session.customer,
       stripe_subscription_id: session.subscription,
       status: sub.status,
-      trial_end_date: safeDate(sub.trial_end),
-      current_period_end: safeDate((sub as any).current_period_end),
+      trial_end_date: trialEnd,
+      // For trials, use trial_end as the renewal date if current_period_end is missing
+      current_period_end: periodEnd ?? trialEnd,
     }, { onConflict: "user_id" });
   }
 

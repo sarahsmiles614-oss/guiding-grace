@@ -130,9 +130,9 @@ export default function AccountContent() {
   }
 
   const subLabel = sub?.status === "trialing"
-    ? `Free trial · ends ${new Date(sub.trial_end_date).toLocaleDateString()}`
+    ? `Free trial · ends ${sub.trial_end_date ? new Date(sub.trial_end_date).toLocaleDateString() : "soon"}`
     : sub?.status === "active"
-    ? `Active · renews ${new Date(sub.current_period_end).toLocaleDateString()}`
+    ? `Active · renews ${sub.current_period_end ? new Date(sub.current_period_end).toLocaleDateString() : "soon"}`
     : sub?.status
     ? sub.status
     : "No subscription";
