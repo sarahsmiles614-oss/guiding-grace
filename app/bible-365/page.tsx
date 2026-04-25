@@ -361,22 +361,47 @@ function Bible365Inner() {
 
             {/* Playback controls */}
             <div className="flex flex-wrap items-center gap-2 mb-4">
+
+              {/* Play / Pause */}
               <button
                 onClick={handlePlayPause}
                 disabled={loading || !!fetchError || !hasSpeech}
-                className="flex items-center gap-2 bg-white/20 hover:bg-white/30 border border-white/30 text-white font-semibold px-5 py-2.5 rounded-xl transition disabled:opacity-30"
+                className={`flex items-center gap-2 font-semibold px-5 py-2.5 rounded-xl border transition disabled:opacity-30 ${
+                  playing
+                    ? "bg-white text-gray-900 border-white hover:bg-white/90"
+                    : "bg-white/20 hover:bg-white/30 border-white/30 text-white"
+                }`}
               >
                 <span className="text-base leading-none">{playing ? "⏸" : "▶"}</span>
                 <span className="text-sm">{playing ? "Pause" : resumeVerse > 0 ? "Resume" : "Play"}</span>
               </button>
 
-              <button
-                onClick={handleRestartDay}
-                disabled={loading || !!fetchError}
-                className="text-white/60 hover:text-white text-sm border border-white/20 hover:border-white/40 px-3 py-2 rounded-xl transition disabled:opacity-30"
-              >
-                ↺ Restart
-              </button>
+              {/* Stop — only shown while playing */}
+              {playing && (
+                <button
+                  onClick={() => {
+                    cancelSpeech();
+                    setResumeVerse(0);
+                    setCurrentVerse(-1);
+                    saveProgress(day, 0, fontSize, speedRef.current, highlightColor);
+                  }}
+                  className="flex items-center gap-1.5 text-white/80 hover:text-white text-sm border border-white/30 hover:border-white/60 px-4 py-2.5 rounded-xl transition"
+                >
+                  <span className="text-base leading-none">⏹</span>
+                  <span>Stop</span>
+                </button>
+              )}
+
+              {/* Restart — only shown when not playing */}
+              {!playing && (
+                <button
+                  onClick={handleRestartDay}
+                  disabled={loading || !!fetchError}
+                  className="text-white/60 hover:text-white text-sm border border-white/20 hover:border-white/40 px-3 py-2.5 rounded-xl transition disabled:opacity-30"
+                >
+                  ↺ Restart
+                </button>
+              )}
 
               {/* Speed */}
               <div className="flex items-center gap-1 ml-auto">
