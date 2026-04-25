@@ -40,6 +40,7 @@ const backgrounds = [
   { label: "Light", url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/manuel-chinchilla-CMAM-ehX210-unsplash.jpg" },
   { label: "Clouds", url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/marcelkessler-heaven-4850411_1920.jpg" },
   { label: "Desert", url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/saud-edum-cgapZpzd7v0-unsplash%20(1).jpg" },
+  { label: "Chapel", url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/sign/Images%20also/chen-liu-kZH8X0q4Nvo-unsplash.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV85MzA0YmFjMS1lYTk0LTQzODItYjE3YS1hNDU4OTgwZDllYTEiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJJbWFnZXMgYWxzby9jaGVuLWxpdS1rWkg4WDBxNE52by11bnNwbGFzaC5qcGciLCJpYXQiOjE3NzcwODA0NzEsImV4cCI6MTgwODYxNjQ3MX0.LPSTdNaD_gTJ0JWcoPVTQMvoIYWkf2P7-AaBTqk1uPo" },
 ];
 
 export default function HeavensHeartsPage() {
