@@ -5,6 +5,19 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2026-03-25.dahlia" as any,
 });
 
+// Stripe expand can return either an object or a string ID — handle both
+function resolveId(val: any): string | null {
+  if (!val) return null;
+  if (typeof val === "string") return val;
+  return val.id ?? null;
+}
+
+function resolveClientSecret(val: any): string | null {
+  if (!val) return null;
+  if (typeof val === "string") return null; // only an ID, not expanded
+  return val.client_secret ?? null;
+}
+
 export async function POST(req: NextRequest) {
   try {
     const { userId, email, name, mode } = await req.json();
@@ -33,16 +46,18 @@ export async function POST(req: NextRequest) {
         metadata: { userId },
       });
 
-      const setupIntent = (subscription as any).pending_setup_intent;
-      if (setupIntent?.client_secret) {
+      const rawSetup = (subscription as any).pending_setup_intent;
+      const setupSecret = resolveClientSecret(rawSetup);
+      if (setupSecret) {
         return NextResponse.json({
           type: "setup",
-          clientSecret: setupIntent.client_secret,
+          clientSecret: setupSecret,
           subscriptionId: subscription.id,
           customerId: customer.id,
         });
       }
 
+      // No card required for this trial — subscription is live
       return NextResponse.json({ type: "free_trial", subscriptionId: subscription.id });
     }
 
@@ -59,20 +74,23 @@ export async function POST(req: NextRequest) {
     });
 
     const invoice = subscription.latest_invoice as any;
-    const paymentIntent = invoice?.payment_intent as Stripe.PaymentIntent | undefined;
+    const rawIntent = invoice?.payment_intent;
 
-    if (!paymentIntent?.id) {
-      // No payment intent — subscription may be free or already active
-      return NextResponse.json({ type: "free_trial", subscriptionId: subscription.id });
+    // Resolve whether we got a full object or just a string ID
+    let paymentIntentId = resolveId(rawIntent);
+
+    if (!paymentIntentId) {
+      // Shouldn't happen for a paid plan, but handle gracefully
+      return NextResponse.json({ error: "Could not create payment intent. Please try again." }, { status: 500 });
     }
 
-    // Update PaymentIntent to allow all automatic payment methods incl. Google Pay
-    await stripe.paymentIntents.update(paymentIntent.id, {
+    // Update PaymentIntent to allow all automatic payment methods
+    await stripe.paymentIntents.update(paymentIntentId, {
       automatic_payment_methods: { enabled: true, allow_redirects: "always" },
     } as any);
 
-    // Re-fetch updated secret
-    const updatedIntent = await stripe.paymentIntents.retrieve(paymentIntent.id);
+    // Re-fetch to get updated client secret
+    const updatedIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
 
     return NextResponse.json({
       type: "payment",
