@@ -58,7 +58,7 @@ export default function HeroesVillainsPage() {
 
   return (
     <SubscriptionGuard>
-      <PageBackground url="https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/glagolyvechnoyzhizni-goliath-8748113_1920.png">
+      <PageBackground url="https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/sign/Images%20also/nasa-hubble-space-telescope-aRrf665Cqx8-unsplash.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV85MzA0YmFjMS1lYTk0LTQzODItYjE3YS1hNDU4OTgwZDllYTEiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJJbWFnZXMgYWxzby9uYXNhLWh1YmJsZS1zcGFjZS10ZWxlc2NvcGUtYVJyZjY2NUNxeDgtdW5zcGxhc2guanBnIiwiaWF0IjoxNzc3MDgwODQ3LCJleHAiOjE4NDI3NDQ4NDd9.yeQ35AIn6BVYvOxBMVSNMy6wMYGDdDPt6HmHSu1zQEc">
         <main className="flex-1 p-6">
           <div className="max-w-6xl mx-auto">
             <div className="flex justify-between items-center mb-6">
