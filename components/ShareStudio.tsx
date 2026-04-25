@@ -20,6 +20,7 @@ const BG_OPTIONS = [
   { label: "Rainbow",   url: BASE + "edenmoon-rainbow-5145675_1920.jpg" },
   { label: "Beach",     url: BASE + "faserra-beach-1578966_1920.jpg" },
   { label: "Alps",      url: BASE + "renegossner-alps-8728621_1920.jpg" },
+  { label: "Lily",      url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/sign/Images%20also/neal-kharawala-7Ya57A74BTA-unsplash.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV85MzA0YmFjMS1lYTk0LTQzODItYjE3YS1hNDU4OTgwZDllYTEiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJJbWFnZXMgYWxzby9uZWFsLWtoYXJhd2FsYS03WWE1N0E3NEJUQS11bnNwbGFzaC5qcGciLCJpYXQiOjE3NzcwODUzMzAsImV4cCI6MTg1NDg0NTMzMH0.t_ShILODG-vUchzhmftNeHElXU3P4UF7sEU6WPElpXQ" },
 ];
 
 const FONT_OPTIONS = [
