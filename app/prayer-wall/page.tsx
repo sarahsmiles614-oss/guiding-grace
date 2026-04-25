@@ -36,9 +36,9 @@ export default function PrayerWallPage() {
     setSubmitting(true);
     await supabase.from("prayer_requests").insert({
       user_id: userId,
-      user_name: anonymous ? "Anonymous" : userName,
+      user_name: userName,
       prayer_text: request,
-      is_private: anonymous,
+      is_private: false,
       prayer_count: 0,
       is_answered: false,
     });
