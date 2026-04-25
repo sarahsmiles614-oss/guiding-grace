@@ -24,6 +24,9 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
+  alternates: {
+    canonical: "https://guidinggrace.app",
+  },
   title: "Guiding Grace — A Daily Faith Companion",
   description: "Daily devotions, scripture promises, grace challenges, and sacred spaces to strengthen your faith. Start your free 3-day trial today.",
   manifest: "/manifest.json",
