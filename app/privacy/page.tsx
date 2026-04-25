@@ -16,7 +16,7 @@ export default function PrivacyPage() {
           { title: "5. Community Content", body: "Content you post to shared features (prayer wall, testimony wall, grace challenge, memorials) is visible to other subscribers. Post only what you are comfortable sharing with the Guiding Grace community." },
           { title: "6. Your Rights", body: "You may request deletion of your account and associated data at any time by emailing support@guidinggrace.app. We will process deletion requests within 30 days." },
           { title: "7. Cookies", body: "Guiding Grace uses authentication cookies to keep you signed in. We do not use advertising or tracking cookies." },
-          { title: "8. Children", body: "Guiding Grace is not intended for children under 13. We do not knowingly collect data from children under 13." },
+          { title: "8. Minors", body: "Guiding Grace is intended for users aged 16 and older. We do not knowingly collect personal information from children under 13. Users between the ages of 13 and 15 are not permitted to use this app. Users aged 16 or 17 may use the app with parental or guardian awareness. If you believe a minor under 13 has provided us with personal information, please contact us at support@guidinggrace.app and we will delete it promptly." },
           { title: "9. Changes to This Policy", body: "We may update this Privacy Policy from time to time. Continued use of the app after changes constitutes acceptance of the updated policy." },
           { title: "10. Contact", body: "Questions about this Privacy Policy? Email us at support@guidinggrace.app." },
         ].map(s => (
