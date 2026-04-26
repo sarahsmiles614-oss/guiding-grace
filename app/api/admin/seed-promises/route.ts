@@ -11,6 +11,20 @@ const supabase = createClient(
 
 const CATEGORIES = ["Peace", "Strength", "Hope", "Love", "Guidance", "Provision", "Healing", "Victory"];
 
+function getBooksForRound(round: number): string {
+  const books: Record<number, string> = {
+    1: "Psalms, Proverbs, Ecclesiastes",
+    2: "Matthew, Mark, Luke, John",
+    3: "Romans, Corinthians, Galatians, Ephesians, Philippians",
+    4: "Isaiah, Jeremiah, Ezekiel, Daniel",
+    5: "Genesis, Exodus, Deuteronomy, Joshua",
+    6: "Hebrews, James, Peter, John (epistles), Revelation",
+    7: "Hosea, Joel, Amos, Micah, Habakkuk, Zephaniah, Zechariah",
+    8: "Acts, Colossians, Thessalonians, Timothy, Titus",
+  };
+  return books[round] ?? books[1];
+}
+
 async function generateBatch(category: string, round: number): Promise<any[]> {
   const response = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
@@ -25,11 +39,10 @@ async function generateBatch(category: string, round: number): Promise<any[]> {
       messages: [
         {
           role: "user",
-          content: `Generate 10 unique Bible scripture promises for the category "${category}" (batch ${round}).
+          content: `Generate 10 unique Bible scripture promises about "${category}" ONLY from these specific Bible books: ${getBooksForRound(round)}.
 
 - NIV translation
-- No duplicates with previous batches — pick DIFFERENT verses each time
-- Batch 1: Psalms and Gospels. Batch 2: Paul's letters. Batch 3: Old Testament prophets. Batch 4: Wisdom books. Batch 5: Minor prophets and Acts.
+- Pull directly from the listed books only
 - Each reflection is 2 personal sentences
 
 Return ONLY a raw JSON array, no markdown, no explanation:
