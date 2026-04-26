@@ -22,7 +22,6 @@ export default function PromisesPage() {
   const [favorites, setFavorites] = useState<string[]>([]);
   const [userId, setUserId] = useState<string | null>(null);
   const [showStudio, setShowStudio] = useState(false);
-  const [favoritedScriptures, setFavoritedScriptures] = useState<Scripture[]>([]);
   const seenRefs = useRef<string[]>([]);
 
   // Load all scriptures from Supabase, fall back to static list if it fails
@@ -51,13 +50,6 @@ export default function PromisesPage() {
         .then(({ data }) => {
           if (data) {
             setFavorites(data.map((r: any) => r.reference));
-            setFavoritedScriptures(data.map((r: any) => ({
-              id: r.reference,
-              category: r.category,
-              scripture: r.scripture,
-              reference: r.reference,
-              reflection: r.reflection,
-            })));
           }
         });
     });
@@ -84,11 +76,8 @@ export default function PromisesPage() {
     if (favorites.includes(target.reference)) {
       await supabase.from("ai_favorite_promises").delete().eq("user_id", userId).eq("reference", target.reference);
       setFavorites(f => f.filter(x => x !== target.reference));
-      setFavoritedScriptures(f => f.filter(x => x.reference !== target.reference));
     } else {
-      // Optimistic update — turn heart purple immediately
       setFavorites(f => [...f, target.reference]);
-      setFavoritedScriptures(f => [{ ...target, id: target.reference }, ...f]);
       const { error } = await supabase.from("ai_favorite_promises").insert({
         user_id: userId,
         category: target.category,
@@ -96,11 +85,7 @@ export default function PromisesPage() {
         reference: target.reference,
         reflection: target.reflection,
       });
-      // Roll back if save failed
-      if (error) {
-        setFavorites(f => f.filter(x => x !== target.reference));
-        setFavoritedScriptures(f => f.filter(x => x.reference !== target.reference));
-      }
+      if (error) setFavorites(f => f.filter(x => x !== target.reference));
     }
   }
 
@@ -199,28 +184,14 @@ export default function PromisesPage() {
                 </button>
               </div>
 
-              {/* Favorites */}
-              {favoritedScriptures.length > 0 && (
-                <div className="mt-8 pt-6 border-t border-white/20">
-                  <h2 className="text-2xl font-bold text-white mb-5 text-center" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 8px rgba(0,0,0,0.7)" }}>
-                    💜 My Favorites ({favoritedScriptures.length})
-                  </h2>
-                  <div className="space-y-6">
-                    {favoritedScriptures.map(p => (
-                      <div key={p.id} className="cursor-pointer hover:opacity-80 transition text-center p-2"
-                        onClick={() => { setCurrent(p); window.scrollTo({ top: 0, behavior: "smooth" }); }}>
-                        <span className="text-xs font-bold text-white/50 uppercase tracking-wide block mb-1">{p.category}</span>
-                        <p className="text-white font-serif italic leading-relaxed mb-1 line-clamp-2"
-                          style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 1px 4px rgba(0,0,0,0.6)" }}>
-                          &ldquo;{p.scripture}&rdquo;
-                        </p>
-                        <p className="text-amber-200 text-sm font-medium mb-2" style={{ textShadow: "0 1px 3px rgba(0,0,0,0.5)" }}>
-                          {p.reference}
-                        </p>
-                        <button onClick={e => { e.stopPropagation(); toggleFavorite(p); }} className="text-xl">💜</button>
-                      </div>
-                    ))}
-                  </div>
+              {/* Link to favorites page */}
+              {favorites.length > 0 && (
+                <div className="mt-8 pt-6 border-t border-white/20 text-center">
+                  <Link href="/promises/favorites" className="inline-flex items-center gap-2 text-white/70 hover:text-white text-sm transition">
+                    <span>💜</span>
+                    <span>View My Favorites ({favorites.length})</span>
+                    <span>→</span>
+                  </Link>
                 </div>
               )}
             </div>
