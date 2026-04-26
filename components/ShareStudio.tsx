@@ -118,9 +118,12 @@ export default function ShareStudio({ scripture, reference, onClose }: Props) {
     ctx.fillText(`\u2014 ${reference}`, W / 2, startY + textH + 90);
 
     ctx.shadowBlur = 0;
-    ctx.font = `400 34px system-ui, -apple-system, sans-serif`;
-    ctx.fillStyle = "rgba(255,255,255,0.4)";
-    ctx.fillText("Guiding Grace", W / 2, H - 90);
+    ctx.font = `600 36px system-ui, -apple-system, sans-serif`;
+    ctx.fillStyle = "rgba(255,255,255,0.55)";
+    ctx.fillText("Guiding Grace", W / 2, H - 110);
+    ctx.font = `400 28px system-ui, -apple-system, sans-serif`;
+    ctx.fillStyle = "rgba(255,255,255,0.30)";
+    ctx.fillText("guidinggrace.app · find your promise", W / 2, H - 58);
 
     return canvas;
   }
@@ -216,10 +219,10 @@ export default function ShareStudio({ scripture, reference, onClose }: Props) {
                 &mdash; {reference}
               </p>
             </div>
-            <p className="absolute bottom-3 w-full text-center text-white/35"
-              style={{ fontSize: "clamp(8px, 1.8vw, 10px)" }}>
-              Guiding Grace
-            </p>
+            <div className="absolute bottom-3 w-full text-center">
+              <p className="text-white/55 font-semibold" style={{ fontSize: "clamp(8px, 1.8vw, 10px)" }}>Guiding Grace</p>
+              <p className="text-white/30" style={{ fontSize: "clamp(6px, 1.4vw, 8px)" }}>guidinggrace.app · find your promise</p>
+            </div>
           </div>
 
           {/* Background section */}
