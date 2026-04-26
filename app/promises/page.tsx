@@ -50,9 +50,9 @@ export default function PromisesPage() {
         .order("created_at", { ascending: false })
         .then(({ data }) => {
           if (data) {
-            setFavorites(data.map((r: any) => r.scripture_id));
+            setFavorites(data.map((r: any) => r.reference));
             setFavoritedScriptures(data.map((r: any) => ({
-              id: r.scripture_id,
+              id: r.reference,
               category: r.category,
               scripture: r.scripture,
               reference: r.reference,
@@ -81,21 +81,22 @@ export default function PromisesPage() {
   async function toggleFavorite(p?: Scripture) {
     const target = p ?? current;
     if (!userId || !target) return;
-    if (favorites.includes(target.id)) {
-      await supabase.from("ai_favorite_promises").delete().eq("user_id", userId).eq("scripture_id", target.id);
-      setFavorites(f => f.filter(x => x !== target.id));
-      setFavoritedScriptures(f => f.filter(x => x.id !== target.id));
+    if (favorites.includes(target.reference)) {
+      await supabase.from("ai_favorite_promises").delete().eq("user_id", userId).eq("reference", target.reference);
+      setFavorites(f => f.filter(x => x !== target.reference));
+      setFavoritedScriptures(f => f.filter(x => x.reference !== target.reference));
     } else {
-      await supabase.from("ai_favorite_promises").insert({
+      const { error } = await supabase.from("ai_favorite_promises").insert({
         user_id: userId,
-        scripture_id: target.id,
         category: target.category,
         scripture: target.scripture,
         reference: target.reference,
         reflection: target.reflection,
       });
-      setFavorites(f => [...f, target.id]);
-      setFavoritedScriptures(f => [target, ...f]);
+      if (!error) {
+        setFavorites(f => [...f, target.reference]);
+        setFavoritedScriptures(f => [{ ...target, id: target.reference }, ...f]);
+      }
     }
   }
 
@@ -159,8 +160,8 @@ export default function PromisesPage() {
                   <span className="px-4 py-1.5 text-white text-xs font-bold backdrop-blur-sm bg-white/20 rounded-full">
                     {current.category}
                   </span>
-                  <button onClick={toggleFavorite} className="transition-transform hover:scale-110 text-2xl">
-                    {favorites.includes(current.id) ? "💜" : "🤍"}
+                  <button onClick={() => toggleFavorite()} className="transition-transform hover:scale-110 text-2xl">
+                    {favorites.includes(current.reference) ? "💜" : "🤍"}
                   </button>
                 </div>
 
