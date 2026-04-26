@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import SubscriptionGuard from "@/components/SubscriptionGuard";
 import { supabase } from "@/lib/supabase";
-import { categories } from "@/lib/promises";
+import { promises as staticPromises, categories } from "@/lib/promises";
 import PageBackground from "@/components/PageBackground";
 import ShareStudio from "@/components/ShareStudio";
 
@@ -24,15 +24,16 @@ export default function PromisesPage() {
   const [showStudio, setShowStudio] = useState(false);
   const seenRefs = useRef<string[]>([]);
 
-  // Load all scriptures from Supabase once
+  // Load all scriptures from Supabase, fall back to static list if it fails
   useEffect(() => {
     supabase.from("promise_scriptures").select("*").then(({ data }) => {
-      if (data && data.length > 0) {
-        setPool(data);
-        const pick = data[Math.floor(Math.random() * data.length)];
-        setCurrent(pick);
-        seenRefs.current = [pick.reference];
-      }
+      const source: Scripture[] = (data && data.length > 0)
+        ? data
+        : staticPromises.map(p => ({ id: String(p.id), category: p.category, scripture: p.scripture, reference: p.reference, reflection: p.reflection }));
+      setPool(source);
+      const pick = source[Math.floor(Math.random() * source.length)];
+      setCurrent(pick);
+      seenRefs.current = [pick.reference];
     });
   }, []);
 
