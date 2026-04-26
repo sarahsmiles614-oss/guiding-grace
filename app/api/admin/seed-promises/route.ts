@@ -11,7 +11,7 @@ const supabase = createClient(
 
 const CATEGORIES = ["Peace", "Strength", "Hope", "Love", "Guidance", "Provision", "Healing", "Victory"];
 
-async function generateForCategory(category: string) {
+async function generateBatch(category: string): Promise<any[]> {
   const response = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
     headers: {
@@ -25,40 +25,29 @@ async function generateForCategory(category: string) {
       messages: [
         {
           role: "user",
-          content: `Generate 50 unique Bible scripture promises for the category "${category}" for a Christian faith app called Guiding Grace.
+          content: `Generate 50 unique Bible scripture promises for the category "${category}".
 
-Rules:
-- Use NIV translation
-- Each verse must be genuinely about ${category}
-- Include well-known AND lesser-known verses — variety is important
+- NIV translation
 - No duplicates
-- Cover both Old and New Testament
-- Each reflection should be warm, personal, and 2-3 sentences
+- Mix of Old and New Testament
+- Each reflection is 2 personal sentences
 
-Return ONLY a JSON array with exactly 50 objects, no markdown:
-[
-  {
-    "category": "${category}",
-    "scripture": "Full verse text",
-    "reference": "Book Chapter:Verse",
-    "reflection": "2-3 warm sentences applying this to the reader's life."
-  }
-]`,
+Return ONLY a raw JSON array, no markdown, no explanation:
+[{"category":"${category}","scripture":"...","reference":"...","reflection":"..."}]`,
         },
-        { role: "assistant", content: "[" },
       ],
     }),
   });
 
   const data = await response.json();
-  const partial = data.content?.[0]?.text?.trim();
-  if (!partial) throw new Error(`No response for ${category}`);
+  const text = data.content?.[0]?.text?.trim() ?? "";
 
-  const text = "[" + partial;
-  const match = text.match(/\[[\s\S]*\]/);
-  if (!match) throw new Error(`Could not extract JSON for ${category}`);
+  // Extract JSON array from response
+  const start = text.indexOf("[");
+  const end = text.lastIndexOf("]");
+  if (start === -1 || end === -1) throw new Error(`No JSON array found for ${category}: ${text.slice(0, 200)}`);
 
-  return JSON.parse(match[0]);
+  return JSON.parse(text.slice(start, end + 1));
 }
 
 export async function GET(req: Request) {
@@ -67,33 +56,34 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const results: Record<string, number> = {};
+  const results: Record<string, any> = {};
 
   for (const category of CATEGORIES) {
     try {
-      // Check how many we already have
-      const { count } = await supabase
-        .from("promise_scriptures")
-        .select("*", { count: "exact", head: true })
-        .eq("category", category);
+      const rows = await generateBatch(category);
 
-      if ((count ?? 0) >= 50) {
-        results[category] = count ?? 0;
-        continue;
-      }
-
-      const promises = await generateForCategory(category);
-
-      // Delete existing for this category and re-insert fresh
+      // Delete old rows for this category first
       await supabase.from("promise_scriptures").delete().eq("category", category);
-      await supabase.from("promise_scriptures").insert(promises);
 
-      results[category] = promises.length;
+      // Insert in one batch
+      const { error, count } = await supabase
+        .from("promise_scriptures")
+        .insert(rows.map(r => ({
+          category: r.category || category,
+          scripture: r.scripture,
+          reference: r.reference,
+          reflection: r.reflection,
+        })));
+
+      if (error) {
+        results[category] = { error: error.message };
+      } else {
+        results[category] = { inserted: rows.length };
+      }
     } catch (e: any) {
-      results[category] = -1;
-      console.error(`Error for ${category}:`, e.message);
+      results[category] = { error: e.message };
     }
   }
 
-  return NextResponse.json({ success: true, results });
+  return NextResponse.json({ results });
 }
