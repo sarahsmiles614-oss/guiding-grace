@@ -11,7 +11,7 @@ const supabase = createClient(
 
 const CATEGORIES = ["Peace", "Strength", "Hope", "Love", "Guidance", "Provision", "Healing", "Victory"];
 
-async function generateBatch(category: string): Promise<any[]> {
+async function generateBatch(category: string, round: number): Promise<any[]> {
   const response = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
     headers: {
@@ -25,11 +25,11 @@ async function generateBatch(category: string): Promise<any[]> {
       messages: [
         {
           role: "user",
-          content: `Generate 10 unique Bible scripture promises for the category "${category}".
+          content: `Generate 10 unique Bible scripture promises for the category "${category}" (batch ${round}).
 
 - NIV translation
-- No duplicates
-- Mix of Old and New Testament
+- No duplicates with previous batches — pick DIFFERENT verses each time
+- Batch 1: Psalms and Gospels. Batch 2: Paul's letters. Batch 3: Old Testament prophets. Batch 4: Wisdom books. Batch 5: Minor prophets and Acts.
 - Each reflection is 2 personal sentences
 
 Return ONLY a raw JSON array, no markdown, no explanation:
@@ -58,13 +58,14 @@ export async function GET(req: Request) {
 
   const url = new URL(req.url);
   const category = url.searchParams.get("category");
+  const round = parseInt(url.searchParams.get("round") ?? "1");
 
   if (!category || !CATEGORIES.includes(category)) {
     return NextResponse.json({ error: "Provide ?category=Peace (or Strength, Hope, Love, Guidance, Provision, Healing, Victory)" });
   }
 
   try {
-    const rows = await generateBatch(category);
+    const rows = await generateBatch(category, round);
     const { error } = await supabase.from("promise_scriptures").insert(
       rows.map(r => ({
         category: r.category || category,
