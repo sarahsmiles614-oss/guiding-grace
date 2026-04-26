@@ -22,6 +22,7 @@ export default function PromisesPage() {
   const [favorites, setFavorites] = useState<string[]>([]);
   const [userId, setUserId] = useState<string | null>(null);
   const [showStudio, setShowStudio] = useState(false);
+  const [favoritedScriptures, setFavoritedScriptures] = useState<Scripture[]>([]);
   const seenRefs = useRef<string[]>([]);
 
   // Load all scriptures from Supabase, fall back to static list if it fails
@@ -44,10 +45,20 @@ export default function PromisesPage() {
       setUserId(user.id);
       supabase
         .from("ai_favorite_promises")
-        .select("scripture_id")
+        .select("*")
         .eq("user_id", user.id)
+        .order("created_at", { ascending: false })
         .then(({ data }) => {
-          if (data) setFavorites(data.map((r: any) => r.scripture_id));
+          if (data) {
+            setFavorites(data.map((r: any) => r.scripture_id));
+            setFavoritedScriptures(data.map((r: any) => ({
+              id: r.scripture_id,
+              category: r.category,
+              scripture: r.scripture,
+              reference: r.reference,
+              reflection: r.reflection,
+            })));
+          }
         });
     });
   }, []);
@@ -67,21 +78,24 @@ export default function PromisesPage() {
     pickNew(cat);
   }
 
-  async function toggleFavorite() {
-    if (!userId || !current) return;
-    if (favorites.includes(current.id)) {
-      await supabase.from("ai_favorite_promises").delete().eq("user_id", userId).eq("scripture_id", current.id);
-      setFavorites(f => f.filter(x => x !== current.id));
+  async function toggleFavorite(p?: Scripture) {
+    const target = p ?? current;
+    if (!userId || !target) return;
+    if (favorites.includes(target.id)) {
+      await supabase.from("ai_favorite_promises").delete().eq("user_id", userId).eq("scripture_id", target.id);
+      setFavorites(f => f.filter(x => x !== target.id));
+      setFavoritedScriptures(f => f.filter(x => x.id !== target.id));
     } else {
       await supabase.from("ai_favorite_promises").insert({
         user_id: userId,
-        scripture_id: current.id,
-        category: current.category,
-        scripture: current.scripture,
-        reference: current.reference,
-        reflection: current.reflection,
+        scripture_id: target.id,
+        category: target.category,
+        scripture: target.scripture,
+        reference: target.reference,
+        reflection: target.reflection,
       });
-      setFavorites(f => [...f, current.id]);
+      setFavorites(f => [...f, target.id]);
+      setFavoritedScriptures(f => [target, ...f]);
     }
   }
 
@@ -179,6 +193,31 @@ export default function PromisesPage() {
                   <span className="text-white font-semibold text-sm" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.8)" }}>Customize &amp; Share</span>
                 </button>
               </div>
+
+              {/* Favorites */}
+              {favoritedScriptures.length > 0 && (
+                <div className="mt-8 pt-6 border-t border-white/20">
+                  <h2 className="text-2xl font-bold text-white mb-5 text-center" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 8px rgba(0,0,0,0.7)" }}>
+                    💜 My Favorites ({favoritedScriptures.length})
+                  </h2>
+                  <div className="space-y-6">
+                    {favoritedScriptures.map(p => (
+                      <div key={p.id} className="cursor-pointer hover:opacity-80 transition text-center p-2"
+                        onClick={() => { setCurrent(p); window.scrollTo({ top: 0, behavior: "smooth" }); }}>
+                        <span className="text-xs font-bold text-white/50 uppercase tracking-wide block mb-1">{p.category}</span>
+                        <p className="text-white font-serif italic leading-relaxed mb-1 line-clamp-2"
+                          style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 1px 4px rgba(0,0,0,0.6)" }}>
+                          &ldquo;{p.scripture}&rdquo;
+                        </p>
+                        <p className="text-amber-200 text-sm font-medium mb-2" style={{ textShadow: "0 1px 3px rgba(0,0,0,0.5)" }}>
+                          {p.reference}
+                        </p>
+                        <button onClick={e => { e.stopPropagation(); toggleFavorite(p); }} className="text-xl">💜</button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </main>
         </PageBackground>
