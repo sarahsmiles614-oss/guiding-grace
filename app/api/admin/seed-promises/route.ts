@@ -56,34 +56,27 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const results: Record<string, any> = {};
+  const url = new URL(req.url);
+  const category = url.searchParams.get("category");
 
-  for (const category of CATEGORIES) {
-    try {
-      const rows = await generateBatch(category);
-
-      // Delete old rows for this category first
-      await supabase.from("promise_scriptures").delete().eq("category", category);
-
-      // Insert in one batch
-      const { error, count } = await supabase
-        .from("promise_scriptures")
-        .insert(rows.map(r => ({
-          category: r.category || category,
-          scripture: r.scripture,
-          reference: r.reference,
-          reflection: r.reflection,
-        })));
-
-      if (error) {
-        results[category] = { error: error.message };
-      } else {
-        results[category] = { inserted: rows.length };
-      }
-    } catch (e: any) {
-      results[category] = { error: e.message };
-    }
+  if (!category || !CATEGORIES.includes(category)) {
+    return NextResponse.json({ error: "Provide ?category=Peace (or Strength, Hope, Love, Guidance, Provision, Healing, Victory)" });
   }
 
-  return NextResponse.json({ results });
+  try {
+    const rows = await generateBatch(category);
+    await supabase.from("promise_scriptures").delete().eq("category", category);
+    const { error } = await supabase.from("promise_scriptures").insert(
+      rows.map(r => ({
+        category: r.category || category,
+        scripture: r.scripture,
+        reference: r.reference,
+        reflection: r.reflection,
+      }))
+    );
+    if (error) return NextResponse.json({ error: error.message });
+    return NextResponse.json({ category, inserted: rows.length });
+  } catch (e: any) {
+    return NextResponse.json({ error: e.message });
+  }
 }
