@@ -25,7 +25,7 @@ async function generateBatch(category: string): Promise<any[]> {
       messages: [
         {
           role: "user",
-          content: `Generate 50 unique Bible scripture promises for the category "${category}".
+          content: `Generate 10 unique Bible scripture promises for the category "${category}".
 
 - NIV translation
 - No duplicates
@@ -65,7 +65,6 @@ export async function GET(req: Request) {
 
   try {
     const rows = await generateBatch(category);
-    await supabase.from("promise_scriptures").delete().eq("category", category);
     const { error } = await supabase.from("promise_scriptures").insert(
       rows.map(r => ({
         category: r.category || category,
