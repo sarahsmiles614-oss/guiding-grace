@@ -86,6 +86,9 @@ export default function PromisesPage() {
       setFavorites(f => f.filter(x => x !== target.reference));
       setFavoritedScriptures(f => f.filter(x => x.reference !== target.reference));
     } else {
+      // Optimistic update — turn heart purple immediately
+      setFavorites(f => [...f, target.reference]);
+      setFavoritedScriptures(f => [{ ...target, id: target.reference }, ...f]);
       const { error } = await supabase.from("ai_favorite_promises").insert({
         user_id: userId,
         category: target.category,
@@ -93,9 +96,10 @@ export default function PromisesPage() {
         reference: target.reference,
         reflection: target.reflection,
       });
-      if (!error) {
-        setFavorites(f => [...f, target.reference]);
-        setFavoritedScriptures(f => [{ ...target, id: target.reference }, ...f]);
+      // Roll back if save failed
+      if (error) {
+        setFavorites(f => f.filter(x => x !== target.reference));
+        setFavoritedScriptures(f => f.filter(x => x.reference !== target.reference));
       }
     }
   }
