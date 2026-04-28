@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/sazia/Downloads/**)",
+      "Bash(ls *.zip)",
+      "Bash(wc:*)",
+      "Bash(npm run:*)",
+      "Bash(cat \"/c/Users/sazia/Downloads/Guiding Grace — Daily Devotions & His Promises \\(1\\)/migrations/\"*.sql)",
+      "Bash(npm install:*)"
+    ]
+  }
+}
