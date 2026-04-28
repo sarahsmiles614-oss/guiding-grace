@@ -346,14 +346,6 @@ export default function HeavensHeartsPage() {
                 <div className="w-px h-4 bg-rose-300/50 mx-1" />
                 {/* Save / Share / Print */}
                 <button
-                  onClick={handleSpreadOut}
-                  disabled={memorials.length === 0}
-                  title="Spread names out"
-                  className="text-rose-800 hover:text-rose-600 text-sm px-1.5 py-1 rounded hover:bg-white/40 transition disabled:opacity-40"
-                >
-                  ⊹
-                </button>
-                <button
                   onClick={handleSaveImage}
                   disabled={saving || memorials.length === 0}
                   title="Save as image"
@@ -382,13 +374,21 @@ export default function HeavensHeartsPage() {
           <div className="max-w-5xl mx-auto px-4 pb-12">
             {/* Add Button */}
             {!isAdding && (
-              <div className="hh-no-print text-center mb-6">
+              <div className="hh-no-print text-center mb-6 flex items-center justify-center gap-3">
                 <button
                   onClick={() => setIsAdding(true)}
                   className="px-8 py-3 text-base bg-white/90 hover:bg-white text-rose-900 shadow-xl backdrop-blur-sm font-semibold rounded-xl"
                 >
                   + Add a Loved One
                 </button>
+                {memorials.length > 0 && (
+                  <button
+                    onClick={handleSpreadOut}
+                    className="px-5 py-3 text-sm bg-white/80 hover:bg-white text-rose-700 shadow-xl backdrop-blur-sm font-medium rounded-xl"
+                  >
+                    Spread Out
+                  </button>
+                )}
               </div>
             )}
 
