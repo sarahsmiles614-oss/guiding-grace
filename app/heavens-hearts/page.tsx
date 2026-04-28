@@ -555,7 +555,7 @@ export default function HeavensHeartsPage() {
                 <div
                   ref={canvasRef}
                   onClick={() => setSelectedId(null)}
-                  className="hh-canvas relative overflow-hidden"
+                  className="hh-canvas relative"
                   style={{ minHeight: 600, touchAction: isDragging || isResizing || isRotating ? "none" : "auto" }}
                 >
                   {memorials.map((m) => {
@@ -649,7 +649,7 @@ export default function HeavensHeartsPage() {
                   })}
                 </div>
                 <p className="hh-no-print text-center text-rose-800/70 text-xs mt-3" style={{ textShadow: "0 1px 2px rgba(255,255,255,0.6)" }}>
-                  Tap a name to select it · drag to move · use Size &amp; Rotate to customize
+                  Tap a name to select · drag to move · drag ↔ Size left/right to resize · drag ↻ Rotate to spin
                 </p>
               </div>
             ) : (
