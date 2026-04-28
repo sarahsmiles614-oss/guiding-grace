@@ -540,7 +540,7 @@ export default function HeavensHeartsPage() {
                 <div
                   ref={canvasRef}
                   onClick={() => setSelectedId(null)}
-                  className="hh-canvas relative border-2 border-rose-300/50 rounded-2xl bg-white/10 backdrop-blur-sm overflow-hidden"
+                  className="hh-canvas relative overflow-hidden"
                   style={{ minHeight: 600, touchAction: isDragging || isResizing || isRotating ? "none" : "auto" }}
                 >
                   {memorials.map((m) => {
