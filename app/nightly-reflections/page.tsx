@@ -82,7 +82,7 @@ export default function NightlyReflectionsPage() {
                       value={burdens}
                       onChange={(e) => setBurdens(e.target.value)}
                       disabled={isSending}
-                      className="w-full h-32 p-2 text-sm border border-white/40 focus:border-white/70 outline-none bg-white/15 backdrop-blur-md text-white placeholder-white/60 resize-none disabled:opacity-50 rounded-lg"
+                      className="w-full h-32 p-2 text-sm border border-white/50 focus:border-white/80 outline-none bg-white/5 text-white placeholder-white/70 resize-none disabled:opacity-50 rounded-lg"
                       placeholder="What weighed on your heart..."
                     />
                   </div>
@@ -95,7 +95,7 @@ export default function NightlyReflectionsPage() {
                       value={blessings}
                       onChange={(e) => setBlessings(e.target.value)}
                       disabled={isSending}
-                      className="w-full h-32 p-2 text-sm border border-white/40 focus:border-white/70 outline-none bg-white/15 backdrop-blur-md text-white placeholder-white/60 resize-none disabled:opacity-50 rounded-lg"
+                      className="w-full h-32 p-2 text-sm border border-white/50 focus:border-white/80 outline-none bg-white/5 text-white placeholder-white/70 resize-none disabled:opacity-50 rounded-lg"
                       placeholder="What brought you joy..."
                     />
                   </div>
