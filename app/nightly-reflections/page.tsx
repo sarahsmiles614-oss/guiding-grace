@@ -101,11 +101,11 @@ export default function NightlyReflectionsPage() {
                   </div>
                 </div>
 
-                <div className="text-center">
+                <div className="flex justify-end max-w-4xl mx-auto w-full">
                   <button
                     onClick={handleSend}
                     disabled={(!burdens.trim() && !blessings.trim()) || isSending}
-                    className="px-4 py-2 text-sm bg-white/90 hover:bg-white text-gray-900 backdrop-blur-sm disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 mx-auto"
+                    className="px-4 py-2 text-sm bg-white/90 hover:bg-white text-gray-900 backdrop-blur-sm disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                   >
                     {isSending ? "Sending..." : "✈ Send to God"}
                   </button>
