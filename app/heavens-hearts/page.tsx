@@ -116,10 +116,33 @@ export default function HeavensHeartsPage() {
     }
   }
 
+  async function handleSpreadOut() {
+    if (!userId || memorials.length === 0) return;
+    const cols = Math.ceil(Math.sqrt(memorials.length));
+    const updated = memorials.map((m, i) => {
+      const col = i % cols;
+      const row = Math.floor(i / cols);
+      const totalCols = cols;
+      const totalRows = Math.ceil(memorials.length / cols);
+      const x = 10 + (col / Math.max(totalCols - 1, 1)) * 80 + (Math.random() * 8 - 4);
+      const y = 10 + (row / Math.max(totalRows - 1, 1)) * 80 + (Math.random() * 8 - 4);
+      return { ...m, x: Math.max(5, Math.min(92, x)), y: Math.max(5, Math.min(92, y)), rotation: (Math.random() * 10 - 5) };
+    });
+    setMemorials(updated);
+    for (const m of updated) {
+      await supabase.from("memorials").update({ x: m.x, y: m.y, rotation: m.rotation }).eq("id", m.id);
+    }
+  }
+
   async function handleAdd() {
     if (!newName.trim() || !userId) return;
-    const x = Math.random() * 60 + 20;
-    const y = Math.random() * 60 + 20;
+    // Place new name in a less-crowded zone based on existing count
+    const i = memorials.length;
+    const cols = Math.max(3, Math.ceil(Math.sqrt(i + 1)));
+    const col = i % cols;
+    const row = Math.floor(i / cols);
+    const x = Math.max(10, Math.min(88, 10 + (col / (cols - 1 || 1)) * 78 + (Math.random() * 12 - 6)));
+    const y = Math.max(10, Math.min(88, 10 + row * 22 + Math.random() * 10));
     const { data, error } = await supabase
       .from("memorials")
       .insert({
@@ -322,6 +345,14 @@ export default function HeavensHeartsPage() {
                 ))}
                 <div className="w-px h-4 bg-rose-300/50 mx-1" />
                 {/* Save / Share / Print */}
+                <button
+                  onClick={handleSpreadOut}
+                  disabled={memorials.length === 0}
+                  title="Spread names out"
+                  className="text-rose-800 hover:text-rose-600 text-sm px-1.5 py-1 rounded hover:bg-white/40 transition disabled:opacity-40"
+                >
+                  ⊹
+                </button>
                 <button
                   onClick={handleSaveImage}
                   disabled={saving || memorials.length === 0}
