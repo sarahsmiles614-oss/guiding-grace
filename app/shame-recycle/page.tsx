@@ -84,7 +84,7 @@ export default function ShameRecyclePage() {
           <header className="py-3 px-4">
             <div className="max-w-xl mx-auto flex items-center justify-between">
               <Link href="/dashboard" className="text-white text-sm hover:text-amber-200">← Dashboard</Link>
-              <h1 className="text-lg font-bold text-white whitespace-nowrap" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 8px rgba(0,0,0,0.7)" }}>
+              <h1 className="text-lg font-bold text-white whitespace-nowrap text-center flex-1" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 8px rgba(0,0,0,0.7)" }}>
                 Shame Recycle Bin
               </h1>
               <div className="w-24" />
@@ -111,7 +111,7 @@ export default function ShameRecyclePage() {
                   <button
                     onClick={handleRelease}
                     disabled={!text.trim() || isReleasing}
-                    className="px-5 py-2 text-sm bg-white/20 hover:bg-white/30 text-white backdrop-blur-sm disabled:opacity-40 disabled:cursor-not-allowed border border-white/30 flex items-center gap-2 mx-auto"
+                    className="px-5 py-2 text-sm bg-white/30 hover:bg-white/40 text-white font-semibold backdrop-blur-sm disabled:opacity-40 disabled:cursor-not-allowed border border-white/50 flex items-center gap-2 mx-auto"
                   >
                     🔥 Release to the Fire
                   </button>
