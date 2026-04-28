@@ -56,12 +56,12 @@ export default function NightlyReflectionsPage() {
           backgroundImage: "url('https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/rezaaskarii-sweden-6834164.jpg')",
         }}
       >
-        <div className="absolute inset-0 bg-gradient-to-b from-indigo-950/60 via-blue-900/50 to-slate-900/60" />
+        <div className="absolute inset-0 bg-gradient-to-b from-indigo-950/30 via-blue-900/25 to-slate-900/30" />
 
         <div className="relative z-10 flex flex-col h-full">
           <header className="py-2 px-4 flex-shrink-0">
             <div className="flex items-center justify-between">
-              <Link href="/dashboard" className="text-white/70 text-sm hover:text-white">← Dashboard</Link>
+              <Link href="/dashboard" className="text-white text-sm hover:text-blue-200">← Dashboard</Link>
             </div>
           </header>
 
@@ -74,7 +74,7 @@ export default function NightlyReflectionsPage() {
 
                 <div className="grid grid-cols-2 gap-2 mb-2 max-w-4xl mx-auto w-full">
                   <div>
-                    <label htmlFor="burdens" className="block text-white font-thin mb-1 text-sm">
+                    <label htmlFor="burdens" className="block text-white font-semibold mb-1 text-sm">
                       Burdens
                     </label>
                     <textarea
@@ -82,12 +82,12 @@ export default function NightlyReflectionsPage() {
                       value={burdens}
                       onChange={(e) => setBurdens(e.target.value)}
                       disabled={isSending}
-                      className="w-full h-32 p-2 text-sm border border-white/20 focus:border-white/40 outline-none bg-white/10 backdrop-blur-md text-white placeholder-white/40 resize-none disabled:opacity-50"
+                      className="w-full h-32 p-2 text-sm border border-white/40 focus:border-white/70 outline-none bg-black/40 backdrop-blur-md text-white placeholder-white/60 resize-none disabled:opacity-50 rounded-lg"
                       placeholder="What weighed on your heart..."
                     />
                   </div>
                   <div>
-                    <label htmlFor="blessings" className="block text-white font-thin mb-1 text-sm">
+                    <label htmlFor="blessings" className="block text-white font-semibold mb-1 text-sm">
                       Blessings
                     </label>
                     <textarea
@@ -95,7 +95,7 @@ export default function NightlyReflectionsPage() {
                       value={blessings}
                       onChange={(e) => setBlessings(e.target.value)}
                       disabled={isSending}
-                      className="w-full h-32 p-2 text-sm border border-white/20 focus:border-white/40 outline-none bg-white/10 backdrop-blur-md text-white placeholder-white/40 resize-none disabled:opacity-50"
+                      className="w-full h-32 p-2 text-sm border border-white/40 focus:border-white/70 outline-none bg-black/40 backdrop-blur-md text-white placeholder-white/60 resize-none disabled:opacity-50 rounded-lg"
                       placeholder="What brought you joy..."
                     />
                   </div>
@@ -201,7 +201,7 @@ export default function NightlyReflectionsPage() {
                 >
                   &ldquo;{currentScripture.scripture}&rdquo;
                 </blockquote>
-                <p className="text-sm text-white/80 mb-6" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.6)" }}>
+                <p className="text-sm text-white mb-6" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>
                   — {currentScripture.reference}
                 </p>
                 <button
