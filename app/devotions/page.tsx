@@ -197,7 +197,7 @@ export default function DevotionsPage() {
 
   return (
     <SubscriptionGuard>
-      <PageBackground url="https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/edenmoon-rainbow-5145675_1920.jpg">
+      <PageBackground url="https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/edenmoon-rainbow-5145675_1920.jpg" overlayOpacity={0.75}>
         <main className="flex-1 p-6 flex flex-col items-center">
           <div className="w-full max-w-2xl text-center">
             <div className="flex justify-between items-center mb-6">
@@ -265,7 +265,7 @@ export default function DevotionsPage() {
               {searched && (
                 <button
                   onClick={() => { setSearched(null); setSearchDate(""); setSearchError(""); setTeaser(""); today && fetchTeaser(today); }}
-                  className="text-white/50 hover:text-white/80 text-sm px-3 py-2 rounded-xl border border-white/10 transition"
+                  className="text-white font-semibold text-sm px-3 py-2 rounded-xl border border-white/40 bg-white/15 hover:bg-white/25 transition"
                 >
                   Today
                 </button>
@@ -273,18 +273,18 @@ export default function DevotionsPage() {
             </div>
 
             {loading ? (
-              <p className="text-white/60 text-center py-12">Loading...</p>
+              <p className="text-white text-center py-12">Loading...</p>
             ) : searchError ? (
-              <p className="text-white/50 text-center py-8">{searchError}</p>
+              <p className="text-white text-center py-8">{searchError}</p>
             ) : !displayed ? (
-              <p className="text-white/60 text-center py-12">No devotion posted yet today. Check back soon. 🌅</p>
+              <p className="text-white text-center py-12">No devotion posted yet today. Check back soon. 🌅</p>
             ) : (
               <>
-                <p className="text-white/50 text-xs uppercase tracking-widest mb-2 text-center">{formatDate(displayed.devotion_date)}</p>
-                <h2 className="text-3xl font-bold text-white mb-6 text-center" style={{ textShadow: "0 2px 12px rgba(0,0,0,0.8)", fontFamily: "'Playfair Display', Georgia, serif" }}>{displayed.title}</h2>
-                <p className="text-white/90 italic text-lg mb-2 text-center" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.8)" }}>"{displayed.verse_text}"</p>
-                <p className="text-white/50 text-sm mb-8 text-center">— {displayed.verse_reference}</p>
-                <p className="text-white/80 leading-relaxed text-center" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>{displayed.reflection}</p>
+                <p className="text-white font-semibold text-sm mb-2 text-center" style={{ textShadow: "0 2px 10px rgba(0,0,0,1)" }}>{formatDate(displayed.devotion_date)}</p>
+                <h2 className="text-3xl font-bold text-white mb-6 text-center" style={{ textShadow: "0 2px 14px rgba(0,0,0,0.9)", fontFamily: "'Playfair Display', Georgia, serif" }}>{displayed.title}</h2>
+                <p className="text-white italic text-lg mb-2 text-center" style={{ textShadow: "0 1px 8px rgba(0,0,0,0.9)" }}>"{displayed.verse_text}"</p>
+                <p className="text-white/80 text-sm mb-8 text-center" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>— {displayed.verse_reference}</p>
+                <p className="text-white leading-relaxed text-center" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>{displayed.reflection}</p>
 
                 {/* Share devotion */}
                 <div className="mt-6 flex justify-center">
@@ -293,24 +293,24 @@ export default function DevotionsPage() {
                     text={`"${displayed.verse_text}" — ${displayed.verse_reference}\n\n${displayed.reflection}\n\nRead today's devotion on Guiding Grace:`}
                     url="https://guidinggrace.app"
                     label="🤍 Share This Devotion"
-                    className="bg-white/10 hover:bg-white/20 border border-white/20 text-white/70 hover:text-white text-sm px-6 py-2.5 rounded-2xl backdrop-blur-sm transition"
+                    className="bg-white/25 hover:bg-white/35 border border-white/50 text-white font-semibold text-sm px-6 py-2.5 rounded-2xl backdrop-blur-sm transition"
                   />
                 </div>
 
                 {/* Grace Challenge CTA */}
                 <div className="mt-10 mb-4 text-center">
-                  <p className="text-white/50 text-xs uppercase tracking-widest mb-3" style={{ textShadow: "0 1px 3px rgba(0,0,0,0.8)" }}>Today's Grace Challenge</p>
+                  <p className="text-white/80 text-xs uppercase tracking-widest mb-3" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>Today's Grace Challenge</p>
                   {teaserLoading ? (
-                    <p className="text-white/40 text-sm italic mb-5 animate-pulse">Finding your challenge nudge...</p>
+                    <p className="text-white/60 text-sm italic mb-5 animate-pulse">Finding your challenge nudge...</p>
                   ) : teaser ? (
-                    <p className="text-white/80 text-sm leading-relaxed mb-5" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>{teaser}</p>
+                    <p className="text-white text-sm leading-relaxed mb-5" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>{teaser}</p>
                   ) : (
-                    <p className="text-white/80 text-sm leading-relaxed mb-5" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
+                    <p className="text-white text-sm leading-relaxed mb-5" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>
                       This devotion has a matching real-world challenge waiting for you. Take what you just read and live it out today — your community is doing it alongside you.
                     </p>
                   )}
                   <Link href="/grace-challenge">
-                    <button className="bg-white/20 hover:bg-white/30 border border-white/30 text-white font-semibold px-8 py-3 rounded-xl transition">
+                    <button className="bg-white/30 hover:bg-white/40 border border-white/60 text-white font-bold px-8 py-3 rounded-xl transition" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
                       Take the Challenge 💛
                     </button>
                   </Link>

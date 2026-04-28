@@ -1,6 +1,6 @@
 // 66 books of the Bible with chapter counts (KJV canon)
 const BOOKS: { name: string; abbr: string; chapters: number }[] = [
-  // Old Testament
+  // Old Testament (39 books)
   { name: "Genesis",        abbr: "genesis",        chapters: 50 },
   { name: "Exodus",         abbr: "exodus",          chapters: 40 },
   { name: "Leviticus",      abbr: "leviticus",       chapters: 27 },
@@ -40,7 +40,7 @@ const BOOKS: { name: string; abbr: string; chapters: number }[] = [
   { name: "Haggai",         abbr: "haggai",          chapters: 2  },
   { name: "Zechariah",      abbr: "zechariah",       chapters: 14 },
   { name: "Malachi",        abbr: "malachi",         chapters: 4  },
-  // New Testament
+  // New Testament (27 books)
   { name: "Matthew",        abbr: "matthew",         chapters: 28 },
   { name: "Mark",           abbr: "mark",            chapters: 16 },
   { name: "Luke",           abbr: "luke",            chapters: 24 },
@@ -79,13 +79,15 @@ export interface BibleChapter {
 export interface DayReading {
   day: number;
   chapters: BibleChapter[];
-  label: string; // e.g. "Genesis 1–3"
+  label: string;    // combined e.g. "Genesis 1–3 · Matthew 1"
+  otLabel: string;  // e.g. "Genesis 1–3"
+  ntLabel: string;  // e.g. "Matthew 1" (empty string on days with no NT reading)
 }
 
-// Build flat list of all 1189 chapters in order
-function buildChapterList(): BibleChapter[] {
+// Build flat list of chapters for a given book array
+function buildChapterListFrom(books: typeof BOOKS): BibleChapter[] {
   const list: BibleChapter[] = [];
-  for (const book of BOOKS) {
+  for (const book of books) {
     for (let c = 1; c <= book.chapters; c++) {
       list.push({ bookName: book.name, bookAbbr: book.abbr, chapter: c });
     }
@@ -93,34 +95,52 @@ function buildChapterList(): BibleChapter[] {
   return list;
 }
 
-// Distribute 1189 chapters into 365 days
-// 1189 = 365 × 3 + 94, so 94 days get 4 chapters, 271 days get 3
+// Distribute 929 OT chapters + 260 NT chapters across 365 days
+// Each day: 2–3 OT chapters + 1 NT chapter (evenly spread across the year)
 let _plan: DayReading[] | null = null;
 
 export function getBiblePlan(): DayReading[] {
   if (_plan) return _plan;
 
-  const allChapters = buildChapterList(); // 1189 chapters
-  const total = allChapters.length;       // 1189
+  const otBooks = BOOKS.slice(0, 39);  // Genesis–Malachi (929 chapters)
+  const ntBooks = BOOKS.slice(39);     // Matthew–Revelation (260 chapters)
+
+  const otChapters = buildChapterListFrom(otBooks);
+  const ntChapters = buildChapterListFrom(ntBooks);
+
   const days = 365;
-  const base = Math.floor(total / days);  // 3
-  const extras = total % days;            // 94
+  const otBase = Math.floor(otChapters.length / days);  // 2
+  const otExtras = otChapters.length % days;            // 199 days get 3, 166 days get 2
 
   const plan: DayReading[] = [];
-  let idx = 0;
+  let otIdx = 0;
+  let ntIdx = 0;
+  let ntAcc = 0; // Bresenham accumulator for even NT distribution
 
   for (let day = 1; day <= days; day++) {
-    const count = day <= extras ? base + 1 : base;
-    const chapters = allChapters.slice(idx, idx + count);
-    idx += count;
+    // OT portion
+    const otCount = day <= otExtras ? otBase + 1 : otBase;
+    const otDay = otChapters.slice(otIdx, otIdx + otCount);
+    otIdx += otCount;
 
-    // Build a readable label like "Genesis 1–3" or "Genesis 50, Exodus 1–2"
-    const label = buildLabel(chapters);
-    plan.push({ day, chapters, label });
+    // NT portion — evenly distribute 260 chapters across 365 days
+    ntAcc += ntChapters.length;
+    let ntDay: BibleChapter[] = [];
+    if (ntAcc >= days && ntIdx < ntChapters.length) {
+      ntAcc -= days;
+      ntDay = [ntChapters[ntIdx++]];
+    }
+
+    const allChapters = [...otDay, ...ntDay];
+    const otLabel = buildLabel(otDay);
+    const ntLabel = buildLabel(ntDay);
+    const label = ntDay.length > 0 ? `${otLabel} · ${ntLabel}` : otLabel;
+
+    plan.push({ day, chapters: allChapters, label, otLabel, ntLabel });
   }
 
   _plan = plan;
-  return plan;
+  return _plan;
 }
 
 function buildLabel(chapters: BibleChapter[]): string {

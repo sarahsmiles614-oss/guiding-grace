@@ -59,16 +59,16 @@ const rules = [
 export default function RulesPage() {
   return (
     <SubscriptionGuard>
-      <PageBackground url="https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/renegossner-alps-8728621_1920.jpg">
+      <PageBackground url="https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/renegossner-alps-8728621_1920.jpg" overlay="bg-black/60">
         <main className="flex-1 p-6 pb-16 flex flex-col items-center">
           <div className="max-w-2xl w-full">
             <div className="flex justify-between items-center mb-8">
-              <Link href="/grace-challenge" className="text-white/70 text-sm">← Challenge</Link>
+              <Link href="/grace-challenge" className="text-white text-sm">← Challenge</Link>
               <h1 className="text-lg font-bold text-white" style={{ textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>How It Works</h1>
               <div className="w-16" />
             </div>
 
-            <p className="text-white/60 text-sm text-center mb-8 leading-relaxed">
+            <p className="text-white text-sm text-center mb-8 leading-relaxed" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>
               The Grace Challenge is a daily community practice of living out grace — in small, real, meaningful ways.
             </p>
 
@@ -78,8 +78,8 @@ export default function RulesPage() {
                   <div className="flex items-start gap-4">
                     <span className="text-2xl mt-0.5 flex-shrink-0">{rule.icon}</span>
                     <div>
-                      <p className="text-white font-semibold mb-1" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.7)" }}>{rule.title}</p>
-                      <p className="text-white/65 text-sm leading-relaxed">{rule.body}</p>
+                      <p className="text-white font-semibold mb-1" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>{rule.title}</p>
+                      <p className="text-white text-sm leading-relaxed" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>{rule.body}</p>
                     </div>
                   </div>
                 </div>

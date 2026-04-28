@@ -8,12 +8,12 @@ import { supabase } from "@/lib/supabase";
 import { getBiblePlan, bibleApiUrl } from "@/lib/bible-plan";
 
 interface Verse {
-  reference: string;   // "Genesis 1:1"
+  reference: string;
   text: string;
   bookName: string;
   chapter: number;
   verseNum: number;
-  chapterLabel: string; // "Genesis 1"
+  chapterLabel: string;
 }
 
 type FontSize = "sm" | "base" | "lg";
@@ -27,27 +27,9 @@ const FONT_CLASSES: Record<FontSize, string> = {
 };
 
 const HIGHLIGHT: Record<HighlightColor, { bg: string; border: string; num: string; resume: string; resumeText: string }> = {
-  yellow: {
-    bg: "bg-yellow-400/25",
-    border: "border-yellow-300",
-    num: "text-yellow-300",
-    resume: "bg-yellow-400/15 border-yellow-400/30",
-    resumeText: "text-yellow-300",
-  },
-  blue: {
-    bg: "bg-blue-400/25",
-    border: "border-blue-300",
-    num: "text-blue-300",
-    resume: "bg-blue-400/15 border-blue-400/30",
-    resumeText: "text-blue-300",
-  },
-  pink: {
-    bg: "bg-pink-400/25",
-    border: "border-pink-300",
-    num: "text-pink-300",
-    resume: "bg-pink-400/15 border-pink-400/30",
-    resumeText: "text-pink-300",
-  },
+  yellow: { bg: "bg-yellow-400/25", border: "border-yellow-300", num: "text-yellow-300", resume: "bg-yellow-400/15 border-yellow-400/30", resumeText: "text-yellow-300" },
+  blue:   { bg: "bg-blue-400/25",   border: "border-blue-300",   num: "text-blue-300",   resume: "bg-blue-400/15 border-blue-400/30",     resumeText: "text-blue-300"   },
+  pink:   { bg: "bg-pink-400/25",   border: "border-pink-300",   num: "text-pink-300",   resume: "bg-pink-400/15 border-pink-400/30",     resumeText: "text-pink-300"   },
 };
 
 const COLOR_SWATCHES: { id: HighlightColor; swatch: string; label: string }[] = [
@@ -57,6 +39,26 @@ const COLOR_SWATCHES: { id: HighlightColor; swatch: string; label: string }[] = 
 ];
 
 const SPEEDS: Speed[] = [0.75, 1, 1.25];
+
+// ── Book categories ────────────────────────────────────────────────────────
+const OT_CATEGORIES = [
+  { label: "THE LAW",         books: ["Genesis", "Exodus", "Leviticus", "Numbers", "Deuteronomy"] },
+  { label: "HISTORY",         books: ["Joshua", "Judges", "Ruth", "1 Samuel", "2 Samuel", "1 Kings", "2 Kings", "1 Chronicles", "2 Chronicles", "Ezra", "Nehemiah", "Esther"] },
+  { label: "POETRY & WISDOM", books: ["Job", "Psalms", "Proverbs", "Ecclesiastes", "Song of Solomon"] },
+  { label: "MAJOR PROPHETS",  books: ["Isaiah", "Jeremiah", "Lamentations", "Ezekiel", "Daniel"] },
+  { label: "MINOR PROPHETS",  books: ["Hosea", "Joel", "Amos", "Obadiah", "Jonah", "Micah", "Nahum", "Habakkuk", "Zephaniah", "Haggai", "Zechariah", "Malachi"] },
+];
+
+const NT_CATEGORIES = [
+  { label: "GOSPELS",          books: ["Matthew", "Mark", "Luke", "John"] },
+  { label: "ACTS",             books: ["Acts"] },
+  { label: "PAUL'S LETTERS",  books: ["Romans", "1 Corinthians", "2 Corinthians", "Galatians", "Ephesians", "Philippians", "Colossians", "1 Thessalonians", "2 Thessalonians", "1 Timothy", "2 Timothy", "Titus", "Philemon"] },
+  { label: "GENERAL LETTERS", books: ["Hebrews", "James", "1 Peter", "2 Peter", "1 John", "2 John", "3 John", "Jude"] },
+  { label: "PROPHECY",        books: ["Revelation"] },
+];
+
+const OT_BOOK_SET = new Set(OT_CATEGORIES.flatMap(c => c.books));
+const NT_BOOK_SET = new Set(NT_CATEGORIES.flatMap(c => c.books));
 
 export default function Bible365Page() {
   return (
@@ -70,7 +72,19 @@ function Bible365Inner() {
   const plan = getBiblePlan();
   const searchParams = useSearchParams();
 
+  // View: "toc" = book browser, "reading" = scripture view
+  const [view, setView] = useState<"toc" | "reading">(() =>
+    searchParams.get("day") ? "reading" : "toc"
+  );
+
+  // Testament tab
+  const [tocTab, setTocTab] = useState<"ot" | "nt">("ot");
+
+  // Completed days (persisted in localStorage)
+  const [completedDays, setCompletedDays] = useState<Set<number>>(new Set());
+
   const [userId, setUserId] = useState<string | null>(null);
+  const [savedDay, setSavedDay] = useState(1);
   const [day, setDay] = useState(() => {
     const param = searchParams.get("day");
     if (param) {
@@ -79,6 +93,7 @@ function Bible365Inner() {
     }
     return 1;
   });
+
   const [verses, setVerses] = useState<Verse[]>([]);
   const [loading, setLoading] = useState(false);
   const [fetchError, setFetchError] = useState<string | null>(null);
@@ -101,9 +116,58 @@ function Bible365Inner() {
   const verseEls = useRef<(HTMLDivElement | null)[]>([]);
 
   const todayReading = plan[day - 1];
-  const progress = Math.round((day / 365) * 100);
+  const completedCount = completedDays.size;
+  const progress = Math.round((completedCount / 365) * 100);
   const hasSpeech = typeof window !== "undefined" && "speechSynthesis" in window;
   const hl = HIGHLIGHT[highlightColor];
+
+  // ── Book → first day mapping ──────────────────────────────────────────────
+  const bookStartDay = useMemo(() => {
+    const map = new Map<string, number>();
+    for (const reading of plan) {
+      for (const ch of reading.chapters) {
+        if (!map.has(ch.bookName)) map.set(ch.bookName, reading.day);
+      }
+    }
+    return map;
+  }, [plan]);
+
+  // Active book for each testament based on saved day
+  const activeOtBook = useMemo(() => {
+    const reading = plan[savedDay - 1];
+    return reading.chapters.find(ch => OT_BOOK_SET.has(ch.bookName))?.bookName ?? null;
+  }, [savedDay, plan]);
+
+  const activeNtBook = useMemo(() => {
+    const reading = plan[savedDay - 1];
+    return reading.chapters.find(ch => NT_BOOK_SET.has(ch.bookName))?.bookName ?? null;
+  }, [savedDay, plan]);
+
+  // ── Load completed days ───────────────────────────────────────────────────
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem("bible365_completed");
+      if (stored) setCompletedDays(new Set(JSON.parse(stored)));
+    } catch {}
+  }, []);
+
+  function markRead(d: number) {
+    setCompletedDays(prev => {
+      const next = new Set(prev);
+      next.add(d);
+      try { localStorage.setItem("bible365_completed", JSON.stringify([...next])); } catch {}
+      return next;
+    });
+  }
+
+  function unmarkRead(d: number) {
+    setCompletedDays(prev => {
+      const next = new Set(prev);
+      next.delete(d);
+      try { localStorage.setItem("bible365_completed", JSON.stringify([...next])); } catch {}
+      return next;
+    });
+  }
 
   // ── Load user, saved progress, bookmarks ──────────────────────────────────
   useEffect(() => {
@@ -118,13 +182,13 @@ function Bible365Inner() {
         .single();
 
       if (prog) {
-        // URL param takes priority (e.g. navigating from bookmarks)
-        if (!searchParams.get("day")) setDay(Math.min(Math.max(1, prog.day ?? 1), 365));
+        const progDay = Math.min(Math.max(1, prog.day ?? 1), 365);
+        setSavedDay(progDay);
+        if (!searchParams.get("day")) setDay(progDay);
         setResumeVerse(prog.verse_index ?? 0);
         setFontSize((prog.font_size as FontSize) ?? "base");
         const s = (prog.speed as Speed) ?? 1;
-        setSpeed(s);
-        speedRef.current = s;
+        setSpeed(s); speedRef.current = s;
         if (prog.highlight_color) setHighlightColor(prog.highlight_color as HighlightColor);
       }
 
@@ -149,8 +213,9 @@ function Bible365Inner() {
     [userId]
   );
 
-  // ── Fetch scripture when day changes ──────────────────────────────────────
+  // ── Fetch scripture when day/view changes ─────────────────────────────────
   useEffect(() => {
+    if (view !== "reading") return;
     cancelSpeech();
     setVerses([]);
     setFetchError(null);
@@ -185,17 +250,12 @@ function Bible365Inner() {
       }
     }
     fetchDay();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [day]);
+  }, [day, view]);
 
-  // ── Auto-scroll to active verse ────────────────────────────────────────────
   useEffect(() => {
-    if (currentVerse >= 0) {
-      verseEls.current[currentVerse]?.scrollIntoView({ behavior: "smooth", block: "center" });
-    }
+    if (currentVerse >= 0) verseEls.current[currentVerse]?.scrollIntoView({ behavior: "smooth", block: "center" });
   }, [currentVerse]);
 
-  // ── Cancel speech on unmount ───────────────────────────────────────────────
   useEffect(() => () => { stopSignal.current = true; window.speechSynthesis?.cancel(); }, []);
 
   // ── Speech ─────────────────────────────────────────────────────────────────
@@ -208,10 +268,8 @@ function Bible365Inner() {
   function speakOne(text: string): Promise<void> {
     return new Promise((resolve) => {
       const utt = new SpeechSynthesisUtterance(text);
-      utt.rate = speedRef.current;
-      utt.lang = "en-US";
-      utt.onend = resolve;
-      utt.onerror = resolve;
+      utt.rate = speedRef.current; utt.lang = "en-US";
+      utt.onend = resolve; utt.onerror = resolve;
       window.speechSynthesis.speak(utt);
     });
   }
@@ -220,7 +278,6 @@ function Bible365Inner() {
     if (!hasSpeech || !verseList.length) return;
     stopSignal.current = false;
     setPlaying(true);
-
     for (let i = fromVerse; i < verseList.length; i++) {
       if (stopSignal.current) break;
       setCurrentVerse(i);
@@ -228,7 +285,6 @@ function Bible365Inner() {
       if (stopSignal.current) break;
       if (i % 5 === 0) saveProgress(day, i + 1, fontSize, speedRef.current, highlightColor);
     }
-
     if (!stopSignal.current) {
       setCurrentVerse(-1);
       setResumeVerse(0);
@@ -237,12 +293,11 @@ function Bible365Inner() {
     setPlaying(false);
   }
 
-  // ── Control handlers ───────────────────────────────────────────────────────
+  // ── Controls ───────────────────────────────────────────────────────────────
   function handlePlayPause() {
     if (playing) {
       const pausedAt = currentVerse >= 0 ? currentVerse : 0;
-      cancelSpeech();
-      setResumeVerse(pausedAt);
+      cancelSpeech(); setResumeVerse(pausedAt);
       saveProgress(day, pausedAt, fontSize, speedRef.current, highlightColor);
     } else {
       startPlayback(currentVerse >= 0 ? currentVerse : resumeVerse, verses);
@@ -250,16 +305,13 @@ function Bible365Inner() {
   }
 
   function handleRestartDay() {
-    cancelSpeech();
-    setResumeVerse(0);
-    setCurrentVerse(-1);
+    cancelSpeech(); setResumeVerse(0); setCurrentVerse(-1);
     saveProgress(day, 0, fontSize, speedRef.current, highlightColor);
     setTimeout(() => startPlayback(0, verses), 80);
   }
 
   function handleSpeed(s: Speed) {
-    setSpeed(s);
-    speedRef.current = s;
+    setSpeed(s); speedRef.current = s;
     saveProgress(day, currentVerse >= 0 ? currentVerse : resumeVerse, fontSize, s, highlightColor);
   }
 
@@ -274,11 +326,28 @@ function Bible365Inner() {
   }
 
   function goToDay(d: number) {
+    markRead(day);
     const next = Math.min(Math.max(1, d), 365);
-    cancelSpeech();
-    setResumeVerse(0);
+    cancelSpeech(); setResumeVerse(0);
     saveProgress(next, 0, fontSize, speedRef.current, highlightColor);
-    setDay(next);
+    setSavedDay(next); setDay(next);
+    window.scrollTo({ top: 0 });
+  }
+
+  function openBook(bookName: string) {
+    const d = bookStartDay.get(bookName);
+    if (!d) return;
+    cancelSpeech(); setResumeVerse(0);
+    setDay(d); setView("reading");
+    saveProgress(d, 0, fontSize, speedRef.current, highlightColor);
+    setSavedDay(d);
+    window.scrollTo({ top: 0 });
+  }
+
+  function backToToc() {
+    cancelSpeech();
+    setView("toc");
+    window.scrollTo({ top: 0 });
   }
 
   // ── Bookmarks ──────────────────────────────────────────────────────────────
@@ -294,7 +363,6 @@ function Bible365Inner() {
     }
   }
 
-  // ── Group verses by chapter ────────────────────────────────────────────────
   const chapterGroups = useMemo(() => {
     const groups: { label: string; start: number; end: number }[] = [];
     verses.forEach((v, i) => {
@@ -308,269 +376,277 @@ function Bible365Inner() {
     return groups;
   }, [verses]);
 
-  const resumeLabel =
-    resumeVerse > 0 && verses.length > 0
-      ? verses[Math.min(resumeVerse, verses.length - 1)]?.reference
-      : null;
+  const resumeLabel = resumeVerse > 0 && verses.length > 0
+    ? verses[Math.min(resumeVerse, verses.length - 1)]?.reference
+    : null;
+
+  const activeBook = tocTab === "ot" ? activeOtBook : activeNtBook;
+  const categories = tocTab === "ot" ? OT_CATEGORIES : NT_CATEGORIES;
 
   // ── Render ─────────────────────────────────────────────────────────────────
   return (
     <SubscriptionGuard>
-      <PageBackground url="https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/saud-edum-cgapZpzd7v0-unsplash%20(1).jpg">
+      <PageBackground url="https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/saud-edum-cgapZpzd7v0-unsplash%20(1).jpg" overlayOpacity={0.65}>
         <main className="flex-1 p-6 pb-24 flex flex-col items-center">
           <div className="max-w-2xl w-full">
 
-            {/* Header */}
-            <div className="flex justify-between items-center mb-6">
-              <Link href="/dashboard" className="text-white/70 text-sm">← Home</Link>
-              <h1
-                className="text-lg font-bold text-white"
-                style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}
-              >
-                Bible in 365 Days
-              </h1>
-              <Link href="/bible-365/bookmarks" className="text-white/60 hover:text-white text-sm transition">
-                🔖 Saved
-              </Link>
-            </div>
+            {/* ── BOOK BROWSER (TOC) ── */}
+            {view === "toc" && (
+              <>
+                {/* Header */}
+                <div className="flex justify-between items-center mb-6">
+                  <Link href="/dashboard" className="text-white text-sm">← Home</Link>
+                  <h1 className="text-lg font-bold text-white" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>
+                    Bible in 365 Days
+                  </h1>
+                  <Link href="/bible-365/bookmarks" className="text-white/70 hover:text-white text-sm transition">🔖</Link>
+                </div>
 
-            {/* Progress bar */}
-            <div className="mb-6">
-              <div className="flex justify-between text-xs text-white/50 mb-1.5">
-                <span>Day {day} of 365</span>
-                <span>{progress}% complete</span>
-              </div>
-              <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-white/40 rounded-full transition-all duration-500"
-                  style={{ width: `${progress}%` }}
-                />
-              </div>
-            </div>
+                {/* Progress */}
+                <div className="mb-6">
+                  <div className="flex justify-between text-xs text-white/80 mb-1.5">
+                    <span>{completedCount} of 365 days read</span>
+                    <span>{progress}%</span>
+                  </div>
+                  <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
+                    <div className="h-full bg-white/50 rounded-full transition-all duration-500" style={{ width: `${progress}%` }} />
+                  </div>
+                </div>
 
-            {/* Day heading */}
-            <div className="mb-5">
-              <p className="text-white/40 text-xs uppercase tracking-widest mb-1">Today's Reading</p>
-              <p
-                className="text-white font-bold text-2xl leading-snug"
-                style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 8px rgba(0,0,0,0.9)" }}
-              >
-                {todayReading.label}
-              </p>
-            </div>
-
-            {/* Playback controls */}
-            <div className="flex flex-wrap items-center gap-2 mb-4">
-
-              {/* Play / Pause */}
-              <button
-                onClick={handlePlayPause}
-                disabled={loading || !!fetchError || !hasSpeech}
-                className={`flex items-center gap-2 font-semibold px-5 py-2.5 rounded-xl border transition disabled:opacity-30 ${
-                  playing
-                    ? "bg-white text-gray-900 border-white hover:bg-white/90"
-                    : "bg-white/20 hover:bg-white/30 border-white/30 text-white"
-                }`}
-              >
-                <span className="text-base leading-none">{playing ? "⏸" : "▶"}</span>
-                <span className="text-sm">{playing ? "Pause" : resumeVerse > 0 ? "Resume" : "Play"}</span>
-              </button>
-
-              {/* Stop — only shown while playing */}
-              {playing && (
-                <button
-                  onClick={() => {
-                    cancelSpeech();
-                    setResumeVerse(0);
-                    setCurrentVerse(-1);
-                    saveProgress(day, 0, fontSize, speedRef.current, highlightColor);
-                  }}
-                  className="flex items-center gap-1.5 text-white/80 hover:text-white text-sm border border-white/30 hover:border-white/60 px-4 py-2.5 rounded-xl transition"
-                >
-                  <span className="text-base leading-none">⏹</span>
-                  <span>Stop</span>
-                </button>
-              )}
-
-              {/* Restart — only shown when not playing */}
-              {!playing && (
-                <button
-                  onClick={handleRestartDay}
-                  disabled={loading || !!fetchError}
-                  className="text-white/60 hover:text-white text-sm border border-white/20 hover:border-white/40 px-3 py-2.5 rounded-xl transition disabled:opacity-30"
-                >
-                  ↺ Restart
-                </button>
-              )}
-
-              {/* Speed */}
-              <div className="flex items-center gap-1 ml-auto">
-                <span className="text-white/30 text-xs mr-1">Speed</span>
-                {SPEEDS.map(s => (
+                {/* Continue button */}
+                {savedDay > 1 && (
                   <button
-                    key={s}
-                    onClick={() => handleSpeed(s)}
-                    className={`text-xs px-2.5 py-1.5 rounded-lg border transition ${
-                      speed === s
-                        ? "border-white/60 text-white bg-white/15"
-                        : "border-white/20 text-white/40 hover:text-white/70"
+                    onClick={() => { setDay(savedDay); setView("reading"); window.scrollTo({ top: 0 }); }}
+                    className="w-full mb-7 flex items-center justify-between bg-white/15 hover:bg-white/25 border border-white/30 rounded-xl px-5 py-4 transition"
+                  >
+                    <div className="text-left">
+                      <p className="text-white text-xs uppercase tracking-widest mb-0.5">Continue where you left off</p>
+                      <p className="text-white font-semibold text-sm">
+                        Day {savedDay} — <span className="text-amber-200">{plan[savedDay - 1].otLabel}</span>
+                        {plan[savedDay - 1].ntLabel && <span className="text-blue-200"> · {plan[savedDay - 1].ntLabel}</span>}
+                      </p>
+                    </div>
+                    <span className="text-white/60 text-lg">→</span>
+                  </button>
+                )}
+
+                {/* Testament toggle */}
+                <div className="flex gap-2 mb-7 p-1 bg-black/30 rounded-2xl">
+                  <button
+                    onClick={() => setTocTab("ot")}
+                    className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition ${
+                      tocTab === "ot"
+                        ? "bg-purple-600 text-white shadow-lg"
+                        : "text-white/60 hover:text-white"
                     }`}
                   >
-                    {s}×
+                    Old Testament
                   </button>
-                ))}
-              </div>
+                  <button
+                    onClick={() => setTocTab("nt")}
+                    className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition ${
+                      tocTab === "nt"
+                        ? "bg-purple-600 text-white shadow-lg"
+                        : "text-white/60 hover:text-white"
+                    }`}
+                  >
+                    New Testament
+                  </button>
+                </div>
 
-              {/* Font size */}
-              <div className="flex items-center gap-1">
-                <button
-                  onClick={() => handleFontSize(fontSize === "lg" ? "base" : "sm")}
-                  disabled={fontSize === "sm"}
-                  className="text-white/50 hover:text-white disabled:opacity-20 border border-white/20 hover:border-white/40 px-2.5 py-1 rounded-lg transition text-sm"
-                >
-                  A−
-                </button>
-                <button
-                  onClick={() => handleFontSize(fontSize === "sm" ? "base" : "lg")}
-                  disabled={fontSize === "lg"}
-                  className="text-white/50 hover:text-white disabled:opacity-20 border border-white/20 hover:border-white/40 px-2.5 py-1 rounded-lg transition"
-                >
-                  A+
-                </button>
-              </div>
-            </div>
-
-            {/* Highlight color picker */}
-            <div className="flex items-center gap-3 mb-5">
-              <span className="text-white/40 text-xs">Highlight:</span>
-              {COLOR_SWATCHES.map(c => (
-                <button
-                  key={c.id}
-                  onClick={() => handleHighlightColor(c.id)}
-                  title={c.label}
-                  className={`w-5 h-5 rounded-full ${c.swatch} transition-all ${
-                    highlightColor === c.id
-                      ? "ring-2 ring-white/60 ring-offset-1 ring-offset-transparent scale-110"
-                      : "opacity-50 hover:opacity-80"
-                  }`}
-                />
-              ))}
-            </div>
-
-            {/* Resume banner */}
-            {resumeLabel && !playing && verses.length > 0 && currentVerse < 0 && (
-              <div className={`mb-5 flex items-center justify-between ${hl.resume} border rounded-xl px-4 py-3`}>
-                <p className="text-white/70 text-sm">
-                  Resume at <span className={hl.resumeText}>{resumeLabel}</span>
-                </p>
-                <button
-                  onClick={() => startPlayback(resumeVerse, verses)}
-                  className={`${hl.resumeText} hover:text-white text-xs font-semibold transition`}
-                >
-                  Resume →
-                </button>
-              </div>
-            )}
-
-            {!hasSpeech && (
-              <p className="text-white/50 text-xs mb-5">Audio not supported in this browser — you can still read along.</p>
-            )}
-
-            {/* Loading */}
-            {loading && (
-              <div className="text-center py-20">
-                <p className="text-white/40 text-sm">Loading scripture…</p>
-              </div>
-            )}
-
-            {/* Error */}
-            {fetchError && (
-              <div className="text-center py-20">
-                <p className="text-red-300/80 text-sm mb-4">{fetchError}</p>
-                <button
-                  onClick={() => setDay(d => d)}
-                  className="text-white/50 hover:text-white text-xs border border-white/20 px-4 py-2 rounded-xl transition"
-                >
-                  Try Again
-                </button>
-              </div>
-            )}
-
-            {/* Scripture */}
-            {!loading && !fetchError && chapterGroups.map(group => (
-              <div key={group.label} className="mb-10">
-                <p className="text-white/30 text-xs uppercase tracking-widest mb-4 pb-2 border-b border-white/10">
-                  {group.label}
-                </p>
-
-                {verses.slice(group.start, group.end).map((verse, localIdx) => {
-                  const globalIdx = group.start + localIdx;
-                  const isActive = currentVerse === globalIdx;
-                  const isBookmarked = bookmarks.has(verse.reference);
-
-                  return (
-                    <div
-                      key={verse.reference}
-                      ref={el => { verseEls.current[globalIdx] = el; }}
-                      className={`group relative flex gap-3 py-2 px-2 -mx-2 rounded-xl transition-all duration-300 ${
-                        isActive
-                          ? `${hl.bg} border-l-2 ${hl.border} pl-4 -ml-3`
-                          : "hover:bg-white/5"
-                      }`}
-                    >
-                      <span
-                        className={`text-xs mt-1 w-5 flex-shrink-0 text-right transition-colors ${
-                          isActive ? `${hl.num} font-bold` : "text-white/25"
-                        }`}
-                      >
-                        {verse.verseNum}
-                      </span>
-
-                      <p
-                        className={`flex-1 leading-relaxed transition-colors ${FONT_CLASSES[fontSize]} ${
-                          isActive ? "text-white" : "text-white/75"
-                        }`}
-                        style={{ textShadow: isActive ? "0 1px 6px rgba(0,0,0,0.95)" : "0 1px 4px rgba(0,0,0,0.8)" }}
-                      >
-                        {verse.text}
+                {/* Category sections */}
+                <div className="space-y-7">
+                  {categories.map(category => (
+                    <div key={category.label}>
+                      <p className="text-white text-xs font-bold tracking-widest mb-3" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>
+                        {category.label}
                       </p>
-
-                      <button
-                        onClick={() => toggleBookmark(verse)}
-                        className={`flex-shrink-0 mt-0.5 text-sm leading-none transition-all ${
-                          isBookmarked
-                            ? `${hl.num} opacity-100`
-                            : "text-white/20 opacity-0 group-hover:opacity-100 hover:text-white/60"
-                        }`}
-                        title={isBookmarked ? "Remove bookmark" : "Bookmark this verse"}
-                      >
-                        🔖
-                      </button>
+                      <div className="flex flex-wrap gap-2">
+                        {category.books.map(book => {
+                          const isActive = book === activeBook;
+                          return (
+                            <button
+                              key={book}
+                              onClick={() => openBook(book)}
+                              className={`px-4 py-2 rounded-full text-sm font-medium transition ${
+                                isActive
+                                  ? "bg-purple-600 text-white shadow-lg"
+                                  : "bg-purple-900/50 hover:bg-purple-700/60 text-white/90 border border-purple-400/20"
+                              }`}
+                            >
+                              {book}
+                            </button>
+                          );
+                        })}
+                      </div>
                     </div>
-                  );
-                })}
-              </div>
-            ))}
+                  ))}
+                </div>
+              </>
+            )}
 
-            {/* Day navigation */}
-            {!loading && !fetchError && verses.length > 0 && (
-              <div className="flex justify-between items-center pt-8 border-t border-white/10">
-                <button
-                  onClick={() => goToDay(day - 1)}
-                  disabled={day === 1}
-                  className="text-white/60 hover:text-white disabled:opacity-20 transition text-sm"
-                >
-                  ← Day {day - 1}
-                </button>
-                <span className="text-white/20 text-xs">Day {day} of 365</span>
-                <button
-                  onClick={() => goToDay(day + 1)}
-                  disabled={day === 365}
-                  className="text-white/60 hover:text-white disabled:opacity-20 transition text-sm"
-                >
-                  Day {day + 1} →
-                </button>
-              </div>
+            {/* ── READING VIEW ── */}
+            {view === "reading" && (
+              <>
+                {/* Header */}
+                <div className="flex justify-between items-center mb-6">
+                  <button onClick={backToToc} className="text-white text-sm hover:text-white/80 transition">← Books</button>
+                  <h1 className="text-lg font-bold text-white" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>
+                    Day {day}
+                  </h1>
+                  <Link href="/bible-365/bookmarks" className="text-white/70 hover:text-white text-sm transition">🔖</Link>
+                </div>
+
+                {/* Day heading */}
+                <div className="mb-5">
+                  <p className="text-white/70 text-xs uppercase tracking-widest mb-1">Today's Reading</p>
+                  <p className="text-amber-200 font-bold text-xl leading-snug" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 8px rgba(0,0,0,0.9)" }}>
+                    {todayReading.otLabel}
+                  </p>
+                  {todayReading.ntLabel && (
+                    <p className="text-blue-200 font-semibold text-lg leading-snug mt-0.5" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 8px rgba(0,0,0,0.9)" }}>
+                      {todayReading.ntLabel}
+                    </p>
+                  )}
+                </div>
+
+                {/* Mark as Read */}
+                <div className="mb-5">
+                  <button
+                    onClick={() => completedDays.has(day) ? unmarkRead(day) : markRead(day)}
+                    className={`flex items-center gap-2 text-sm px-4 py-2 rounded-xl border transition font-semibold ${
+                      completedDays.has(day)
+                        ? "bg-green-500/25 border-green-400/50 text-green-300"
+                        : "bg-white/10 border-white/30 text-white hover:bg-white/20"
+                    }`}
+                  >
+                    {completedDays.has(day) ? "✓ Marked as Read" : "Mark as Read"}
+                  </button>
+                </div>
+
+                {/* Playback controls */}
+                <div className="flex flex-wrap items-center gap-2 mb-4">
+                  <button
+                    onClick={handlePlayPause}
+                    disabled={loading || !!fetchError || !hasSpeech}
+                    className={`flex items-center gap-2 font-semibold px-5 py-2.5 rounded-xl border transition disabled:opacity-30 ${
+                      playing ? "bg-white text-gray-900 border-white hover:bg-white/90" : "bg-white/20 hover:bg-white/30 border-white/30 text-white"
+                    }`}
+                  >
+                    <span className="text-base leading-none">{playing ? "⏸" : "▶"}</span>
+                    <span className="text-sm">{playing ? "Pause" : resumeVerse > 0 ? "Resume" : "Play"}</span>
+                  </button>
+
+                  {playing && (
+                    <button
+                      onClick={() => { cancelSpeech(); setResumeVerse(0); setCurrentVerse(-1); saveProgress(day, 0, fontSize, speedRef.current, highlightColor); }}
+                      className="flex items-center gap-1.5 text-white/80 hover:text-white text-sm border border-white/30 hover:border-white/60 px-4 py-2.5 rounded-xl transition"
+                    >
+                      <span className="text-base leading-none">⏹</span>
+                      <span>Stop</span>
+                    </button>
+                  )}
+
+                  {!playing && (
+                    <button
+                      onClick={handleRestartDay}
+                      disabled={loading || !!fetchError}
+                      className="text-white/70 hover:text-white text-sm border border-white/20 hover:border-white/40 px-3 py-2.5 rounded-xl transition disabled:opacity-30"
+                    >
+                      ↺ Restart
+                    </button>
+                  )}
+
+                  <div className="flex items-center gap-1 ml-auto">
+                    <span className="text-white/70 text-xs mr-1">Speed</span>
+                    {SPEEDS.map(s => (
+                      <button key={s} onClick={() => handleSpeed(s)}
+                        className={`text-xs px-2.5 py-1.5 rounded-lg border transition ${speed === s ? "border-white/60 text-white bg-white/15" : "border-white/20 text-white/70 hover:text-white"}`}
+                      >{s}×</button>
+                    ))}
+                  </div>
+
+                  <div className="flex items-center gap-1">
+                    <button onClick={() => handleFontSize(fontSize === "lg" ? "base" : "sm")} disabled={fontSize === "sm"}
+                      className="text-white/70 hover:text-white disabled:opacity-20 border border-white/20 hover:border-white/40 px-2.5 py-1 rounded-lg transition text-sm">A−</button>
+                    <button onClick={() => handleFontSize(fontSize === "sm" ? "base" : "lg")} disabled={fontSize === "lg"}
+                      className="text-white/70 hover:text-white disabled:opacity-20 border border-white/20 hover:border-white/40 px-2.5 py-1 rounded-lg transition">A+</button>
+                  </div>
+                </div>
+
+                {/* Highlight color picker */}
+                <div className="flex items-center gap-3 mb-5">
+                  <span className="text-white/70 text-xs">Highlight:</span>
+                  {COLOR_SWATCHES.map(c => (
+                    <button key={c.id} onClick={() => handleHighlightColor(c.id)} title={c.label}
+                      className={`w-5 h-5 rounded-full ${c.swatch} transition-all ${highlightColor === c.id ? "ring-2 ring-white/60 ring-offset-1 ring-offset-transparent scale-110" : "opacity-50 hover:opacity-80"}`}
+                    />
+                  ))}
+                </div>
+
+                {/* Resume banner */}
+                {resumeLabel && !playing && verses.length > 0 && currentVerse < 0 && (
+                  <div className={`mb-5 flex items-center justify-between ${hl.resume} border rounded-xl px-4 py-3`}>
+                    <p className="text-white/70 text-sm">Resume at <span className={hl.resumeText}>{resumeLabel}</span></p>
+                    <button onClick={() => startPlayback(resumeVerse, verses)} className={`${hl.resumeText} hover:text-white text-xs font-semibold transition`}>Resume →</button>
+                  </div>
+                )}
+
+                {!hasSpeech && <p className="text-white/70 text-xs mb-5">Audio not supported in this browser — you can still read along.</p>}
+
+                {loading && <div className="text-center py-20"><p className="text-white/70 text-sm">Loading scripture…</p></div>}
+
+                {fetchError && (
+                  <div className="text-center py-20">
+                    <p className="text-red-300/80 text-sm mb-4">{fetchError}</p>
+                    <button onClick={() => setDay(d => d)} className="text-white/70 hover:text-white text-xs border border-white/20 px-4 py-2 rounded-xl transition">Try Again</button>
+                  </div>
+                )}
+
+                {/* Scripture */}
+                {!loading && !fetchError && chapterGroups.map(group => (
+                  <div key={group.label} className="mb-10">
+                    <p className="text-white/70 text-xs uppercase tracking-widest mb-4 pb-2 border-b border-white/10">{group.label}</p>
+                    {verses.slice(group.start, group.end).map((verse, localIdx) => {
+                      const globalIdx = group.start + localIdx;
+                      const isActive = currentVerse === globalIdx;
+                      const isBookmarked = bookmarks.has(verse.reference);
+                      return (
+                        <div
+                          key={verse.reference}
+                          ref={el => { verseEls.current[globalIdx] = el; }}
+                          className={`group relative flex gap-3 py-2 px-2 -mx-2 rounded-xl transition-all duration-300 ${isActive ? `${hl.bg} border-l-2 ${hl.border} pl-4 -ml-3` : "hover:bg-white/5"}`}
+                        >
+                          <span className={`text-xs mt-1 w-5 flex-shrink-0 text-right transition-colors ${isActive ? `${hl.num} font-bold` : "text-white/50"}`}>
+                            {verse.verseNum}
+                          </span>
+                          <p className={`flex-1 leading-relaxed transition-colors ${FONT_CLASSES[fontSize]} ${isActive ? "text-white" : "text-white/90"}`}
+                            style={{ textShadow: isActive ? "0 1px 6px rgba(0,0,0,0.95)" : "0 1px 4px rgba(0,0,0,0.8)" }}>
+                            {verse.text}
+                          </p>
+                          <button onClick={() => toggleBookmark(verse)}
+                            className={`flex-shrink-0 mt-0.5 text-sm leading-none transition-all ${isBookmarked ? `${hl.num} opacity-100` : "text-white/20 opacity-0 group-hover:opacity-100 hover:text-white/60"}`}
+                            title={isBookmarked ? "Remove bookmark" : "Bookmark this verse"}>🔖</button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ))}
+
+                {/* Day navigation */}
+                {!loading && !fetchError && verses.length > 0 && (
+                  <div className="flex justify-between items-center pt-8 border-t border-white/10">
+                    <button onClick={() => goToDay(day - 1)} disabled={day === 1}
+                      className="text-white/70 hover:text-white disabled:opacity-20 transition text-sm">← Day {day - 1}</button>
+                    <button
+                      onClick={() => completedDays.has(day) ? unmarkRead(day) : markRead(day)}
+                      className={`text-xs px-3 py-1.5 rounded-lg border transition ${completedDays.has(day) ? "border-green-400/50 text-green-300 bg-green-500/20" : "border-white/30 text-white/70 hover:text-white"}`}
+                    >{completedDays.has(day) ? "✓ Read" : "Mark Read"}</button>
+                    <button onClick={() => goToDay(day + 1)} disabled={day === 365}
+                      className="text-white/70 hover:text-white disabled:opacity-20 transition text-sm">Day {day + 1} →</button>
+                  </div>
+                )}
+              </>
             )}
 
           </div>
