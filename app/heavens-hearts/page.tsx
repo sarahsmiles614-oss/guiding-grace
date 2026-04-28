@@ -309,7 +309,7 @@ export default function HeavensHeartsPage() {
       <style dangerouslySetInnerHTML={{ __html: `
         @media print {
           .hh-no-print { display: none !important; }
-          .hh-print-list { display: block !important; }
+          .hh-print-list { display: none !important; }
           body { background: white !important; }
           .hh-canvas { min-height: auto !important; }
         }
