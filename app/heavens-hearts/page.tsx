@@ -357,17 +357,26 @@ export default function HeavensHeartsPage() {
     <SubscriptionGuard>
       <style dangerouslySetInnerHTML={{ __html: `
         @media print {
+          * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
           .hh-no-print { display: none !important; }
           .hh-print-list { display: none !important; }
-          body { background: white !important; }
           .hh-canvas { min-height: auto !important; }
+          .hh-bg-img { display: block !important; }
         }
         .hh-print-list { display: none; }
+        .hh-bg-img { display: none; }
       `}} />
       <div
         className="min-h-screen bg-cover bg-center bg-fixed relative"
         style={{ backgroundImage: `url('${backgrounds[bgIndex].url}')` }}
       >
+        {/* Print-only background image — CSS backgrounds don't print, img tags do */}
+        <img
+          src={backgrounds[bgIndex].url}
+          alt=""
+          className="hh-bg-img fixed inset-0 w-full h-full object-cover -z-10"
+          style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", objectFit: "cover", zIndex: -1 }}
+        />
         <div className="absolute inset-0 bg-white/30 backdrop-blur-[1px]" />
 
         <div className="relative z-10">
