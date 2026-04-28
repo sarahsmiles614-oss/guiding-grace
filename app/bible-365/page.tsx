@@ -60,6 +60,23 @@ const NT_CATEGORIES = [
 const OT_BOOK_SET = new Set(OT_CATEGORIES.flatMap(c => c.books));
 const NT_BOOK_SET = new Set(NT_CATEGORIES.flatMap(c => c.books));
 
+const CHAPTER_COUNTS: Record<string, number> = {
+  Genesis: 50, Exodus: 40, Leviticus: 27, Numbers: 36, Deuteronomy: 34,
+  Joshua: 24, Judges: 21, Ruth: 4, "1 Samuel": 31, "2 Samuel": 24,
+  "1 Kings": 22, "2 Kings": 25, "1 Chronicles": 29, "2 Chronicles": 36,
+  Ezra: 10, Nehemiah: 13, Esther: 10, Job: 42, Psalms: 150, Proverbs: 31,
+  Ecclesiastes: 12, "Song of Solomon": 8, Isaiah: 66, Jeremiah: 52,
+  Lamentations: 5, Ezekiel: 48, Daniel: 12, Hosea: 14, Joel: 3, Amos: 9,
+  Obadiah: 1, Jonah: 4, Micah: 7, Nahum: 3, Habakkuk: 3, Zephaniah: 3,
+  Haggai: 2, Zechariah: 14, Malachi: 4,
+  Matthew: 28, Mark: 16, Luke: 24, John: 21, Acts: 28, Romans: 16,
+  "1 Corinthians": 16, "2 Corinthians": 13, Galatians: 6, Ephesians: 6,
+  Philippians: 4, Colossians: 4, "1 Thessalonians": 5, "2 Thessalonians": 3,
+  "1 Timothy": 6, "2 Timothy": 4, Titus: 3, Philemon: 1, Hebrews: 13,
+  James: 5, "1 Peter": 5, "2 Peter": 3, "1 John": 5, "2 John": 1,
+  "3 John": 1, Jude: 1, Revelation: 22,
+};
+
 export default function Bible365Page() {
   return (
     <Suspense fallback={null}>
@@ -79,6 +96,10 @@ function Bible365Inner() {
 
   // Testament tab
   const [tocTab, setTocTab] = useState<"ot" | "nt">("ot");
+
+  // Picker steps
+  const [pickerStep, setPickerStep] = useState<"book" | "chapter">("book");
+  const [pickerBook, setPickerBook] = useState<string | null>(null);
 
   // Completed days (persisted in localStorage)
   const [completedDays, setCompletedDays] = useState<Set<number>>(new Set());
@@ -393,95 +414,95 @@ function Bible365Inner() {
             {/* ── BOOK BROWSER (TOC) ── */}
             {view === "toc" && (
               <>
-                {/* Header */}
-                <div className="flex justify-between items-center mb-6">
-                  <Link href="/dashboard" className="text-white text-sm">← Home</Link>
-                  <h1 className="text-lg font-bold text-white" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>
-                    Bible in 365 Days
-                  </h1>
-                  <Link href="/bible-365/bookmarks" className="text-white text-sm transition">🔖</Link>
+                {/* Sticky top bar */}
+                <div className="sticky top-0 z-10 bg-black/40 backdrop-blur-sm -mx-6 px-6 mb-0">
+                  {pickerStep === "book" ? (
+                    <>
+                      <h1 className="text-2xl font-bold text-white text-center py-4">Choose a Book</h1>
+                      {/* OT/NT toggle — flat full-width halves */}
+                      <div className="flex">
+                        <button
+                          onClick={() => setTocTab("ot")}
+                          className={`flex-1 py-2 text-sm rounded-none transition ${
+                            tocTab === "ot" ? "bg-purple-600 text-white font-bold" : "bg-white/10 text-white font-semibold"
+                          }`}
+                        >
+                          Old Testament
+                        </button>
+                        <button
+                          onClick={() => setTocTab("nt")}
+                          className={`flex-1 py-2 text-sm rounded-none transition ${
+                            tocTab === "nt" ? "bg-purple-600 text-white font-bold" : "bg-white/10 text-white font-semibold"
+                          }`}
+                        >
+                          New Testament
+                        </button>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="px-0 pt-4 pb-2">
+                        <button
+                          onClick={() => setPickerStep("book")}
+                          className="text-white/70 text-sm px-0"
+                        >
+                          ← Back
+                        </button>
+                      </div>
+                      <h2 className="text-2xl font-bold text-white text-center pb-3">{pickerBook}</h2>
+                      <p className="text-white/60 text-sm text-center pb-4">Select a chapter</p>
+                    </>
+                  )}
                 </div>
 
-                {/* Progress */}
-                <div className="mb-6">
-                  <div className="flex justify-between text-xs text-white mb-1.5">
-                    <span>{completedCount} of 365 days read</span>
-                    <span>{progress}%</span>
+                {/* Step 1 — Book list */}
+                {pickerStep === "book" && (
+                  <div className="-mx-6">
+                    {categories.map(category => (
+                      <div key={category.label}>
+                        <p className="text-purple-300 text-xs font-bold tracking-widest uppercase px-4 pt-5 pb-2">
+                          {category.label}
+                        </p>
+                        {category.books.map(book => (
+                          <button
+                            key={book}
+                            onClick={() => { setPickerBook(book); setPickerStep("chapter"); }}
+                            className="w-full text-left px-5 py-3 bg-white/10 hover:bg-purple-600/50 border-b border-white/10 text-white font-semibold text-base transition flex items-center justify-between"
+                          >
+                            <span>{book}</span>
+                            <span className="text-white/50">›</span>
+                          </button>
+                        ))}
+                      </div>
+                    ))}
                   </div>
-                  <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
-                    <div className="h-full bg-white/50 rounded-full transition-all duration-500" style={{ width: `${progress}%` }} />
-                  </div>
-                </div>
-
-                {/* Continue button */}
-                {savedDay > 1 && (
-                  <button
-                    onClick={() => { setDay(savedDay); setView("reading"); window.scrollTo({ top: 0 }); }}
-                    className="w-full mb-7 flex items-center justify-between bg-white/15 hover:bg-white/25 border border-white/30 rounded-xl px-5 py-4 transition"
-                  >
-                    <div className="text-left">
-                      <p className="text-white text-xs uppercase tracking-widest mb-0.5">Continue where you left off</p>
-                      <p className="text-white font-semibold text-sm">
-                        Day {savedDay} — <span className="text-amber-200">{plan[savedDay - 1].otLabel}</span>
-                        {plan[savedDay - 1].ntLabel && <span className="text-blue-200"> · {plan[savedDay - 1].ntLabel}</span>}
-                      </p>
-                    </div>
-                    <span className="text-white text-lg">→</span>
-                  </button>
                 )}
 
-                {/* Testament toggle */}
-                <div className="flex gap-2 mb-7 p-1 bg-black/30 rounded-2xl">
-                  <button
-                    onClick={() => setTocTab("ot")}
-                    className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition ${
-                      tocTab === "ot"
-                        ? "bg-purple-600 text-white"
-                        : "bg-white/10 text-white"
-                    }`}
-                  >
-                    Old Testament
-                  </button>
-                  <button
-                    onClick={() => setTocTab("nt")}
-                    className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition ${
-                      tocTab === "nt"
-                        ? "bg-purple-600 text-white"
-                        : "bg-white/10 text-white"
-                    }`}
-                  >
-                    New Testament
-                  </button>
-                </div>
-
-                {/* Category sections */}
-                <div className="space-y-7">
-                  {categories.map(category => (
-                    <div key={category.label}>
-                      <p className="text-white font-bold tracking-widest text-xs mt-4 mb-2">
-                        {category.label}
-                      </p>
-                      <div className="flex flex-wrap gap-2">
-                        {category.books.map(book => {
-                          const isActive = book === activeBook;
-                          return (
-                            <button
-                              key={book}
-                              onClick={() => openBook(book)}
-                              className={`px-3 py-1.5 rounded-full text-sm font-medium transition ${
-                                isActive
-                                  ? "bg-purple-600 border border-purple-400 text-white"
-                                  : "bg-purple-600/40 hover:bg-purple-500/60 border border-purple-400/50 text-white"
-                              }`}
-                            >
-                              {book}
-                            </button>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                {/* Step 2 — Chapter grid */}
+                {pickerStep === "chapter" && pickerBook && (
+                  <div className="grid grid-cols-5 gap-2 px-4 pt-4">
+                    {Array.from({ length: CHAPTER_COUNTS[pickerBook] ?? 1 }, (_, i) => i + 1).map(ch => (
+                      <button
+                        key={ch}
+                        onClick={() => {
+                          const match = plan.find(r => r.chapters.some(c => c.bookName === pickerBook && c.chapter === ch));
+                          const targetDay = match ? match.day : plan.find(r => r.chapters.some(c => c.bookName === pickerBook))?.day ?? 1;
+                          cancelSpeech();
+                          setResumeVerse(0);
+                          setSavedDay(targetDay);
+                          setDay(targetDay);
+                          saveProgress(targetDay, 0, fontSize, speedRef.current, highlightColor);
+                          setPickerStep("book");
+                          setView("reading");
+                          window.scrollTo({ top: 0 });
+                        }}
+                        className="bg-white/10 hover:bg-purple-600 text-white font-bold py-3 rounded-lg text-sm transition"
+                      >
+                        {ch}
+                      </button>
+                    ))}
+                  </div>
+                )}
               </>
             )}
 
