@@ -25,6 +25,7 @@ const BG_OPTIONS = [
   { label: "Meadow",    url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/sign/Images%20also/trent-bradley-xSv6JausA8A-unsplash.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV85MzA0YmFjMS1lYTk0LTQzODItYjE3YS1hNDU4OTgwZDllYTEiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJJbWFnZXMgYWxzby90cmVudC1icmFkbGV5LXhTdjZKYXVzQThBLXVuc3BsYXNoLmpwZyIsImlhdCI6MTc3NzA4NTU1MiwiZXhwIjoxODU0ODQ1NTUyfQ.qmAusrHLhbV4NtU-wv8BWHw68wkbTgguXVStgTTCIIQ" },
   { label: "Bloom",     url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/sign/Images%20also/josie-weiss-9VhNkv7Y5l0-unsplash.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV85MzA0YmFjMS1lYTk0LTQzODItYjE3YS1hNDU4OTgwZDllYTEiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJJbWFnZXMgYWxzby9qb3NpZS13ZWlzcy05VmhOa3Y3WTVsMC11bnNwbGFzaC5qcGciLCJpYXQiOjE3NzcwODU2NjYsImV4cCI6MTg1NDg0NTY2Nn0.eepYKgoj9zbQULW2ZdJQr80JsFr9ek8bToBKtXNpKEw" },
   { label: "Spirit",    url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/alex-lehner-YHGZEAHiCKk-unsplash.jpg" },
+  { label: "Dove",      url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/sign/Images%20also/hugh-whyte-Zv6F1LALn2I-unsplash.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV85MzA0YmFjMS1lYTk0LTQzODItYjE3YS1hNDU4OTgwZDllYTEiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJJbWFnZXMgYWxzby9odWdoLXdoeXRlLVp2NkYxTEFMbjJJLXVuc3BsYXNoLmpwZyIsImlhdCI6MTc3NzM2MDI0NCwiZXhwIjoxODYzNzYwMjQ0fQ.wc94K-1pwwZD8MFc9oar7LZITmIJ34Iau6dPL9dLggU" },
 ];
 
 const FONT_OPTIONS = [
