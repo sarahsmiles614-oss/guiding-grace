@@ -184,7 +184,7 @@ export default function PrayerWallPage() {
             </div>
 
             {/* Prayer list */}
-            <div className="flex-1 overflow-y-auto space-y-10 pr-1"
+            <div className="flex-1 overflow-y-auto space-y-16 pr-1"
               style={{ scrollbarWidth: "none" }}>
               {prayers.filter(p => !blockedIds.has(p.user_id)).map((p) => (
                 <div key={p.id} className={`${p.is_answered ? "opacity-60" : ""}`}>
