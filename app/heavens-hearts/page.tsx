@@ -137,13 +137,9 @@ export default function HeavensHeartsPage() {
 
   async function handleAdd() {
     if (!newName.trim() || !userId) return;
-    // Place new name in a less-crowded zone based on existing count
-    const i = memorials.length;
-    const cols = Math.max(3, Math.ceil(Math.sqrt(i + 1)));
-    const col = i % cols;
-    const row = Math.floor(i / cols);
-    const x = Math.max(10, Math.min(88, 10 + (col / (cols - 1 || 1)) * 78 + (Math.random() * 12 - 6)));
-    const y = Math.max(10, Math.min(88, 10 + row * 22 + Math.random() * 10));
+    // Always start new names near center so nothing is cut off
+    const x = 50 + (Math.random() * 20 - 10);
+    const y = 40 + (Math.random() * 20 - 10);
     const { data, error } = await supabase
       .from("memorials")
       .insert({
@@ -579,42 +575,49 @@ export default function HeavensHeartsPage() {
 
                         {sel && (
                           <>
+                            {/* Dashed selection border */}
+                            <div
+                              className="absolute inset-0 border-2 border-dashed border-rose-400 rounded pointer-events-none"
+                              style={{ transform: `rotate(-${m.rotation}deg)`, margin: "-10px" }}
+                            />
+
+                            {/* Delete */}
                             <button
                               onClick={(e) => { e.stopPropagation(); handleRemove(m.id); }}
-                              className="absolute -top-8 right-0 w-8 h-8 bg-white/95 hover:bg-white rounded-full flex items-center justify-center shadow-lg z-10"
-                              style={{ transform: `rotate(-${m.rotation}deg)` }}
+                              className="absolute -top-10 left-1/2 -translate-x-1/2 bg-white/95 hover:bg-white text-rose-700 text-xs font-bold px-3 py-1.5 rounded-full shadow-lg z-10 whitespace-nowrap"
+                              style={{ transform: `translateX(-50%) rotate(-${m.rotation}deg)` }}
                             >
-                              🗑
+                              🗑 Remove
                             </button>
 
+                            {/* Resize — bottom right */}
                             <div
                               onMouseDown={(e) => { e.stopPropagation(); handleMouseDown(e, m.id, "resize"); }}
                               onTouchStart={(e) => { e.stopPropagation(); handleTouchStart(e, m.id, "resize"); }}
-                              className="absolute -bottom-8 -right-8 w-8 h-8 bg-blue-500/90 hover:bg-blue-600 rounded-full flex items-center justify-center shadow-lg cursor-nwse-resize z-10"
+                              className="absolute -bottom-10 -right-10 bg-blue-500 hover:bg-blue-600 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg cursor-nwse-resize z-10 whitespace-nowrap select-none"
                               style={{ transform: `rotate(-${m.rotation}deg)`, touchAction: "none" }}
                             >
-                              <div className="w-3 h-3 border-2 border-white rounded-sm" />
+                              ↔ Size
                             </div>
 
+                            {/* Rotate — bottom left */}
                             <div
                               onMouseDown={(e) => { e.stopPropagation(); handleMouseDown(e, m.id, "rotate"); }}
                               onTouchStart={(e) => { e.stopPropagation(); handleTouchStart(e, m.id, "rotate"); }}
-                              className="absolute -top-8 -right-8 w-8 h-8 bg-purple-500/90 hover:bg-purple-600 rounded-full flex items-center justify-center shadow-lg cursor-grab active:cursor-grabbing z-10"
+                              className="absolute -bottom-10 -left-10 bg-purple-500 hover:bg-purple-600 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg cursor-grab active:cursor-grabbing z-10 whitespace-nowrap select-none"
                               style={{ transform: `rotate(-${m.rotation}deg)`, touchAction: "none" }}
                             >
-                              ↻
+                              ↻ Rotate
                             </div>
-
-                            <div
-                              className="absolute inset-0 border-2 border-dashed border-rose-400 rounded pointer-events-none"
-                              style={{ transform: `rotate(-${m.rotation}deg)`, margin: "-8px" }}
-                            />
                           </>
                         )}
                       </div>
                     );
                   })}
                 </div>
+                <p className="hh-no-print text-center text-rose-800/70 text-xs mt-3" style={{ textShadow: "0 1px 2px rgba(255,255,255,0.6)" }}>
+                  Tap a name to select it · drag to move · use Size &amp; Rotate to customize
+                </p>
               </div>
             ) : (
               <div className="text-center py-16">
