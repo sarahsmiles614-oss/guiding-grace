@@ -78,7 +78,7 @@ export default function ShameRecyclePage() {
           backgroundImage: "url('https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/geralt-thunderstorm-9514137_1920.jpg')",
         }}
       >
-        <div className="absolute inset-0 bg-gradient-to-b from-purple-900/50 via-orange-900/40 to-cyan-900/50" />
+        <div className="absolute inset-0 bg-gradient-to-b from-purple-900/30 via-orange-900/25 to-cyan-900/30" />
 
         <div className="relative z-10 flex flex-col h-full">
           <header className="py-3 px-4">
@@ -94,7 +94,7 @@ export default function ShameRecyclePage() {
           <div className="flex-1 flex flex-col items-center justify-center px-4 pb-4">
             {!showScripture ? (
               <div className="w-full max-w-md">
-                <p className="text-white text-center text-sm mb-3" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>
+                <p className="text-white text-center text-base font-semibold mb-3" style={{ textShadow: "0 2px 8px rgba(0,0,0,1)" }}>
                   Write what you're ready to release
                 </p>
 
@@ -102,7 +102,7 @@ export default function ShameRecyclePage() {
                   value={text}
                   onChange={(e) => setText(e.target.value)}
                   disabled={isReleasing}
-                  className="w-full h-28 p-4 bg-black/30 backdrop-blur-sm text-white placeholder-white/50 resize-none outline-none text-base leading-relaxed"
+                  className="w-full h-28 p-4 bg-black/50 backdrop-blur-sm text-white placeholder-white/60 resize-none outline-none text-base leading-relaxed"
                   placeholder="Give it to God..."
                   style={{ fontFamily: "'Lora', Georgia, serif", textShadow: "0 1px 3px rgba(0,0,0,0.5)" }}
                 />
