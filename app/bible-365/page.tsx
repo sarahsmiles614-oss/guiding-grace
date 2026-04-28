@@ -399,12 +399,12 @@ function Bible365Inner() {
                   <h1 className="text-lg font-bold text-white" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>
                     Bible in 365 Days
                   </h1>
-                  <Link href="/bible-365/bookmarks" className="text-white/70 hover:text-white text-sm transition">🔖</Link>
+                  <Link href="/bible-365/bookmarks" className="text-white text-sm transition">🔖</Link>
                 </div>
 
                 {/* Progress */}
                 <div className="mb-6">
-                  <div className="flex justify-between text-xs text-white/80 mb-1.5">
+                  <div className="flex justify-between text-xs text-white mb-1.5">
                     <span>{completedCount} of 365 days read</span>
                     <span>{progress}%</span>
                   </div>
@@ -426,7 +426,7 @@ function Bible365Inner() {
                         {plan[savedDay - 1].ntLabel && <span className="text-blue-200"> · {plan[savedDay - 1].ntLabel}</span>}
                       </p>
                     </div>
-                    <span className="text-white/60 text-lg">→</span>
+                    <span className="text-white text-lg">→</span>
                   </button>
                 )}
 
@@ -436,8 +436,8 @@ function Bible365Inner() {
                     onClick={() => setTocTab("ot")}
                     className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition ${
                       tocTab === "ot"
-                        ? "bg-purple-600 text-white shadow-lg"
-                        : "text-white/60 hover:text-white"
+                        ? "bg-purple-600 text-white"
+                        : "bg-white/10 text-white"
                     }`}
                   >
                     Old Testament
@@ -446,8 +446,8 @@ function Bible365Inner() {
                     onClick={() => setTocTab("nt")}
                     className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition ${
                       tocTab === "nt"
-                        ? "bg-purple-600 text-white shadow-lg"
-                        : "text-white/60 hover:text-white"
+                        ? "bg-purple-600 text-white"
+                        : "bg-white/10 text-white"
                     }`}
                   >
                     New Testament
@@ -458,7 +458,7 @@ function Bible365Inner() {
                 <div className="space-y-7">
                   {categories.map(category => (
                     <div key={category.label}>
-                      <p className="text-white text-xs font-bold tracking-widest mb-3" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>
+                      <p className="text-white font-bold tracking-widest text-xs mt-4 mb-2">
                         {category.label}
                       </p>
                       <div className="flex flex-wrap gap-2">
@@ -468,10 +468,10 @@ function Bible365Inner() {
                             <button
                               key={book}
                               onClick={() => openBook(book)}
-                              className={`px-4 py-2 rounded-full text-sm font-medium transition ${
+                              className={`px-3 py-1.5 rounded-full text-sm font-medium transition ${
                                 isActive
-                                  ? "bg-purple-600 text-white shadow-lg"
-                                  : "bg-purple-900/50 hover:bg-purple-700/60 text-white/90 border border-purple-400/20"
+                                  ? "bg-purple-600 border border-purple-400 text-white"
+                                  : "bg-purple-600/40 hover:bg-purple-500/60 border border-purple-400/50 text-white"
                               }`}
                             >
                               {book}
