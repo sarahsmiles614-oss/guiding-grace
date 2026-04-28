@@ -173,16 +173,6 @@ export default function HeroesVillainsPage() {
                   </div>
                 </div>
 
-                {/* Surprise Me */}
-                <div className="mb-5 text-center">
-                  <button
-                    onClick={handleSurpriseMe}
-                    className="px-8 py-3 bg-gradient-to-r from-purple-500/40 to-pink-500/40 hover:from-purple-500/50 hover:to-pink-500/50 text-white backdrop-blur-sm text-base rounded-full transition"
-                  >
-                    ✨ Surprise Me
-                  </button>
-                </div>
-
                 {/* Type Filter */}
                 <div className="mb-6 flex flex-wrap items-center justify-center gap-3">
                   {(["all", "hero", "villain", "both"] as Filter[]).map((f) => (
@@ -196,49 +186,6 @@ export default function HeroesVillainsPage() {
                       {f === "all" ? "All Stories" : f === "both" ? "Complex" : f === "hero" ? "🛡️ Heroes" : "⚔️ Villains"}
                     </button>
                   ))}
-                </div>
-
-                {/* A-Z Index */}
-                <div className="mb-6" ref={alphaRef}>
-                  <p className="text-white/50 text-xs uppercase tracking-widest text-center mb-3">Browse by Name</p>
-                  <div className="flex flex-wrap items-center justify-center gap-1.5">
-                    <button
-                      onClick={() => { setSelectedLetter("all"); setOpenDropdown(null); }}
-                      className={`w-9 h-9 rounded-lg text-xs font-bold transition ${selectedLetter === "all" ? "bg-amber-500/50 text-white" : "bg-white/10 text-white/70 hover:bg-white/20"}`}
-                    >
-                      All
-                    </button>
-                    {allLetters.map((letter) => {
-                      const letterChars = filtered.filter((c) => c.name[0].toUpperCase() === letter);
-                      if (letterChars.length === 0 && filter !== "all" && selectedLetter !== letter) return null;
-                      return (
-                        <div key={letter} className="relative">
-                          <button
-                            onClick={() => setOpenDropdown(openDropdown === letter ? null : letter)}
-                            className={`w-9 h-9 rounded-lg text-xs font-bold transition ${
-                              openDropdown === letter ? "bg-amber-500/50 text-white scale-110" : "bg-white/10 text-white/70 hover:bg-white/20"
-                            }`}
-                          >
-                            {letter}
-                          </button>
-                          {openDropdown === letter && letterChars.length > 0 && (
-                            <div className="absolute top-11 left-1/2 -translate-x-1/2 z-50 bg-white/95 backdrop-blur-md rounded-lg shadow-2xl min-w-[200px] overflow-hidden">
-                              {letterChars.map((c) => (
-                                <button
-                                  key={c.id}
-                                  onClick={() => { handleSelect(c); setSelectedLetter(letter); setOpenDropdown(null); }}
-                                  className="w-full px-4 py-3 text-left hover:bg-amber-500/20 transition flex items-center justify-between"
-                                >
-                                  <span className="font-semibold text-gray-800 text-sm">{c.name}</span>
-                                  <span>{typeIcon(c.type)}</span>
-                                </button>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </div>
                 </div>
 
                 {/* Character Grid */}
