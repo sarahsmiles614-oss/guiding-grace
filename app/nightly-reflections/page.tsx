@@ -68,7 +68,7 @@ export default function NightlyReflectionsPage() {
           <div className="flex-1 flex flex-col justify-center px-4 pb-4 -mt-16">
             {!showScripture ? (
               <>
-                <h1 className="text-2xl font-thin text-white text-center mb-2" style={{ textShadow: "0 2px 8px rgba(0,0,0,0.7)" }}>
+                <h1 className="text-3xl font-thin text-white text-center mb-5" style={{ textShadow: "0 2px 8px rgba(0,0,0,0.7)" }}>
                   Nightly Reflections
                 </h1>
 
