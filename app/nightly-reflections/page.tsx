@@ -101,7 +101,7 @@ export default function NightlyReflectionsPage() {
                   </div>
                 </div>
 
-                <div className="flex justify-end max-w-4xl mx-auto w-full">
+                <div className="flex justify-center max-w-4xl mx-auto w-full mt-2">
                   <button
                     onClick={handleSend}
                     disabled={(!burdens.trim() && !blessings.trim()) || isSending}
