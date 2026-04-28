@@ -135,11 +135,11 @@ export default function SubscribePage() {
       <main className="flex-1 flex items-center justify-center p-6">
         <div className="max-w-md w-full text-center">
           <h1 className="text-4xl font-bold text-white mb-1" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 12px rgba(0,0,0,0.8)" }}>Guiding Grace</h1>
-          <p className="text-white/50 mb-8 text-sm">Your daily faith companion</p>
+          <p className="text-white mb-8 text-sm" style={{textShadow:"0 1px 6px rgba(0,0,0,0.9)"}}>Your daily faith companion</p>
 
           <div className="grid grid-cols-2 gap-1.5 mb-8 text-left">
             {["Daily Devotions","His Promises","Shame Recycle Bin","Heaven's Hearts","Nightly Reflections","Heroes & Villains","P.U.S.H. Prayer Wall","Truth Testimonies","Daily Grace Challenge"].map(f => (
-              <p key={f} className="text-white/65 text-xs flex items-center gap-1.5"><span className="text-green-400 text-xs">✓</span>{f}</p>
+              <p key={f} className="text-white text-xs flex items-center gap-1.5" style={{textShadow:"0 1px 6px rgba(0,0,0,0.9)"}}><span className="text-green-400 text-xs">✓</span>{f}</p>
             ))}
           </div>
 
