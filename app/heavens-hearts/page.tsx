@@ -54,6 +54,8 @@ export default function HeavensHeartsPage() {
   const [selectedColor, setSelectedColor] = useState("#ff6b9d");
   const [selectedFont, setSelectedFont] = useState(fontStyles[0]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [editingNameId, setEditingNameId] = useState<string | null>(null);
+  const [editingNameText, setEditingNameText] = useState("");
   const [isDragging, setIsDragging] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
   const [isRotating, setIsRotating] = useState(false);
@@ -173,6 +175,14 @@ export default function HeavensHeartsPage() {
   async function handleRemove(id: string) {
     await supabase.from("memorials").delete().eq("id", id);
     setMemorials((prev) => prev.filter((m) => m.id !== id));
+  }
+
+  async function handleRenameSave(id: string) {
+    const trimmed = editingNameText.trim();
+    if (!trimmed) return;
+    setMemorials((prev) => prev.map((m) => m.id === id ? { ...m, name: trimmed } : m));
+    setEditingNameId(null);
+    await supabase.from("memorials").update({ name: trimmed }).eq("id", id);
   }
 
   async function handleSaveImage() {
@@ -566,12 +576,27 @@ export default function HeavensHeartsPage() {
                           touchAction: "none",
                         }}
                       >
-                        <p
-                          className="text-4xl drop-shadow-[0_2px_8px_rgba(0,0,0,0.3)] whitespace-nowrap"
-                          style={{ fontFamily: fontFamily(m.font_style), color: m.color }}
-                        >
-                          {m.name}
-                        </p>
+                        {editingNameId === m.id ? (
+                          <div className="flex items-center gap-2" onClick={e => e.stopPropagation()}>
+                            <input
+                              autoFocus
+                              value={editingNameText}
+                              onChange={e => setEditingNameText(e.target.value)}
+                              onKeyDown={e => { if (e.key === "Enter") handleRenameSave(m.id); if (e.key === "Escape") setEditingNameId(null); }}
+                              className="bg-white/90 text-rose-900 font-semibold text-xl px-3 py-1 rounded-lg border-2 border-rose-400 outline-none"
+                              style={{ fontFamily: fontFamily(m.font_style) }}
+                            />
+                            <button onClick={() => handleRenameSave(m.id)} className="bg-rose-600 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow">Save</button>
+                            <button onClick={() => setEditingNameId(null)} className="bg-white/80 text-rose-700 text-xs font-bold px-3 py-1.5 rounded-full shadow">Cancel</button>
+                          </div>
+                        ) : (
+                          <p
+                            className="text-4xl drop-shadow-[0_2px_8px_rgba(0,0,0,0.3)] whitespace-nowrap"
+                            style={{ fontFamily: fontFamily(m.font_style), color: m.color }}
+                          >
+                            {m.name}
+                          </p>
+                        )}
 
                         {sel && (
                           <>
@@ -581,14 +606,22 @@ export default function HeavensHeartsPage() {
                               style={{ transform: `rotate(-${m.rotation}deg)`, margin: "-10px" }}
                             />
 
-                            {/* Delete */}
-                            <button
-                              onClick={(e) => { e.stopPropagation(); handleRemove(m.id); }}
-                              className="absolute -top-10 left-1/2 -translate-x-1/2 bg-white/95 hover:bg-white text-rose-700 text-xs font-bold px-3 py-1.5 rounded-full shadow-lg z-10 whitespace-nowrap"
-                              style={{ transform: `translateX(-50%) rotate(-${m.rotation}deg)` }}
-                            >
-                              🗑 Remove
-                            </button>
+                            {/* Edit name & Delete */}
+                            <div className="absolute -top-10 left-1/2 flex gap-2 z-10 whitespace-nowrap"
+                              style={{ transform: `translateX(-50%) rotate(-${m.rotation}deg)` }}>
+                              <button
+                                onClick={(e) => { e.stopPropagation(); setEditingNameId(m.id); setEditingNameText(m.name); }}
+                                className="bg-white/95 hover:bg-white text-rose-700 text-xs font-bold px-3 py-1.5 rounded-full shadow-lg"
+                              >
+                                Rename
+                              </button>
+                              <button
+                                onClick={(e) => { e.stopPropagation(); handleRemove(m.id); }}
+                                className="bg-white/95 hover:bg-white text-rose-700 text-xs font-bold px-3 py-1.5 rounded-full shadow-lg"
+                              >
+                                🗑 Remove
+                              </button>
+                            </div>
 
                             {/* Resize — bottom right */}
                             <div
