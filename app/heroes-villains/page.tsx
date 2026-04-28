@@ -58,7 +58,7 @@ export default function HeroesVillainsPage() {
 
   return (
     <SubscriptionGuard>
-      <PageBackground url="https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/glagolyvechnoyzhizni-goliath-8748113_1920.png">
+      <PageBackground url="https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/glagolyvechnoyzhizni-goliath-8748113_1920.png" bgSize="contain" bgPosition="center top" bgColor="#0a0a1a">
         <main className="flex-1 p-6 flex flex-col items-center">
           <div className="max-w-6xl w-full">
             <div className="flex justify-between items-center mb-6">
