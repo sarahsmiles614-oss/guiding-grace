@@ -94,7 +94,7 @@ export default function ShameRecyclePage() {
           <div className="flex-1 flex flex-col items-center justify-center px-4 pb-4">
             {!showScripture ? (
               <div className="w-full max-w-md">
-                <p className="text-white text-center text-base font-semibold mb-3" style={{ textShadow: "0 2px 8px rgba(0,0,0,1)" }}>
+                <p className="text-white text-center text-sm font-semibold mb-2" style={{ textShadow: "0 2px 8px rgba(0,0,0,1)" }}>
                   Write what you're ready to release
                 </p>
 
@@ -102,12 +102,12 @@ export default function ShameRecyclePage() {
                   value={text}
                   onChange={(e) => setText(e.target.value)}
                   disabled={isReleasing}
-                  className="w-full h-28 p-4 bg-black/50 backdrop-blur-sm text-white placeholder-white/60 resize-none outline-none text-base leading-relaxed"
+                  className="w-full h-24 p-3 bg-black/50 backdrop-blur-sm text-white placeholder-white/60 resize-none outline-none text-sm leading-snug"
                   placeholder="Give it to God..."
                   style={{ fontFamily: "'Lora', Georgia, serif", textShadow: "0 1px 3px rgba(0,0,0,0.5)" }}
                 />
 
-                <div className="text-center mt-4">
+                <div className="text-center mt-3">
                   <button
                     onClick={handleRelease}
                     disabled={!text.trim() || isReleasing}
