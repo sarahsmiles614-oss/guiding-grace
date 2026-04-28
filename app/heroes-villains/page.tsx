@@ -62,7 +62,7 @@ export default function HeroesVillainsPage() {
         <main className="flex-1 p-6 flex flex-col items-center">
           <div className="max-w-6xl w-full">
             <div className="flex justify-between items-center mb-6">
-              <Link href="/dashboard" className="text-white/70 text-sm hover:text-white">← Dashboard</Link>
+              <Link href="/dashboard" className="text-white text-sm hover:text-amber-200">← Dashboard</Link>
               <h1
                 className="text-3xl font-bold text-white"
                 style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 10px rgba(0,0,0,0.7)" }}
@@ -77,7 +77,7 @@ export default function HeroesVillainsPage() {
               <div className="p-2">
                 <button
                   onClick={handleBack}
-                  className="text-white/60 hover:text-white text-sm mb-6 flex items-center gap-1"
+                  className="text-white hover:text-amber-200 text-sm mb-6 flex items-center gap-1"
                 >
                   ← Back to All Characters
                 </button>
@@ -107,7 +107,7 @@ export default function HeroesVillainsPage() {
                 {/* Story */}
                 <div className="mb-8 space-y-4">
                   {selected.story.split("\n\n").map((para, i) => (
-                    <p key={i} className="text-white/90 text-base leading-relaxed" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.6)" }}>
+                    <p key={i} className="text-white text-base leading-relaxed" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>
                       {para}
                     </p>
                   ))}
@@ -117,7 +117,7 @@ export default function HeroesVillainsPage() {
                 {selected.didYouKnow && (
                   <div className="mb-6">
                     <h3 className="text-cyan-200 text-xs font-bold mb-2 uppercase tracking-wide" style={{ textShadow: "0 1px 3px rgba(0,0,0,0.8)" }}>✨ Did You Know?</h3>
-                    <p className="text-white/90 text-sm leading-relaxed italic" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.6)" }}>
+                    <p className="text-white text-sm leading-relaxed italic" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.6)" }}>
                       {selected.didYouKnow}
                     </p>
                   </div>
@@ -141,7 +141,7 @@ export default function HeroesVillainsPage() {
                   <h3 className="text-white font-bold mb-2 uppercase tracking-wide text-sm" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.6)" }}>
                     Legacy
                   </h3>
-                  <p className="text-white/90 text-base leading-relaxed" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.6)" }}>
+                  <p className="text-white text-base leading-relaxed" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.6)" }}>
                     {selected.legacy}
                   </p>
                 </div>
@@ -269,7 +269,7 @@ export default function HeroesVillainsPage() {
                         {c.title}
                       </p>
                       {c.summary && (
-                        <p className="text-white/70 text-xs leading-relaxed line-clamp-3" style={{ textShadow: "0 1px 3px rgba(0,0,0,0.6)" }}>
+                        <p className="text-white text-xs leading-relaxed line-clamp-3" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>
                           {c.summary}
                         </p>
                       )}
