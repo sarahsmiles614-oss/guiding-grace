@@ -130,7 +130,8 @@ export default function HeavensHeartsPage() {
     });
     setMemorials(updated);
     for (const m of updated) {
-      await supabase.from("memorials").update({ x: m.x, y: m.y }).eq("id", m.id);
+      const { error } = await supabase.from("memorials").update({ x: m.x, y: m.y }).eq("id", m.id);
+      if (error) console.error("Spread out save failed:", error.message);
     }
   }
 
@@ -169,7 +170,8 @@ export default function HeavensHeartsPage() {
 
   async function updateMemorial(id: string, updates: Partial<Memorial>) {
     setMemorials((prev) => prev.map((m) => (m.id === id ? { ...m, ...updates } : m)));
-    await supabase.from("memorials").update(updates).eq("id", id);
+    const { error } = await supabase.from("memorials").update(updates).eq("id", id);
+    if (error) console.error("Memorial update failed:", error.message, updates);
   }
 
   async function handleRemove(id: string) {
