@@ -102,7 +102,7 @@ export default function ShameRecyclePage() {
                   value={text}
                   onChange={(e) => setText(e.target.value)}
                   disabled={isReleasing}
-                  className="w-full h-24 p-3 bg-black/50 backdrop-blur-sm text-white placeholder-white/60 resize-none outline-none text-sm leading-snug"
+                  className="w-full h-24 p-3 bg-black/40 backdrop-blur-sm text-white placeholder-white/60 resize-none outline-none text-sm leading-snug rounded-xl border border-white/30 focus:border-white/60"
                   placeholder="Give it to God..."
                   style={{ fontFamily: "'Lora', Georgia, serif", textShadow: "0 1px 3px rgba(0,0,0,0.5)" }}
                 />
