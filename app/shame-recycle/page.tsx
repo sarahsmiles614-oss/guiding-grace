@@ -94,24 +94,24 @@ export default function ShameRecyclePage() {
           <div className="flex-1 flex flex-col items-center justify-center px-4 pb-4">
             {!showScripture ? (
               <div className="w-full max-w-md">
-                <p className="text-white text-center text-sm font-semibold mb-2" style={{ textShadow: "0 2px 8px rgba(0,0,0,1)" }}>
-                  Write what you're ready to release
+                <p className="text-white text-center text-2xl font-bold mb-3" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 10px rgba(0,0,0,1)" }}>
+                  Give it to God
                 </p>
 
                 <textarea
                   value={text}
                   onChange={(e) => setText(e.target.value)}
                   disabled={isReleasing}
-                  className="w-full h-24 p-3 bg-black/40 backdrop-blur-sm text-white placeholder-white/60 resize-none outline-none text-sm leading-snug rounded-xl border border-white/30 focus:border-white/60"
-                  placeholder="Give it to God..."
-                  style={{ fontFamily: "'Lora', Georgia, serif", textShadow: "0 1px 3px rgba(0,0,0,0.5)" }}
+                  className="w-full h-24 p-3 bg-black/40 backdrop-blur-sm text-white placeholder-white/70 resize-none outline-none text-sm leading-snug rounded-xl border border-white/30 focus:border-white/60"
+                  placeholder="Write what you're ready to release..."
+                  style={{ fontFamily: "'Lora', Georgia, serif" }}
                 />
 
-                <div className="text-center mt-3">
+                <div className="flex justify-end mt-2">
                   <button
                     onClick={handleRelease}
                     disabled={!text.trim() || isReleasing}
-                    className="px-5 py-2 text-sm bg-white/30 hover:bg-white/40 text-white font-semibold backdrop-blur-sm disabled:opacity-40 disabled:cursor-not-allowed border border-white/50 flex items-center gap-2 mx-auto"
+                    className="px-5 py-2 text-sm bg-white/30 hover:bg-white/40 text-white font-semibold backdrop-blur-sm disabled:opacity-40 disabled:cursor-not-allowed border border-white/50 rounded-xl flex items-center gap-2"
                   >
                     🔥 Release to the Fire
                   </button>
