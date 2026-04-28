@@ -83,7 +83,7 @@ export default function ShameRecyclePage() {
         <div className="relative z-10 flex flex-col h-full">
           <header className="py-3 px-4">
             <div className="max-w-xl mx-auto flex items-center justify-between">
-              <Link href="/dashboard" className="text-white/70 text-sm hover:text-white">← Dashboard</Link>
+              <Link href="/dashboard" className="text-white text-sm hover:text-amber-200">← Dashboard</Link>
               <h1 className="text-xl font-bold text-white" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 8px rgba(0,0,0,0.7)" }}>
                 Shame Recycle Bin
               </h1>
@@ -94,7 +94,7 @@ export default function ShameRecyclePage() {
           <div className="flex-1 flex flex-col items-center justify-center px-4 pb-4">
             {!showScripture ? (
               <div className="w-full max-w-md">
-                <p className="text-white/90 text-center text-sm mb-3" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.6)" }}>
+                <p className="text-white text-center text-sm mb-3" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>
                   Write what you're ready to release
                 </p>
 
@@ -276,7 +276,7 @@ export default function ShameRecyclePage() {
                 />
 
                 <div className="relative z-10 max-w-lg mx-auto px-6 text-center">
-                  <p className="text-amber-400/50 text-xs tracking-widest uppercase mb-8"
+                  <p className="text-amber-300 text-xs tracking-widest uppercase mb-8"
                     style={{ animation: "textFadeIn 1.5s ease-out forwards", opacity: 0 }}
                   >
                     Your shame is released
@@ -294,7 +294,7 @@ export default function ShameRecyclePage() {
                     &ldquo;{currentScripture.scripture}&rdquo;
                   </blockquote>
 
-                  <p className="text-base text-amber-200/55 mb-10"
+                  <p className="text-base text-amber-200 mb-10"
                     style={{
                       fontFamily: "'Lora', Georgia, serif",
                       animation: "textFadeIn 2s ease-out forwards",
