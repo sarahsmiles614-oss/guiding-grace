@@ -82,7 +82,7 @@ export default function ShameRecyclePage() {
 
         <div className="relative z-10 flex flex-col h-full">
           <header className="py-3 px-4">
-            <div className="max-w-xl mx-auto flex items-center">
+            <div className="max-w-md mx-auto flex items-center">
               <Link href="/dashboard" className="text-white text-sm hover:text-amber-200 w-24 shrink-0">← Dashboard</Link>
               <h1 className="text-lg font-bold text-white whitespace-nowrap text-center flex-1" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 8px rgba(0,0,0,0.7)" }}>
                 Shame Recycle Bin
