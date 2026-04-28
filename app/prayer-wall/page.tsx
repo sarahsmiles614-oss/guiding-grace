@@ -137,11 +137,11 @@ export default function PrayerWallPage() {
               <Link href="/dashboard" className="pw-no-print text-white/70 text-sm">← Dashboard</Link>
               <h1 className="text-lg font-bold text-white" style={{ textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>P.U.S.H. Prayer Wall</h1>
               {/* Action toolbar */}
-              <div className="pw-no-print flex items-center gap-1">
+              <div className="pw-no-print flex items-center gap-2">
                 <button
                   onClick={handleDownload}
                   title="Save as text file"
-                  className="text-white/60 hover:text-white text-sm px-2 py-1.5 rounded-lg hover:bg-white/10 transition"
+                  className="text-white text-xl px-3 py-2 rounded-xl bg-white/20 hover:bg-white/30 border border-white/30 transition"
                 >
                   💾
                 </button>
@@ -150,12 +150,12 @@ export default function PrayerWallPage() {
                   text="Join me in prayer on Guiding Grace — Pray Until Something Happens."
                   url="https://guidinggrace.app/prayer-wall"
                   label="↑"
-                  className="text-white/60 hover:text-white text-sm px-2 py-1.5 rounded-lg hover:bg-white/10 transition"
+                  className="text-white text-xl px-3 py-2 rounded-xl bg-white/20 hover:bg-white/30 border border-white/30 transition"
                 />
                 <button
                   onClick={() => window.print()}
                   title="Print"
-                  className="text-white/60 hover:text-white text-sm px-2 py-1.5 rounded-lg hover:bg-white/10 transition"
+                  className="text-white text-xl px-3 py-2 rounded-xl bg-white/20 hover:bg-white/30 border border-white/30 transition"
                 >
                   🖨️
                 </button>
