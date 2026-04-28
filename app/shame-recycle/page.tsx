@@ -81,14 +81,11 @@ export default function ShameRecyclePage() {
         <div className="absolute inset-0 bg-gradient-to-b from-purple-900/30 via-orange-900/25 to-cyan-900/30" />
 
         <div className="relative z-10 flex flex-col h-full">
-          <header className="py-3 px-4">
-            <div className="max-w-md mx-auto flex items-center">
-              <Link href="/dashboard" className="text-white text-sm hover:text-amber-200 w-24 shrink-0">← Dashboard</Link>
-              <h1 className="text-lg font-bold text-white whitespace-nowrap text-center flex-1" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 8px rgba(0,0,0,0.7)" }}>
-                Shame Recycle Bin
-              </h1>
-              <div className="w-24 shrink-0" />
-            </div>
+          <header className="py-3 px-4 relative">
+            <Link href="/dashboard" className="absolute left-4 top-1/2 -translate-y-1/2 text-white text-sm hover:text-amber-200">← Dashboard</Link>
+            <h1 className="text-lg font-bold text-white whitespace-nowrap text-center" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 8px rgba(0,0,0,0.7)" }}>
+              Shame Recycle Bin
+            </h1>
           </header>
 
           <div className="flex-1 flex flex-col items-center justify-center px-4 pb-4">
