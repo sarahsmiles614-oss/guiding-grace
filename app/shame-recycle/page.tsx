@@ -111,7 +111,7 @@ export default function ShameRecyclePage() {
                   <button
                     onClick={handleRelease}
                     disabled={!text.trim() || isReleasing}
-                    className="px-5 py-2 text-sm bg-white/30 hover:bg-white/40 text-white font-semibold backdrop-blur-sm disabled:opacity-40 disabled:cursor-not-allowed border border-white/50 rounded-xl flex items-center gap-2"
+                    className="px-5 py-2 text-sm bg-orange-500/80 hover:bg-orange-500 text-white font-bold backdrop-blur-sm disabled:opacity-40 disabled:cursor-not-allowed border border-orange-300/60 rounded-xl flex items-center gap-2 shadow-lg"
                   >
                     🔥 Release to the Fire
                   </button>
