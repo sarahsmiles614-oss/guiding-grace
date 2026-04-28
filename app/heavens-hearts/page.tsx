@@ -126,11 +126,11 @@ export default function HeavensHeartsPage() {
       const totalRows = Math.ceil(memorials.length / cols);
       const x = 10 + (col / Math.max(totalCols - 1, 1)) * 80 + (Math.random() * 8 - 4);
       const y = 10 + (row / Math.max(totalRows - 1, 1)) * 80 + (Math.random() * 8 - 4);
-      return { ...m, x: Math.max(5, Math.min(92, x)), y: Math.max(5, Math.min(92, y)), rotation: (Math.random() * 10 - 5) };
+      return { ...m, x: Math.max(5, Math.min(92, x)), y: Math.max(5, Math.min(92, y)) };
     });
     setMemorials(updated);
     for (const m of updated) {
-      await supabase.from("memorials").update({ x: m.x, y: m.y, rotation: m.rotation }).eq("id", m.id);
+      await supabase.from("memorials").update({ x: m.x, y: m.y }).eq("id", m.id);
     }
   }
 
