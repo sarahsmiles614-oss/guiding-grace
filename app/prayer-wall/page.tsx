@@ -211,17 +211,17 @@ export default function PrayerWallPage() {
                     <p className="text-white/90 text-sm mb-2" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>{p.prayer_text}</p>
                   )}
 
-                  <div className="pw-no-print flex items-center gap-4">
+                  <div className="pw-no-print flex items-center flex-wrap gap-2 mt-1">
                     <button
                       onClick={() => handlePrayed(p.id, p.prayer_count || 0)}
-                      className="text-xs text-white/50 hover:text-white/80 transition"
+                      className="inline-flex items-center gap-1 text-xs text-white font-medium bg-white/15 hover:bg-white/25 border border-white/20 px-3 py-1 rounded-full transition"
                     >
-                      🙏 I prayed for this{p.prayer_count > 0 ? ` · ${p.prayer_count}` : ""}
+                      🙏 Prayed{p.prayer_count > 0 ? ` · ${p.prayer_count}` : ""}
                     </button>
 
                     <button
                       onClick={() => shareItem(p.prayer_text)}
-                      className="text-xs text-white/40 hover:text-white/70 transition"
+                      className="inline-flex items-center gap-1 text-xs text-white font-medium bg-white/15 hover:bg-white/25 border border-white/20 px-3 py-1 rounded-full transition"
                     >
                       ↑ Share
                     </button>
@@ -229,7 +229,7 @@ export default function PrayerWallPage() {
                     {p.user_id !== userId && (
                       <button
                         onClick={() => handleBlock(p.user_id)}
-                        className="text-xs text-white/30 hover:text-red-300 transition"
+                        className="inline-flex items-center gap-1 text-xs text-white/70 hover:text-white font-medium bg-white/10 hover:bg-red-500/20 border border-white/15 hover:border-red-400/30 px-3 py-1 rounded-full transition"
                       >
                         Block
                       </button>
@@ -237,7 +237,7 @@ export default function PrayerWallPage() {
                     {p.user_id !== userId && (
                       <button
                         onClick={() => handleReport(p.id, p.prayer_text, p.user_id)}
-                        className="text-xs text-white/30 hover:text-red-300 transition"
+                        className="inline-flex items-center gap-1 text-xs text-white/70 hover:text-white font-medium bg-white/10 hover:bg-red-500/20 border border-white/15 hover:border-red-400/30 px-3 py-1 rounded-full transition"
                       >
                         Report
                       </button>
@@ -247,19 +247,19 @@ export default function PrayerWallPage() {
                       <>
                         <button
                           onClick={() => { setEditingId(p.id); setEditText(p.prayer_text); }}
-                          className="text-xs text-white/40 hover:text-white/70 transition"
+                          className="inline-flex items-center gap-1 text-xs text-white font-medium bg-white/15 hover:bg-white/25 border border-white/20 px-3 py-1 rounded-full transition"
                         >
                           Edit
                         </button>
                         <button
                           onClick={() => handleToggleAnswered(p.id, p.is_answered)}
-                          className="text-xs text-white/40 hover:text-white/70 transition"
+                          className="inline-flex items-center gap-1 text-xs text-white font-medium bg-white/15 hover:bg-white/25 border border-white/20 px-3 py-1 rounded-full transition"
                         >
                           {p.is_answered ? "Unmark answered" : "Mark answered ✓"}
                         </button>
                         <button
                           onClick={() => { if (confirm("Remove this prayer?")) handleDelete(p.id); }}
-                          className="text-xs text-red-400/50 hover:text-red-300 transition"
+                          className="inline-flex items-center gap-1 text-xs text-white/70 hover:text-white font-medium bg-white/10 hover:bg-red-500/20 border border-white/15 hover:border-red-400/30 px-3 py-1 rounded-full transition"
                         >
                           Remove
                         </button>
