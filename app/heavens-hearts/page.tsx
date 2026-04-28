@@ -180,19 +180,68 @@ export default function HeavensHeartsPage() {
   }
 
   async function handleSaveImage() {
-    if (!canvasRef.current || saving) return;
+    if (saving || memorials.length === 0) return;
     setSaving(true);
     try {
-      const html2canvas = (await import("html2canvas")).default;
-      const canvas = await html2canvas(canvasRef.current, {
-        useCORS: true,
-        backgroundColor: "#fff5f7",
-        scale: 2,
+      const W = 1080, H = 1080;
+      const canvas = document.createElement("canvas");
+      canvas.width = W;
+      canvas.height = H;
+      const ctx = canvas.getContext("2d")!;
+
+      // Draw background
+      await new Promise<void>((resolve) => {
+        const img = new Image();
+        img.crossOrigin = "anonymous";
+        img.onload = () => { ctx.drawImage(img, 0, 0, W, H); resolve(); };
+        img.onerror = () => {
+          ctx.fillStyle = "#fff0f5";
+          ctx.fillRect(0, 0, W, H);
+          resolve();
+        };
+        img.src = backgrounds[bgIndex].url;
       });
+
+      // Dim overlay
+      ctx.fillStyle = "rgba(255,255,255,0.25)";
+      ctx.fillRect(0, 0, W, H);
+
+      // Draw each name
+      for (const m of memorials) {
+        ctx.save();
+        const cx = (m.x / 100) * W;
+        const cy = (m.y / 100) * H;
+        ctx.translate(cx, cy);
+        ctx.rotate((m.rotation * Math.PI) / 180);
+        ctx.scale(m.size, m.size);
+        const fontSize = Math.round(52);
+        ctx.font = `${fontSize}px '${m.font_style}', Georgia, serif`;
+        ctx.fillStyle = m.color;
+        ctx.shadowColor = "rgba(0,0,0,0.25)";
+        ctx.shadowBlur = 8;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(m.name, 0, 0);
+        ctx.restore();
+      }
+
+      // Watermark
+      ctx.font = "500 28px system-ui";
+      ctx.fillStyle = "rgba(0,0,0,0.25)";
+      ctx.textAlign = "center";
+      ctx.shadowBlur = 0;
+      ctx.fillText("Heaven's Hearts · Guiding Grace", W / 2, H - 40);
+
+      const dataUrl = canvas.toDataURL("image/png");
       const link = document.createElement("a");
-      link.download = "heavens-hearts-memorial.png";
-      link.href = canvas.toDataURL("image/png");
+      link.download = "heavens-hearts.png";
+      link.href = dataUrl;
+      document.body.appendChild(link);
       link.click();
+      document.body.removeChild(link);
+    } catch (e) {
+      console.error("Save image failed:", e);
+      alert("Couldn't save the image. Please try again.");
     } finally {
       setSaving(false);
     }
