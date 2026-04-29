@@ -455,6 +455,23 @@ function Bible365Inner() {
                   )}
                 </div>
 
+                {/* Intro description — shown only on book step */}
+                {pickerStep === "book" && (
+                  <div className="pt-4 pb-2">
+                    <p className="text-white/80 text-sm leading-relaxed mb-3">
+                      A structured journey through the entire Bible — Old Testament, New Testament, Psalms and Proverbs — one day at a time. Complete the full Word of God in one year.
+                    </p>
+                    <div className="bg-black/25 rounded-xl px-4 py-3 mb-4 text-left">
+                      <p className="text-white font-semibold text-sm mb-2">How it works:</p>
+                      <p className="text-white/70 text-xs leading-relaxed mb-1">1. <span className="text-white">Pick a book</span> from the Old or New Testament below.</p>
+                      <p className="text-white/70 text-xs leading-relaxed mb-1">2. <span className="text-white">Select a chapter</span> to jump to that day's reading.</p>
+                      <p className="text-white/70 text-xs leading-relaxed mb-1">3. <span className="text-white">Read or listen</span> — use the audio player to follow along hands-free.</p>
+                      <p className="text-white/70 text-xs leading-relaxed mb-1">4. <span className="text-white">Save your progress</span> — tap the bookmark icon when you finish a day.</p>
+                      <p className="text-white/70 text-xs leading-relaxed">5. <span className="text-white">Come back tomorrow</span> — your place is saved so you never lose track.</p>
+                    </div>
+                  </div>
+                )}
+
                 {/* Step 1 — Book list */}
                 {pickerStep === "book" && (
                   <div className="-mx-6">
