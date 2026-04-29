@@ -27,8 +27,9 @@ export async function POST() {
   const { data: existingDevotion } = await supabase.from("daily_devotions").select("id").eq("devotion_date", today).single();
   const { data: existingChallenge } = await supabase.from("grace_challenges").select("id").eq("challenge_date", today).single();
   const { data: existingMatch } = await supabase.from("scripture_match_cards").select("id").eq("card_date", today).single();
+  const { data: existingGuide } = await supabase.from("study_guides").select("id").eq("guide_date", today).single();
 
-  if (existingDevotion && existingChallenge && existingMatch) {
+  if (existingDevotion && existingChallenge && existingMatch && existingGuide) {
     return NextResponse.json({ message: "Already generated today" });
   }
 
@@ -86,7 +87,7 @@ Return ONLY a JSON object with these exact fields, no markdown, no preamble:
   }
 
   if (!existingMatch) {
-    const matchResponse = await fetch("https://api.anthropic.com/v1/messages", {
+    const matchRes = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -98,34 +99,51 @@ Return ONLY a JSON object with these exact fields, no markdown, no preamble:
         max_tokens: 800,
         messages: [{
           role: "user",
-          content: `Today's devotion is titled "${parsed.title}" based on ${parsed.verse_reference}: "${parsed.verse_text}"
-
-Generate 6 scripture matching pairs themed around this devotion. Each pair has a LEFT card and a RIGHT card.
-
-Mix these types:
-- Verse fragment to its Bible reference
-- Bible character to their famous act
-- First half of verse to second half
-
-Return ONLY a JSON array, no markdown, no preamble:
-[
-  { "left": "text on left card", "right": "text on right card", "difficulty": "easy" },
-  { "left": "...", "right": "...", "difficulty": "easy" },
-  { "left": "...", "right": "...", "difficulty": "medium" },
-  { "left": "...", "right": "...", "difficulty": "medium" },
-  { "left": "...", "right": "...", "difficulty": "hard" },
-  { "left": "...", "right": "...", "difficulty": "hard" }
-]`
+          content: `Today's devotion is titled "${parsed.title}" based on ${parsed.verse_reference}: "${parsed.verse_text}"\n\nGenerate 6 scripture matching pairs themed around this devotion.\n\nMix these types:\n- Verse fragment to its Bible reference\n- Bible character to their famous act\n- First half of verse to second half\n\nReturn ONLY a JSON array, no markdown, no preamble:\n[\n  { "left": "text on left card", "right": "text on right card", "difficulty": "easy" },\n  { "left": "...", "right": "...", "difficulty": "easy" },\n  { "left": "...", "right": "...", "difficulty": "medium" },\n  { "left": "...", "right": "...", "difficulty": "medium" },\n  { "left": "...", "right": "...", "difficulty": "hard" },\n  { "left": "...", "right": "...", "difficulty": "hard" }\n]`
         }]
       }),
     });
-
-    const matchData = await matchResponse.json();
+    const matchData = await matchRes.json();
     const matchText = matchData.content?.[0]?.text?.trim();
     if (matchText) {
       try {
         const pairs = JSON.parse(matchText);
         await supabase.from("scripture_match_cards").insert({ card_date: today, pairs });
+      } catch {}
+    }
+  }
+
+  if (!existingGuide) {
+    const guideRes = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": process.env.ANTHROPIC_API_KEY!,
+        "anthropic-version": "2023-06-01",
+      },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-6",
+        max_tokens: 1200,
+        messages: [{
+          role: "user",
+          content: `Today's devotion is titled "${parsed.title}" based on ${parsed.verse_reference}: "${parsed.verse_text}"\n\nGenerate a warm, accessible Bible study guide for everyday Christians.\n\nReturn ONLY a JSON object, no markdown, no preamble:\n{\n  "title": "${parsed.title}",\n  "verse_reference": "${parsed.verse_reference}",\n  "background": "3-4 sentences of historical and spiritual context for this passage.",\n  "questions": [\n    "A personal reflection question about the verse",\n    "A question about how this applies to daily life",\n    "A deeper question about faith or character growth"\n  ],\n  "application": "2-3 sentences of specific practical guidance for living out this scripture today.",\n  "related_verses": [\n    { "reference": "Book Chapter:Verse", "text": "Full verse text" },\n    { "reference": "Book Chapter:Verse", "text": "Full verse text" },\n    { "reference": "Book Chapter:Verse", "text": "Full verse text" }\n  ]\n}`
+        }]
+      }),
+    });
+    const guideData = await guideRes.json();
+    const guideText = guideData.content?.[0]?.text?.trim();
+    if (guideText) {
+      try {
+        const guide = JSON.parse(guideText);
+        await supabase.from("study_guides").insert({
+          guide_date: today,
+          title: guide.title,
+          verse_reference: guide.verse_reference,
+          background: guide.background,
+          questions: guide.questions,
+          application: guide.application,
+          related_verses: guide.related_verses,
+        });
       } catch {}
     }
   }
