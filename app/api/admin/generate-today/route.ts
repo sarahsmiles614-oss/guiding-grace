@@ -1,21 +1,23 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
-const ADMIN_EMAILS = ["sarahsmiles614@gmail.com"];
-
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-export async function POST() {
-  const anonClient = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  );
-  const { data: { user } } = await anonClient.auth.getUser();
-  if (!user || !ADMIN_EMAILS.includes(user.email ?? "")) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+export async function POST(req: Request) {
+  const auth = req.headers.get("authorization");
+  const isAdmin = auth === `Bearer ${process.env.CRON_SECRET}`;
+  if (!isAdmin) {
+    const anonClient = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    );
+    const { data: { user } } = await anonClient.auth.getUser();
+    if (!user || user.email !== "sarahsmiles614@gmail.com") {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
   }
 
   const today = new Date().toISOString().split("T")[0];

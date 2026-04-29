@@ -1,7 +1,7 @@
 {
   "crons": [
     {
-      "path": "/api/generate-challenge",
+      "path": "/api/admin/generate-today",
       "schedule": "0 12 * * *"
     },
     {
