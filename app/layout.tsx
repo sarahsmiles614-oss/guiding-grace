@@ -27,8 +27,8 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://guidinggrace.app",
   },
-  title: "Guiding Grace — Christian Devotional App | Daily Bible Devotions & Prayer",
-  description: "A Christian devotional app with daily Bible devotions, scripture promises, a prayer wall, nightly reflections, and grace challenges. Your daily faith companion. Free 3-day trial.",
+  title: "Guiding Grace — Christian Devotional App | Daily Bible Devotions, Study Guide & Prayer",
+  description: "A Christian devotional app with daily Bible devotions, Bible in a year reading plan, study guide, scripture match game, grace challenges, prayer wall, and nightly reflections. Your daily faith companion. Free 3-day trial.",
   manifest: "/manifest.json",
   metadataBase: new URL("https://guidinggrace.app"),
   keywords: [
@@ -37,6 +37,10 @@ export const metadata: Metadata = {
     "Bible verse of the day", "faith app", "Christian app", "grace challenge",
     "daily prayer", "Bible study app", "Christian women app", "devotional app",
     "nightly reflections", "prayer journal", "Christian lifestyle app",
+    "Bible in a year", "Bible reading plan", "Bible study guide", "scripture matching game",
+    "daily Bible reading plan", "Christian Bible app", "faith community app",
+    "shame healing", "memorial wall", "heroes of the Bible", "Bible trivia",
+    "Christian daily routine", "scripture memory", "Bible 365",
   ],
   appleWebApp: {
     capable: true,
