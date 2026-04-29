@@ -469,6 +469,37 @@ function Bible365Inner() {
                       <p className="text-white/70 text-xs leading-relaxed mb-1">4. <span className="text-white">Save your progress</span> — tap the bookmark icon when you finish a day.</p>
                       <p className="text-white/70 text-xs leading-relaxed">5. <span className="text-white">Come back tomorrow</span> — your place is saved so you never lose track.</p>
                     </div>
+
+                    {/* 365-Day Reading Plan */}
+                    <div className="px-0 pb-4">
+                      <p className="text-white/60 text-xs font-bold tracking-widest uppercase mb-3 pt-2">365-Day Reading Plan</p>
+                      <div className="space-y-1">
+                        {plan.map((entry) => {
+                          const isCompleted = completedDays.has(entry.day);
+                          const isToday = entry.day === savedDay;
+                          return (
+                            <button
+                              key={entry.day}
+                              onClick={() => { cancelSpeech(); setDay(entry.day); setView("reading"); window.scrollTo({ top: 0 }); }}
+                              className={`w-full text-left px-4 py-3 rounded-xl border flex items-center justify-between transition ${
+                                isToday
+                                  ? "bg-white/25 border-white/40 text-white font-bold"
+                                  : isCompleted
+                                  ? "bg-black/15 border-white/10 text-white/40"
+                                  : "bg-black/20 border-white/10 text-white/80 hover:bg-white/15"
+                              }`}
+                            >
+                              <div className="min-w-0 flex-1">
+                                <span className="text-white/50 text-xs mr-2">Day {entry.day}</span>
+                                <span className="text-sm">{entry.label}</span>
+                              </div>
+                              {isCompleted && !isToday && <span className="text-white/40 text-xs ml-2 flex-shrink-0">✓</span>}
+                              {isToday && <span className="text-white/80 text-xs font-bold ml-2 flex-shrink-0">Today</span>}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
                   </div>
                 )}
 
