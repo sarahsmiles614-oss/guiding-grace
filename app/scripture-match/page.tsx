@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useState, useRef } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import SubscriptionGuard from "@/components/SubscriptionGuard";
 import PageBackground from "@/components/PageBackground";
@@ -21,11 +20,11 @@ function buildCards(pairs: Pair[]): Card[] {
 }
 
 export default function ScriptureMatchPage() {
-  const router = useRouter();
   const [pairs, setPairs] = useState<Pair[]>([]);
   const [cards, setCards] = useState<Card[]>([]);
   const [selected, setSelected] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
+  const [generating, setGenerating] = useState(false);
   const [error, setError] = useState("");
   const [matched, setMatched] = useState(0);
   const [attempts, setAttempts] = useState(0);
@@ -57,7 +56,7 @@ export default function ScriptureMatchPage() {
   }, [running]);
 
   async function loadGame(diff: "all" | "easy" | "medium" | "hard" = difficulty) {
-    setLoading(true); setError("");
+    setLoading(true); setGenerating(false); setError("");
     const today = new Date().toISOString().split("T")[0];
     const { data } = await supabase
       .from("scripture_match_cards")
@@ -65,15 +64,30 @@ export default function ScriptureMatchPage() {
       .eq("card_date", today)
       .single();
 
-    if (!data) {
-      setError("No cards for today yet. Check back after 7am.");
+    if (data) {
+      initGame(data.pairs, diff);
       setLoading(false);
       return;
     }
 
-    let p: Pair[] = data.pairs;
-    if (diff !== "all") p = p.filter((x: Pair) => x.difficulty === diff);
-    if (p.length === 0) p = data.pairs;
+    setGenerating(true);
+    const res = await fetch("/api/generate-scripture-match", { method: "POST" });
+    const json = await res.json();
+    if (json.error || !json.pairs) {
+      setError("Could not load today's game. Make sure today's devotion has been generated first.");
+      setLoading(false);
+      setGenerating(false);
+      return;
+    }
+    initGame(json.pairs, diff);
+    setGenerating(false);
+    setLoading(false);
+  }
+
+  function initGame(allPairs: Pair[], diff: "all" | "easy" | "medium" | "hard") {
+    let p = allPairs;
+    if (diff !== "all") p = allPairs.filter((x: Pair) => x.difficulty === diff);
+    if (p.length === 0) p = allPairs;
     setPairs(p);
     setCards(buildCards(p));
     setSelected([]);
@@ -84,7 +98,6 @@ export default function ScriptureMatchPage() {
     setRunning(false);
     setNewBest(false);
     lockRef.current = false;
-    setLoading(false);
   }
 
   function handleSelect(id: string) {
@@ -116,13 +129,12 @@ export default function ScriptureMatchPage() {
             if (next === pairs.length) {
               setRunning(false);
               setWon(true);
-              const streakKey = "sm_last_played";
               const today = new Date().toISOString().split("T")[0];
-              const last = localStorage.getItem(streakKey);
+              const last = localStorage.getItem("sm_last_played");
               const yesterday = new Date(Date.now() - 86400000).toISOString().split("T")[0];
               const newStreak = last === yesterday ? streak + 1 : 1;
               setStreak(newStreak);
-              localStorage.setItem(streakKey, today);
+              localStorage.setItem("sm_last_played", today);
               localStorage.setItem("sm_streak", String(newStreak));
               setTime(t => {
                 const pb = localStorage.getItem("sm_personal_best");
@@ -167,7 +179,6 @@ export default function ScriptureMatchPage() {
       <PageBackground url={BG} overlayOpacity={0.65}>
         <main className="flex-1 p-6 pb-24 flex flex-col items-center">
           <div className="max-w-lg w-full">
-
             <div className="flex justify-between items-center mb-6">
               <Link href="/dashboard" className="text-white/70 hover:text-white text-sm transition">← Back</Link>
               <h1 className="text-xl font-bold text-white" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>
@@ -191,7 +202,11 @@ export default function ScriptureMatchPage() {
               ))}
             </div>
 
-            {loading && <p className="text-white/60 text-center py-20 text-sm">Loading today's cards...</p>}
+            {(loading || generating) && (
+              <p className="text-white/60 text-center py-20 text-sm">
+                {generating ? "Preparing today's cards..." : "Loading..."}
+              </p>
+            )}
             {error && <p className="text-red-300 text-center py-20 text-sm">{error}</p>}
 
             {!loading && !error && !won && (
@@ -228,19 +243,14 @@ export default function ScriptureMatchPage() {
                 <h2 className="text-white text-2xl font-bold mb-2" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>
                   You matched them all!
                 </h2>
-                {newBest && (
-                  <p className="text-yellow-300 text-sm font-semibold mb-2">⚡ New personal best!</p>
-                )}
+                {newBest && <p className="text-yellow-300 text-sm font-semibold mb-2">⚡ New personal best!</p>}
                 <p className="text-white/70 text-sm mb-1">Time: {formatTime(time)}</p>
                 <p className="text-white/70 text-sm mb-1">Attempts: {attempts}</p>
                 <p className="text-white/70 text-sm mb-6">🔥 {streak} day streak</p>
                 {personalBest !== null && !newBest && (
                   <p className="text-white/50 text-xs mb-6">Personal best: {formatTime(personalBest)}</p>
                 )}
-                <button
-                  onClick={() => loadGame()}
-                  className="bg-white/20 hover:bg-white/30 border border-white/30 text-white font-semibold px-8 py-3 rounded-2xl transition text-sm"
-                >
+                <button onClick={() => loadGame()} className="bg-white/20 hover:bg-white/30 border border-white/30 text-white font-semibold px-8 py-3 rounded-2xl transition text-sm">
                   Play Again
                 </button>
               </div>
@@ -251,7 +261,6 @@ export default function ScriptureMatchPage() {
                 Tap a card to flip it. Match the pairs to win.
               </p>
             )}
-
           </div>
         </main>
       </PageBackground>
