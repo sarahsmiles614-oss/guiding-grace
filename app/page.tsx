@@ -9,6 +9,7 @@ const BG = "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/im
 const features = [
   { icon: "📖", label: "Daily Devotions", desc: "A fresh Scripture-based devotion every morning" },
   { icon: "💛", label: "Grace Challenge", desc: "Real-world faith challenges with community heart voting" },
+  { icon: "🎧", label: "Bible in 365 Days", desc: "Read through the entire Bible in one year" },
   { icon: "🕊️", label: "His Promises", desc: "Browse and save scripture promises by theme" },
   { icon: "🙏", label: "Prayer Wall", desc: "Post prayers, pray for others — P.U.S.H. together" },
   { icon: "🌙", label: "Nightly Reflections", desc: "End your day with gratitude and surrender" },
