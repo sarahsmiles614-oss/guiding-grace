@@ -424,7 +424,7 @@ function Bible365Inner() {
                         <button
                           onClick={() => setTocTab("ot")}
                           className={`flex-1 py-2 text-sm rounded-none transition ${
-                            tocTab === "ot" ? "bg-purple-600 text-white font-bold" : "bg-white/10 text-white font-semibold"
+                            tocTab === "ot" ? "bg-white/30 text-white font-bold" : "bg-white/10 text-white/70 font-semibold"
                           }`}
                         >
                           Old Testament
@@ -432,7 +432,7 @@ function Bible365Inner() {
                         <button
                           onClick={() => setTocTab("nt")}
                           className={`flex-1 py-2 text-sm rounded-none transition ${
-                            tocTab === "nt" ? "bg-purple-600 text-white font-bold" : "bg-white/10 text-white font-semibold"
+                            tocTab === "nt" ? "bg-white/30 text-white font-bold" : "bg-white/10 text-white/70 font-semibold"
                           }`}
                         >
                           New Testament
@@ -460,14 +460,14 @@ function Bible365Inner() {
                   <div className="-mx-6">
                     {categories.map(category => (
                       <div key={category.label}>
-                        <p className="text-purple-300 text-xs font-bold tracking-widest uppercase px-4 pt-5 pb-2">
+                        <p className="text-white/60 text-xs font-bold tracking-widest uppercase px-4 pt-5 pb-2">
                           {category.label}
                         </p>
                         {category.books.map(book => (
                           <button
                             key={book}
                             onClick={() => { setPickerBook(book); setPickerStep("chapter"); }}
-                            className="w-full text-left px-5 py-3 bg-white/10 hover:bg-purple-600/50 border-b border-white/10 text-white font-semibold text-base transition flex items-center justify-between"
+                            className="w-full text-left px-5 py-3 bg-white/10 hover:bg-white/20 border-b border-white/10 text-white font-semibold text-base transition flex items-center justify-between"
                           >
                             <span>{book}</span>
                             <span className="text-white/50">›</span>
@@ -496,7 +496,7 @@ function Bible365Inner() {
                           setView("reading");
                           window.scrollTo({ top: 0 });
                         }}
-                        className="bg-white/10 hover:bg-purple-600 text-white font-bold py-3 rounded-lg text-sm transition"
+                        className="bg-white/10 hover:bg-white/25 text-white font-bold py-3 rounded-lg text-sm transition"
                       >
                         {ch}
                       </button>
