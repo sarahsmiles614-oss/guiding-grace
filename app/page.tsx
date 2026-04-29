@@ -10,6 +10,7 @@ const features = [
   { icon: "📖", label: "Daily Devotions", desc: "A fresh Scripture-based devotion every morning" },
   { icon: "💛", label: "Grace Challenge", desc: "Real-world faith challenges with community heart voting" },
   { icon: "🎧", label: "Bible in 365 Days", desc: "Read through the entire Bible in one year" },
+  { icon: "📚", label: "Study Guide", desc: "Background, reflection questions, and application" },
   { icon: "🕊️", label: "His Promises", desc: "Browse and save scripture promises by theme" },
   { icon: "🙏", label: "Prayer Wall", desc: "Post prayers, pray for others — P.U.S.H. together" },
   { icon: "🌙", label: "Nightly Reflections", desc: "End your day with gratitude and surrender" },
@@ -17,6 +18,7 @@ const features = [
   { icon: "⚔️", label: "Heroes & Villains", desc: "Explore bold Bible figures and the lessons they left" },
   { icon: "✨", label: "Testimonies", desc: "Share what God has done in your life" },
   { icon: "🗑️", label: "Shame Recycle Bin", desc: "Write it down. Let it burn. Walk free." },
+  { icon: "🎮", label: "Scripture Match", desc: "Match verses and characters — beat your best time" },
 ];
 
 export default function Home() {
