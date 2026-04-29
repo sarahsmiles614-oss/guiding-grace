@@ -41,15 +41,17 @@ export default function DashboardContent() {
   }, [router]);
 
   const features = [
-    { label: "Daily Devotions", href: "/devotions", icon: "📖", desc: "Scripture & reflection delivered every morning" },
+    { label: "Daily Devotions", href: "/devotions", icon: "📖", desc: "Scripture and reflection delivered every morning" },
     { label: "Bible in 365 Days", href: "/bible-365", icon: "🎧", desc: "Read or listen through the entire Bible in one year" },
-    { label: "His Promises", href: "/promises", icon: "🕊️", desc: "Discover scripture promises by category, save your favorites, and share beautifully customized verse cards." },
+    { label: "Study Guide", href: "/study-guide", icon: "📚", desc: "Go deeper with background, questions, and application" },
+    { label: "His Promises", href: "/promises", icon: "🕊️", desc: "Discover scripture promises by category and save your favorites" },
     { label: "Shame Recycle Bin", href: "/shame-recycle", icon: "🗑️", desc: "Release guilt and shame — let it burn away" },
-    { label: "Heaven's Hearts", href: "/heavens-hearts", icon: "💜", desc: "Honor your deceased loved ones with a beautiful, customizable memorial wall" },
+    { label: "Heaven's Hearts", href: "/heavens-hearts", icon: "💜", desc: "Honor your deceased loved ones with a beautiful memorial wall" },
     { label: "Nightly Reflections", href: "/nightly-reflections", icon: "🌙", desc: "End your day with gratitude and surrender" },
     { label: "Heroes & Villains", href: "/heroes-villains", icon: "⚔️", desc: "Explore the stories of the bold heroes and notorious villains of the Bible" },
     { label: "P.U.S.H. Prayer Wall", href: "/prayer-wall", icon: "🙏", desc: "Pray Until Something Happens — post and pray together" },
     { label: "Truth Testimonies", href: "/testimony-wall", icon: "✨", desc: "Share what God has done in your life" },
+    { label: "Scripture Match", href: "/scripture-match", icon: "🎮", desc: "Match verses, characters, and scripture pairs — beat your best time" },
   ];
 
   return (
@@ -70,7 +72,6 @@ export default function DashboardContent() {
             </p>
           )}
 
-          {/* Expired / no subscription banner */}
           {(subStatus === "expired" || subStatus === "none") && (
             <div className="mb-10 text-center max-w-lg mx-auto">
               <p className="text-white text-xl font-semibold mb-2" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>
@@ -87,7 +88,6 @@ export default function DashboardContent() {
             </div>
           )}
 
-          {/* Grace Challenge hero */}
           <div className={`mb-10 ${subStatus !== "active" ? "opacity-40 pointer-events-none select-none" : ""}`}>
             <Link href="/grace-challenge">
               <div className="p-2 hover:opacity-80 transition cursor-pointer">
@@ -102,7 +102,7 @@ export default function DashboardContent() {
                       Daily Grace Challenge
                     </h2>
                     <p className="text-white text-sm leading-relaxed mb-4" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
-                      A fresh real-world challenge drops every morning — inspired by the daily devotion. Share your story, vote for responses that move you, and see who the community honors as Most Loved. It's faith in action, together.
+                      A fresh real-world challenge drops every morning. Share your story, vote for responses that move you, and see who the community honors as Most Loved.
                     </p>
                     <span className="text-yellow-200 text-xs font-semibold" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
                       Take Today's Challenge →
@@ -113,7 +113,6 @@ export default function DashboardContent() {
             </Link>
           </div>
 
-          {/* Feature grid */}
           <p className="text-white text-xs uppercase tracking-widest mb-6 text-center">Everything Inside</p>
           <div className={`grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 ${subStatus !== "active" ? "opacity-40 pointer-events-none select-none" : ""}`}>
             {features.map((f) => (
@@ -125,12 +124,11 @@ export default function DashboardContent() {
             ))}
           </div>
 
-          {/* Share the app */}
           <div className="mt-14 text-center">
             <p className="text-white text-xs mb-3">Know someone who could use this?</p>
             <ShareButton
               title="Guiding Grace"
-              text="I've been using Guiding Grace for daily devotions and faith challenges — thought you might love it too."
+              text="I have been using Guiding Grace for daily devotions and faith challenges — thought you might love it too."
               url="https://guidinggrace.app"
               label="🤍 Share Guiding Grace"
               className="bg-white/10 hover:bg-white/20 border border-white/20 text-white/80 hover:text-white text-sm font-medium px-6 py-3 rounded-2xl backdrop-blur-sm transition"

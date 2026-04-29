@@ -9,7 +9,6 @@ const supabase = createClient(
 );
 
 export async function POST() {
-  // Verify admin via Supabase auth
   const anonClient = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
@@ -20,17 +19,18 @@ export async function POST() {
   }
 
   const today = new Date().toISOString().split("T")[0];
-
-  const { data: existingDevotion } = await supabase.from("daily_devotions").select("id").eq("devotion_date", today).single();
-  const { data: existingChallenge } = await supabase.from("grace_challenges").select("id").eq("challenge_date", today).single();
-  if (existingDevotion && existingChallenge) {
-    return NextResponse.json({ message: "Already generated today" });
-  }
-
   const date = new Date();
   const fullDate = date.toLocaleString("en-US", { month: "long", day: "numeric", year: "numeric" });
   const month = date.toLocaleString("en-US", { month: "long" });
   const day = date.getDate();
+
+  const { data: existingDevotion } = await supabase.from("daily_devotions").select("id").eq("devotion_date", today).single();
+  const { data: existingChallenge } = await supabase.from("grace_challenges").select("id").eq("challenge_date", today).single();
+  const { data: existingMatch } = await supabase.from("scripture_match_cards").select("id").eq("card_date", today).single();
+
+  if (existingDevotion && existingChallenge && existingMatch) {
+    return NextResponse.json({ message: "Already generated today" });
+  }
 
   const response = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
@@ -54,7 +54,7 @@ Return ONLY a JSON object with these exact fields, no markdown, no preamble:
   "verse_reference": "Book Chapter:Verse",
   "verse_text": "The full verse text from NIV",
   "reflection": "2-3 sentences of warm, personal spiritual reflection on the verse. Speak directly to the reader.",
-  "challenge": "One specific, practical, real-world act of grace the reader can do today that mirrors the devotion theme. 1-2 sentences. Warm and achievable. IMPORTANT: The challenge must never cost money or require any purchase. It should involve the person themselves (inner work, reflection, a personal habit) or their community (a neighbor, friend, stranger, family member, church) — or both. The goal is to strengthen faith through action, not transaction."
+  "challenge": "One specific, practical, real-world act of grace the reader can do today that mirrors the devotion theme. 1-2 sentences. Warm and achievable. IMPORTANT: The challenge must never cost money or require any purchase."
 }`
       }]
     }),
@@ -85,5 +85,50 @@ Return ONLY a JSON object with these exact fields, no markdown, no preamble:
     });
   }
 
-  return NextResponse.json({ message: "Generated", challenge: parsed.challenge });
+  if (!existingMatch) {
+    const matchResponse = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": process.env.ANTHROPIC_API_KEY!,
+        "anthropic-version": "2023-06-01",
+      },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-6",
+        max_tokens: 800,
+        messages: [{
+          role: "user",
+          content: `Today's devotion is titled "${parsed.title}" based on ${parsed.verse_reference}: "${parsed.verse_text}"
+
+Generate 6 scripture matching pairs themed around this devotion. Each pair has a LEFT card and a RIGHT card.
+
+Mix these types:
+- Verse fragment to its Bible reference
+- Bible character to their famous act
+- First half of verse to second half
+
+Return ONLY a JSON array, no markdown, no preamble:
+[
+  { "left": "text on left card", "right": "text on right card", "difficulty": "easy" },
+  { "left": "...", "right": "...", "difficulty": "easy" },
+  { "left": "...", "right": "...", "difficulty": "medium" },
+  { "left": "...", "right": "...", "difficulty": "medium" },
+  { "left": "...", "right": "...", "difficulty": "hard" },
+  { "left": "...", "right": "...", "difficulty": "hard" }
+]`
+        }]
+      }),
+    });
+
+    const matchData = await matchResponse.json();
+    const matchText = matchData.content?.[0]?.text?.trim();
+    if (matchText) {
+      try {
+        const pairs = JSON.parse(matchText);
+        await supabase.from("scripture_match_cards").insert({ card_date: today, pairs });
+      } catch {}
+    }
+  }
+
+  return NextResponse.json({ message: "Generated", title: parsed.title });
 }
