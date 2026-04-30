@@ -51,7 +51,7 @@ export default function DashboardContent() {
     { label: "Heroes & Villains", href: "/heroes-villains", icon: "⚔️", desc: "Explore the stories of the bold heroes and notorious villains of the Bible" },
     { label: "P.U.S.H. Prayer Wall", href: "/prayer-wall", icon: "🙏", desc: "Pray Until Something Happens — post and pray together" },
     { label: "Truth Testimonies", href: "/testimony-wall", icon: "✨", desc: "Share what God has done in your life" },
-    { label: "Scripture Match", href: "/scripture-match", icon: "🎮", desc: "Match verses, characters, and scripture pairs — beat your best time" },
+    { label: "Scripture Match", href: "/scripture-match", icon: "🎮", desc: "Match verses and characters — beat your best time" },
   ];
 
   return (
@@ -72,20 +72,21 @@ export default function DashboardContent() {
             </p>
           )}
 
-          <div className={`mb-8 ${subStatus !== "active" ? "opacity-40 pointer-events-none select-none" : ""}`}>
-            <Link href="/today">
-              <div className="bg-white/10 backdrop-blur-sm border border-white/25 rounded-2xl px-6 py-4 flex items-center justify-between hover:bg-white/15 transition cursor-pointer">
-                <div className="flex items-center gap-3">
-                  <span className="text-2xl">✨</span>
-                  <div>
-                    <p className="text-white font-bold text-sm" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>See Today's Content</p>
-                    <p className="text-white/60 text-xs">Devotion, challenge, study guide &amp; more in one place</p>
-                  </div>
+          {subStatus === "active" && (
+            <div className="mb-10">
+              <Link href="/today">
+                <div className="bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/30 rounded-2xl p-6 transition cursor-pointer text-center">
+                  <p className="text-white/50 text-xs uppercase tracking-widest mb-2">
+                    {new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })}
+                  </p>
+                  <h2 className="text-white text-2xl font-bold mb-2" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>
+                    See Today's Content ✨
+                  </h2>
+                  <p className="text-white/60 text-sm">Devotion · Challenge · Study Guide · Game · and more</p>
                 </div>
-                <span className="text-white/40 text-sm">→</span>
-              </div>
-            </Link>
-          </div>
+              </Link>
+            </div>
+          )}
 
           {(subStatus === "expired" || subStatus === "none") && (
             <div className="mb-10 text-center max-w-lg mx-auto">
