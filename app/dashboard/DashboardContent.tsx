@@ -67,10 +67,25 @@ export default function DashboardContent() {
           </div>
 
           {user && (
-            <p className="text-white mb-10 text-lg text-center" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
+            <p className="text-white mb-6 text-lg text-center" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
               Welcome, {user.user_metadata?.full_name?.split(" ")[0] || "friend"} 🌿
             </p>
           )}
+
+          <div className={`mb-8 ${subStatus !== "active" ? "opacity-40 pointer-events-none select-none" : ""}`}>
+            <Link href="/today">
+              <div className="bg-white/10 backdrop-blur-sm border border-white/25 rounded-2xl px-6 py-4 flex items-center justify-between hover:bg-white/15 transition cursor-pointer">
+                <div className="flex items-center gap-3">
+                  <span className="text-2xl">✨</span>
+                  <div>
+                    <p className="text-white font-bold text-sm" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>See Today's Content</p>
+                    <p className="text-white/60 text-xs">Devotion, challenge, study guide &amp; more in one place</p>
+                  </div>
+                </div>
+                <span className="text-white/40 text-sm">→</span>
+              </div>
+            </Link>
+          </div>
 
           {(subStatus === "expired" || subStatus === "none") && (
             <div className="mb-10 text-center max-w-lg mx-auto">
