@@ -184,10 +184,10 @@ export default function PrayerWallPage() {
             </div>
 
             {/* Prayer list */}
-            <div className="flex-1 overflow-y-auto space-y-24 pr-1"
+            <div className="flex-1 overflow-y-auto pr-1"
               style={{ scrollbarWidth: "none" }}>
               {prayers.filter(p => !blockedIds.has(p.user_id)).map((p) => (
-                <div key={p.id} className={`${p.is_answered ? "opacity-60" : ""}`}>
+                <div key={p.id} className={`py-5 border-b border-white/10 ${p.is_answered ? "opacity-60" : ""}`}>
                   {p.is_answered && (
                     <div className="mb-1">
                       <span className="text-xs text-green-400 font-semibold">✓ Answered</span>
