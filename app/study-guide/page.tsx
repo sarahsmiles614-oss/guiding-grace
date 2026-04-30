@@ -28,11 +28,23 @@ export default function StudyGuidePage() {
   async function loadGuide() {
     setLoading(true); setError("");
     const today = new Date().toISOString().split("T")[0];
-    const { data } = await supabase
+
+    // Try today first, then fall back to most recent
+    let { data } = await supabase
       .from("study_guides")
       .select("title, verse_reference, background, questions, application, related_verses")
       .eq("guide_date", today)
       .single();
+
+    if (!data) {
+      const { data: latest } = await supabase
+        .from("study_guides")
+        .select("title, verse_reference, background, questions, application, related_verses")
+        .order("guide_date", { ascending: false })
+        .limit(1)
+        .single();
+      data = latest;
+    }
 
     if (data) { setGuide(data); setLoading(false); return; }
 

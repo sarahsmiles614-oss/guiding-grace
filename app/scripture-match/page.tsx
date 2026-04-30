@@ -58,11 +58,21 @@ export default function ScriptureMatchPage() {
   async function loadGame(diff: "all" | "easy" | "medium" | "hard" = difficulty) {
     setLoading(true); setGenerating(false); setError("");
     const today = new Date().toISOString().split("T")[0];
-    const { data } = await supabase
+    let { data } = await supabase
       .from("scripture_match_cards")
       .select("pairs")
       .eq("card_date", today)
       .single();
+
+    if (!data) {
+      const { data: latest } = await supabase
+        .from("scripture_match_cards")
+        .select("pairs")
+        .order("card_date", { ascending: false })
+        .limit(1)
+        .single();
+      data = latest;
+    }
 
     if (data) {
       initGame(data.pairs, diff);
