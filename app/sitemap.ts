@@ -21,6 +21,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${base}/heroes-villains`, lastModified: now, changeFrequency: "weekly", priority: 0.6 },
     { url: `${base}/testimony-wall`, lastModified: now, changeFrequency: "daily", priority: 0.6 },
     { url: `${base}/shame-recycle`, lastModified: now, changeFrequency: "weekly", priority: 0.6 },
+    { url: `${base}/study-groups`, lastModified: now, changeFrequency: "weekly", priority: 0.7 },
     { url: `${base}/privacy`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
     { url: `${base}/terms`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
   ];
