@@ -5,7 +5,7 @@ import SubscriptionGuard from "@/components/SubscriptionGuard";
 import PageBackground from "@/components/PageBackground";
 import { supabase } from "@/lib/supabase";
 
-const BG = "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/imagenesiacristianas-ai-generated-8762262.jpg";
+const BG = "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images%204/clicker-babu-aKBtbbVP970-unsplash.jpg";
 
 export default function StudyGroupsPage() {
   const [groups, setGroups] = useState<any[]>([]);
