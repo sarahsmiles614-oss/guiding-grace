@@ -459,7 +459,7 @@ function Bible365Inner() {
                 {pickerStep === "book" && (
                   <div className="pt-4 pb-2">
                     <p className="text-white/80 text-sm leading-relaxed mb-3">
-                      A structured journey through the entire Bible — Old Testament, New Testament, Psalms and Proverbs — one day at a time. Complete the full Word of God in one year.
+                      Read the entire Bible in one year — in chronological order, from Creation to Revelation, following the sequence events actually happened in history.
                     </p>
                     <div className="bg-black/25 rounded-xl px-4 py-3 mb-4 text-left">
                       <p className="text-white font-semibold text-sm mb-2">How it works:</p>
@@ -572,11 +572,6 @@ function Bible365Inner() {
                   <p className="text-amber-200 font-bold text-xl leading-snug" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 8px rgba(0,0,0,0.9)" }}>
                     {todayReading.otLabel}
                   </p>
-                  {todayReading.ntLabel && (
-                    <p className="text-blue-200 font-semibold text-lg leading-snug mt-0.5" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 8px rgba(0,0,0,0.9)" }}>
-                      {todayReading.ntLabel}
-                    </p>
-                  )}
                 </div>
 
                 {/* Mark as Read */}
