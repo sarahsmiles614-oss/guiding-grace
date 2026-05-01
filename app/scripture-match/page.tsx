@@ -5,7 +5,7 @@ import SubscriptionGuard from "@/components/SubscriptionGuard";
 import PageBackground from "@/components/PageBackground";
 import { supabase } from "@/lib/supabase";
 
-const BG = "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images%204/zoltan-tasi-KHD_FA43aMw-unsplash.jpg";
+const BG = "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images%204/todd-trapani-91T-rq-pY28-unsplash.jpg";
 
 interface Pair { left: string; right: string; difficulty: string; }
 interface Card { id: string; text: string; pairIndex: number; side: "left" | "right"; matched: boolean; flipped: boolean; }
