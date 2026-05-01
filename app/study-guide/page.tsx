@@ -5,7 +5,7 @@ import SubscriptionGuard from "@/components/SubscriptionGuard";
 import PageBackground from "@/components/PageBackground";
 import { supabase } from "@/lib/supabase";
 
-const BG = "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/saud-edum-cgapZpzd7v0-unsplash%20(1).jpg";
+const BG = "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images%204/zoltan-tasi-KHD_FA43aMw-unsplash.jpg";
 
 interface StudyGuide {
   title: string;
