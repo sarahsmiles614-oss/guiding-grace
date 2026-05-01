@@ -160,7 +160,7 @@ export default function ScriptureMatchPage() {
           });
           setSelected([]);
           lockRef.current = false;
-        }, 400);
+        }, 700);
       } else {
         setTimeout(() => {
           setCards(prev => prev.map(c =>
@@ -168,7 +168,7 @@ export default function ScriptureMatchPage() {
           ));
           setSelected([]);
           lockRef.current = false;
-        }, 900);
+        }, 2000);
       }
     }
   }
