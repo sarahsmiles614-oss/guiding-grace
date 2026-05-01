@@ -168,7 +168,7 @@ export default function ScriptureMatchPage() {
           ));
           setSelected([]);
           lockRef.current = false;
-        }, 1300);
+        }, 1000);
       }
     }
   }
