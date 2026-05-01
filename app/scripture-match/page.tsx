@@ -168,7 +168,7 @@ export default function ScriptureMatchPage() {
           ));
           setSelected([]);
           lockRef.current = false;
-        }, 1000);
+        }, 900);
       }
     }
   }
@@ -263,6 +263,7 @@ export default function ScriptureMatchPage() {
                 <button onClick={() => loadGame()} className="bg-white/20 hover:bg-white/30 border border-white/30 text-white font-semibold px-8 py-3 rounded-2xl transition text-sm">
                   Play Again
                 </button>
+                <p className="text-white/40 text-xs mt-8">A new game drops every day — check back tomorrow! 📖</p>
               </div>
             )}
 
