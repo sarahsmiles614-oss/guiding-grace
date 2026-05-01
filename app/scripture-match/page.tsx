@@ -38,36 +38,41 @@ export default function ScriptureMatchPage() {
   const [showHelp, setShowHelp] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const lockRef = useRef(false);
+  const audioCtxRef = useRef<AudioContext | null>(null);
+
+  function getAudioCtx() {
+    if (!audioCtxRef.current) audioCtxRef.current = new AudioContext();
+    if (audioCtxRef.current.state === "suspended") audioCtxRef.current.resume();
+    return audioCtxRef.current;
+  }
 
   function playFlip() {
     try {
-      const ctx = new AudioContext();
+      const ctx = getAudioCtx();
       const t = ctx.currentTime;
 
-      // White noise burst — the "whoosh" of a card flipping
-      const bufferSize = ctx.sampleRate * 0.08;
+      // Sharp noise burst — quick "thwip" of a card flip
+      const bufferSize = Math.floor(ctx.sampleRate * 0.035);
       const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
       const data = buffer.getChannelData(0);
       for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
       const noise = ctx.createBufferSource();
       noise.buffer = buffer;
 
-      // Bandpass filter to make it sound papery, not hissy
       const filter = ctx.createBiquadFilter();
       filter.type = "bandpass";
-      filter.frequency.setValueAtTime(1800, t);
-      filter.frequency.exponentialRampToValueAtTime(600, t + 0.07);
-      filter.Q.value = 1.2;
+      filter.frequency.value = 3500;
+      filter.Q.value = 0.8;
 
       const gain = ctx.createGain();
-      gain.gain.setValueAtTime(0.35, t);
-      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.08);
+      gain.gain.setValueAtTime(0.5, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.035);
 
       noise.connect(filter);
       filter.connect(gain);
       gain.connect(ctx.destination);
       noise.start(t);
-      noise.stop(t + 0.08);
+      noise.stop(t + 0.035);
     } catch {}
   }
 
