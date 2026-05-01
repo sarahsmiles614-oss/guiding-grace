@@ -75,7 +75,7 @@ export default function ShameRecyclePage() {
       <div
         className="h-screen overflow-hidden bg-cover bg-center bg-fixed relative flex flex-col"
         style={{
-          backgroundImage: "url('https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/sign/Images%20also/nasa-hubble-space-telescope-67gYlPhm6DQ-unsplash.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV85MzA0YmFjMS1lYTk0LTQzODItYjE3YS1hNDU4OTgwZDllYTEiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJJbWFnZXMgYWxzby9uYXNhLWh1YmJsZS1zcGFjZS10ZWxlc2NvcGUtNjdnWWxQaG02RFEtdW5zcGxhc2guanBnIiwiaWF0IjoxNzc3NDAwNzU1LCJleHAiOjE4NjM4MDA3NTV9.cPqZFpOAo6iCVnRPyaNzvlgBEsxiKWMQAWJpogjDC-s')",
+          backgroundImage: "url('https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images%204/cullan-smith-BdTtvBRhOng-unsplash.jpg')",
         }}
       >
         <div className="absolute inset-0 bg-gradient-to-b from-purple-900/30 via-orange-900/25 to-cyan-900/30" />
