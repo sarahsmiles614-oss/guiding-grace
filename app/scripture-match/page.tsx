@@ -38,9 +38,11 @@ export default function ScriptureMatchPage() {
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const lockRef = useRef(false);
 
+  function pbKey(d: string) { return `sm_personal_best_${d}`; }
+
   useEffect(() => {
     loadGame();
-    const pb = localStorage.getItem("sm_personal_best");
+    const pb = localStorage.getItem(pbKey("all"));
     if (pb) setPersonalBest(parseInt(pb));
     const s = localStorage.getItem("sm_streak");
     if (s) setStreak(parseInt(s));
@@ -147,9 +149,10 @@ export default function ScriptureMatchPage() {
               localStorage.setItem("sm_last_played", today);
               localStorage.setItem("sm_streak", String(newStreak));
               setTime(t => {
-                const pb = localStorage.getItem("sm_personal_best");
+                const key = pbKey(difficulty);
+                const pb = localStorage.getItem(key);
                 if (!pb || t < parseInt(pb)) {
-                  localStorage.setItem("sm_personal_best", String(t));
+                  localStorage.setItem(key, String(t));
                   setPersonalBest(t);
                   setNewBest(true);
                 }
@@ -181,6 +184,9 @@ export default function ScriptureMatchPage() {
 
   function handleDifficulty(d: "all" | "easy" | "medium" | "hard") {
     setDifficulty(d);
+    const pb = localStorage.getItem(pbKey(d));
+    setPersonalBest(pb ? parseInt(pb) : null);
+    setNewBest(false);
     loadGame(d);
   }
 
@@ -200,7 +206,7 @@ export default function ScriptureMatchPage() {
             <div className="flex justify-between items-center mb-5 text-xs text-white/60">
               <span>🔥 {streak} day streak</span>
               <span>{matched}/{pairs.length} matched</span>
-              {personalBest !== null && <span>⚡ Best {formatTime(personalBest)}</span>}
+              {personalBest !== null && <span>⚡ Best ({difficulty}) {formatTime(personalBest)}</span>}
             </div>
 
             <div className="flex gap-2 mb-6">
