@@ -29,6 +29,8 @@ const BG_OPTIONS = [
   { label: "Praise",    url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/sign/Images%20also/karthik-sreenivas-MqDlQ_WdawI-unsplash.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV85MzA0YmFjMS1lYTk0LTQzODItYjE3YS1hNDU4OTgwZDllYTEiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJJbWFnZXMgYWxzby9rYXJ0aGlrLXNyZWVuaXZhcy1NcURsUV9XZGF3SS11bnNwbGFzaC5qcGciLCJpYXQiOjE3NzczNjAzNDMsImV4cCI6MTg2Mzc2MDM0M30.kJDySxrhxAeJnOMYRLGVCwqoEmcyzGDHJGDnpcUmPTo" },
   { label: "Glory",     url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/sign/Images%20also/luis-dominguez-HJGtZUWm8tY-unsplash.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV85MzA0YmFjMS1lYTk0LTQzODItYjE3YS1hNDU4OTgwZDllYTEiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJJbWFnZXMgYWxzby9sdWlzLWRvbWluZ3Vlei1ISkd0WlVXbTh0WS11bnNwbGFzaC5qcGciLCJpYXQiOjE3NzczNjA0MDksImV4cCI6MTg2Mzc2MDQwOX0.dcfV92es6G8Ni1aV3rr2r36hIL4edoIsAMoLeo31x6M" },
   { label: "Grace",     url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/sign/Images%20also/othmane-ferrah-TD8E27ud_gk-unsplash.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV85MzA0YmFjMS1lYTk0LTQzODItYjE3YS1hNDU4OTgwZDllYTEiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJJbWFnZXMgYWxzby9vdGhtYW5lLWZlcnJhaC1URDhFMjd1ZF9nay11bnNwbGFzaC5qcGciLCJpYXQiOjE3NzczNjA1MDAsImV4cCI6MTg2Mzc2MDUwMH0.-awDDhL4HAWoJtVasNEM_EBjv0rRZ0itTPMl_c5bP3w" },
+  { label: "Gather",    url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images%204/davide-ragusa-YjW8Qn85V6Y-unsplash.jpg" },
+  { label: "Journey",   url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images%204/clicker-babu-aKBtbbVP970-unsplash.jpg" },
 ];
 
 const FONT_OPTIONS = [
