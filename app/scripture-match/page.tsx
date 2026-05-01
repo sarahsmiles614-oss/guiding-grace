@@ -35,6 +35,7 @@ export default function ScriptureMatchPage() {
   const [streak, setStreak] = useState(0);
   const [difficulty, setDifficulty] = useState<"all" | "easy" | "medium" | "hard">("all");
   const [newBest, setNewBest] = useState(false);
+  const [showHelp, setShowHelp] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const lockRef = useRef(false);
 
@@ -195,12 +196,38 @@ export default function ScriptureMatchPage() {
       <PageBackground url={BG} overlayOpacity={0.65}>
         <main className="flex-1 p-6 pb-24 flex flex-col items-center">
           <div className="max-w-lg w-full">
+            {showHelp && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center px-6" onClick={() => setShowHelp(false)}>
+                <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+                <div className="relative bg-black/80 border border-white/20 rounded-3xl p-7 max-w-sm w-full" onClick={e => e.stopPropagation()}>
+                  <h2 className="text-white text-xl font-bold mb-4 text-center" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>How to Play</h2>
+                  <ul className="text-white/80 text-sm leading-relaxed space-y-3 mb-6">
+                    <li>📖 Each card hides half of a scripture pair — a verse, character, or concept.</li>
+                    <li>👆 Tap any card to flip it and see what's underneath.</li>
+                    <li>🔍 Tap a second card — if they match, they stay face up!</li>
+                    <li>❌ If they don't match, both flip back after a moment. Try to remember where they were!</li>
+                    <li>⏱️ Your time is tracked — finish faster to beat your personal best.</li>
+                    <li>🎯 Use Easy, Medium, or Hard to filter the difficulty of pairs.</li>
+                    <li>🔥 Play every day to keep your streak alive!</li>
+                  </ul>
+                  <button onClick={() => setShowHelp(false)} className="w-full bg-white/20 hover:bg-white/30 border border-white/30 text-white font-semibold py-3 rounded-2xl transition text-sm">
+                    Got it!
+                  </button>
+                </div>
+              </div>
+            )}
+
             <div className="flex justify-between items-center mb-6">
               <Link href="/dashboard" className="text-white/70 hover:text-white text-sm transition">← Back</Link>
               <h1 className="text-xl font-bold text-white" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>
                 Scripture Match
               </h1>
-              <div className="text-white/70 text-sm w-16 text-right">{formatTime(time)}</div>
+              <div className="flex items-center gap-2">
+                <button onClick={() => setShowHelp(true)} className="text-white/50 hover:text-white text-xs border border-white/20 hover:border-white/40 px-2 py-1 rounded-lg transition">
+                  How to Play
+                </button>
+                <div className="text-white/70 text-sm">{formatTime(time)}</div>
+              </div>
             </div>
 
             <div className="flex justify-between items-center mb-5 text-xs text-white/60">
