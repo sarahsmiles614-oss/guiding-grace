@@ -48,6 +48,7 @@ const backgrounds = [
   { label: "Cosmos", url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/sign/Images%20also/nasa-hubble-space-telescope--n7IwXWxr8k-unsplash.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV85MzA0YmFjMS1lYTk0LTQzODItYjE3YS1hNDU4OTgwZDllYTEiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJJbWFnZXMgYWxzby9uYXNhLWh1YmJsZS1zcGFjZS10ZWxlc2NvcGUtLW43SXdYV3hyOGstdW5zcGxhc2guanBnIiwiaWF0IjoxNzc3MDgwNjEwLCJleHAiOjE4MDg2MTY2MTB9.xGIUJV5ZXUOvaGTtlSs9CX6HpqSH7Sa8gtwSXB2GgAQ" },
   { label: "Nebula", url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/sign/Images%20also/nasa-hubble-space-telescope-7zIfnzpxO4Q-unsplash.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV85MzA0YmFjMS1lYTk0LTQzODItYjE3YS1hNDU4OTgwZDllYTEiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJJbWFnZXMgYWxzby9uYXNhLWh1YmJsZS1zcGFjZS10ZWxlc2NvcGUtN3pJZm56cHhPNFEtdW5zcGxhc2guanBnIiwiaWF0IjoxNzc3MDgwNzE2LCJleHAiOjE4NDI3NDQ3MTZ9.BCiquYEoRM_WHGLrc_QzK5Vbve7pcHlBd0l7bpIEAy4" },
   { label: "Galaxy", url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/sign/Images%20also/nasa-hubble-space-telescope-Dk_7-4NyTKM-unsplash.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV85MzA0YmFjMS1lYTk0LTQzODItYjE3YS1hNDU4OTgwZDllYTEiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJJbWFnZXMgYWxzby9uYXNhLWh1YmJsZS1zcGFjZS10ZWxlc2NvcGUtRGtfNy00TnlUS00tdW5zcGxhc2guanBnIiwiaWF0IjoxNzc3MDgxMDEwLCJleHAiOjE4NTQ4NDEwMTB9.X6ixbSXR3fxdRw5tIDLRsQfjiCWVLtiPS1kwUAbEHNI" },
+  { label: "Lantern", url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images%204/frank-mckenna-OD9EOzfSOh0-unsplash.jpg" },
 ];
 
 export default function HeavensHeartsPage() {
@@ -65,6 +66,7 @@ export default function HeavensHeartsPage() {
   const [isRotating, setIsRotating] = useState(false);
   const [bgIndex, setBgIndex] = useState(0);
   const [saving, setSaving] = useState(false);
+  const [tab, setTab] = useState<"wall" | "backgrounds" | "howto">("wall");
   const canvasRef = useRef<HTMLDivElement>(null);
   const latestRef = useRef<{ x: number; y: number; size: number; rotation: number } | null>(null);
 
@@ -398,27 +400,13 @@ export default function HeavensHeartsPage() {
           <header className="hh-no-print py-3 px-4">
             <div className="max-w-5xl mx-auto flex items-center justify-between gap-3">
               <Link href="/dashboard" className="text-rose-800 text-sm hover:text-rose-600 shrink-0">← Dashboard</Link>
-
               <h1
                 className="text-xl font-bold text-rose-900 shrink-0"
                 style={{ fontFamily: fontFamily("Playfair Display"), textShadow: "0 1px 4px rgba(255,255,255,0.8)" }}
               >
                 Heaven&apos;s Hearts
               </h1>
-
               <div className="flex items-center gap-2">
-                {/* Scene picker */}
-                {backgrounds.map((bg, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setBgIndex(i)}
-                    title={bg.label}
-                    className={`w-6 h-6 rounded-full border-2 bg-cover bg-center transition ${bgIndex === i ? "border-rose-600 scale-110 shadow-lg" : "border-white/60 hover:border-rose-400"}`}
-                    style={{ backgroundImage: `url('${bg.url}')` }}
-                  />
-                ))}
-                <div className="w-px h-4 bg-rose-300/50 mx-1" />
-                {/* Save / Share / Print */}
                 <button
                   onClick={handleSaveImage}
                   disabled={saving || memorials.length === 0}
@@ -446,6 +434,109 @@ export default function HeavensHeartsPage() {
           </header>
 
           <div className="max-w-5xl mx-auto px-4 pb-12">
+
+            {/* Tabs */}
+            <div className="hh-no-print flex gap-2 mb-6">
+              {([
+                { id: "wall", label: "💜 My Wall" },
+                { id: "backgrounds", label: "🌄 Backgrounds" },
+                { id: "howto", label: "📖 How to Use" },
+              ] as const).map(t => (
+                <button
+                  key={t.id}
+                  onClick={() => setTab(t.id)}
+                  className={`flex-1 py-2.5 rounded-xl border text-sm font-semibold transition ${tab === t.id ? "bg-white/80 border-rose-400 text-rose-900 shadow" : "bg-white/30 border-white/50 text-rose-800 hover:bg-white/50"}`}
+                >
+                  {t.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Backgrounds tab */}
+            {tab === "backgrounds" && (
+              <div className="hh-no-print bg-white/80 backdrop-blur-sm rounded-2xl p-5 shadow-xl mb-6">
+                <p className="text-rose-900 font-semibold mb-4" style={{ fontFamily: fontFamily("Playfair Display") }}>Choose Your Scene</p>
+                <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
+                  {backgrounds.map((bg, i) => (
+                    <button
+                      key={i}
+                      onClick={() => { setBgIndex(i); setTab("wall"); }}
+                      className="flex flex-col items-center gap-1.5 group"
+                    >
+                      <div
+                        className={`w-full rounded-xl bg-cover bg-center transition duration-150 ${bgIndex === i ? "ring-2 ring-rose-500 ring-offset-1 scale-105 shadow-lg" : "opacity-70 hover:opacity-100"}`}
+                        style={{ backgroundImage: `url('${bg.url}')`, aspectRatio: "1/1" }}
+                      />
+                      <span className={`text-xs font-medium transition ${bgIndex === i ? "text-rose-800 font-semibold" : "text-rose-700"}`}>
+                        {bg.label}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* How to Use tab */}
+            {tab === "howto" && (
+              <div className="hh-no-print bg-white/85 backdrop-blur-sm rounded-2xl p-6 shadow-xl mb-6">
+                <h2 className="text-xl font-bold text-rose-900 mb-5" style={{ fontFamily: fontFamily("Playfair Display") }}>How to Use Heaven&apos;s Hearts</h2>
+                <div className="space-y-4 text-rose-900 text-sm leading-relaxed">
+                  <div className="flex gap-3">
+                    <span className="text-2xl shrink-0">➕</span>
+                    <div>
+                      <p className="font-semibold mb-1">Add a Loved One</p>
+                      <p className="text-rose-700">Tap <strong>+ Add a Loved One</strong> on the Wall tab. Type their name, choose a color with the color picker, and select a font style. A live preview shows how their name will look. Tap <strong>Add to Wall</strong> to place them.</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-3">
+                    <span className="text-2xl shrink-0">👆</span>
+                    <div>
+                      <p className="font-semibold mb-1">Select & Move</p>
+                      <p className="text-rose-700">Tap any name on the wall to select it. Once selected, drag it freely to reposition. Use <strong>Spread Out</strong> to automatically arrange all names evenly.</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-3">
+                    <span className="text-2xl shrink-0">↔</span>
+                    <div>
+                      <p className="font-semibold mb-1">Resize</p>
+                      <p className="text-rose-700">When a name is selected, drag the blue <strong>↔ Size</strong> handle left or right to make it smaller or larger.</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-3">
+                    <span className="text-2xl shrink-0">↻</span>
+                    <div>
+                      <p className="font-semibold mb-1">Rotate</p>
+                      <p className="text-rose-700">Drag the purple <strong>↻ Rotate</strong> handle to spin the name at any angle.</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-3">
+                    <span className="text-2xl shrink-0">✏️</span>
+                    <div>
+                      <p className="font-semibold mb-1">Rename or Remove</p>
+                      <p className="text-rose-700">Select a name and tap <strong>Rename</strong> to edit it, or <strong>🗑 Remove</strong> to delete it from the wall.</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-3">
+                    <span className="text-2xl shrink-0">🌄</span>
+                    <div>
+                      <p className="font-semibold mb-1">Change the Background</p>
+                      <p className="text-rose-700">Go to the <strong>Backgrounds</strong> tab to choose from heaven, nature, space, and more scenes. Tapping a scene switches the background and returns you to your wall.</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-3">
+                    <span className="text-2xl shrink-0">💾</span>
+                    <div>
+                      <p className="font-semibold mb-1">Save & Share</p>
+                      <p className="text-rose-700">Tap <strong>💾</strong> in the top right to save your wall as an image. Tap <strong>↑</strong> to share it with family. Tap <strong>🖨️</strong> to print.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Wall tab content */}
+            {tab === "wall" && (
+            <>
             {/* Add Button */}
             {!isAdding && (
               <div className="hh-no-print text-center mb-6 flex items-center justify-center gap-3">
@@ -667,6 +758,8 @@ export default function HeavensHeartsPage() {
                   Your memorial wall is empty. Add a loved one to begin.
                 </p>
               </div>
+            )}
+            </>
             )}
           </div>
         </div>
