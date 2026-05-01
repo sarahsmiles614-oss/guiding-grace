@@ -5,7 +5,7 @@ import Link from "next/link";
 import SubscriptionGuard from "@/components/SubscriptionGuard";
 import PageBackground from "@/components/PageBackground";
 import { supabase } from "@/lib/supabase";
-import { getBiblePlan, bibleApiUrl } from "@/lib/bible-plan";
+import { getBiblePlan, bibleApiUrl, PlanOrder } from "@/lib/bible-plan";
 
 interface Verse {
   reference: string;
@@ -86,8 +86,14 @@ export default function Bible365Page() {
 }
 
 function Bible365Inner() {
-  const plan = getBiblePlan();
   const searchParams = useSearchParams();
+  const [planOrder, setPlanOrder] = useState<PlanOrder>(() => {
+    if (typeof window !== "undefined") {
+      return (localStorage.getItem("bible365_order") as PlanOrder) ?? "canonical";
+    }
+    return "canonical";
+  });
+  const plan = getBiblePlan(planOrder);
 
   // View: "toc" = book browser, "reading" = scripture view
   const [view, setView] = useState<"toc" | "reading">(() =>
@@ -458,9 +464,27 @@ function Bible365Inner() {
                 {/* Intro description — shown only on book step */}
                 {pickerStep === "book" && (
                   <div className="pt-4 pb-2">
-                    <p className="text-white/80 text-sm leading-relaxed mb-3">
-                      Read the entire Bible in one year — in chronological order, from Creation to Revelation, following the sequence events actually happened in history.
-                    </p>
+                    {/* Plan order toggle */}
+                    <div className="flex gap-2 mb-4">
+                      {([
+                        { id: "canonical",      label: "📖 Canonical",      desc: "Traditional Bible order" },
+                        { id: "chronological",  label: "🕰️ Chronological",  desc: "By when events happened" },
+                      ] as { id: PlanOrder; label: string; desc: string }[]).map(opt => (
+                        <button
+                          key={opt.id}
+                          onClick={() => {
+                            setPlanOrder(opt.id);
+                            localStorage.setItem("bible365_order", opt.id);
+                            setSavedDay(1); setDay(1); setView("toc");
+                          }}
+                          className={`flex-1 py-2.5 px-3 rounded-xl border text-xs font-semibold transition text-left ${planOrder === opt.id ? "bg-white/25 border-white/50 text-white" : "bg-white/5 border-white/15 text-white/50 hover:text-white/80"}`}
+                        >
+                          <div>{opt.label}</div>
+                          <div className={`text-xs font-normal mt-0.5 ${planOrder === opt.id ? "text-white/70" : "text-white/30"}`}>{opt.desc}</div>
+                        </button>
+                      ))}
+                    </div>
+
                     <div className="bg-black/25 rounded-xl px-4 py-3 mb-4 text-left">
                       <p className="text-white font-semibold text-sm mb-2">How it works:</p>
                       <p className="text-white/70 text-xs leading-relaxed mb-1">1. <span className="text-white">Pick a book</span> from the Old or New Testament below.</p>
