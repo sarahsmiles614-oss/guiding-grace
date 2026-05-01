@@ -72,6 +72,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-S7Z1146JP3" />
+        <script dangerouslySetInnerHTML={{ __html: `
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-S7Z1146JP3');
+        `}} />
         <link rel="manifest" href="/manifest.json" />
         <link rel="apple-touch-icon" href={LOGO} />
         <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Cinzel:wght@400;600&family=Cormorant+Garamond:ital,wght@0,400;1,400;1,600&family=Josefin+Sans:wght@300;400&family=Pinyon+Script&family=EB+Garamond:ital,wght@0,400;1,400;1,600&family=Italiana&display=swap" rel="stylesheet" />
