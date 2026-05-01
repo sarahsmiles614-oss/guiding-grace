@@ -236,7 +236,7 @@ export default function ScriptureMatchPage() {
                       }`}
                   >
                     {card.matched ? (
-                      <span className="text-2xl">✓</span>
+                      <span className="leading-snug">{card.text}</span>
                     ) : card.flipped ? (
                       <span className="leading-snug">{card.text}</span>
                     ) : (
