@@ -39,6 +39,41 @@ export default function ScriptureMatchPage() {
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const lockRef = useRef(false);
 
+  function playFlip() {
+    try {
+      const ctx = new AudioContext();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(600, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(300, ctx.currentTime + 0.08);
+      gain.gain.setValueAtTime(0.18, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.12);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.12);
+    } catch {}
+  }
+
+  function playMatch() {
+    try {
+      const ctx = new AudioContext();
+      [520, 660, 780].forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.type = "sine";
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0.15, ctx.currentTime + i * 0.1);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.1 + 0.15);
+        osc.start(ctx.currentTime + i * 0.1);
+        osc.stop(ctx.currentTime + i * 0.1 + 0.15);
+      });
+    } catch {}
+  }
+
   function pbKey(d: string) { return `sm_personal_best_${d}`; }
 
   useEffect(() => {
@@ -120,6 +155,7 @@ export default function ScriptureMatchPage() {
     if (!running) setRunning(true);
 
     if (selected.length === 0) {
+      playFlip();
       setCards(prev => prev.map(c => c.id === id ? { ...c, flipped: true } : c));
       setSelected([id]);
       return;
@@ -127,6 +163,7 @@ export default function ScriptureMatchPage() {
 
     if (selected.length === 1) {
       if (selected[0] === id) return;
+      playFlip();
       setCards(prev => prev.map(c => c.id === id ? { ...c, flipped: true } : c));
       const firstCard = cards.find(c => c.id === selected[0])!;
       setAttempts(a => a + 1);
@@ -134,6 +171,7 @@ export default function ScriptureMatchPage() {
 
       if (firstCard.pairIndex === card.pairIndex && firstCard.side !== card.side) {
         setTimeout(() => {
+          playMatch();
           setCards(prev => prev.map(c =>
             c.id === id || c.id === selected[0] ? { ...c, matched: true } : c
           ));
