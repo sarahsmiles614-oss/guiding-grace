@@ -4,6 +4,7 @@ import "./globals.css";
 import { AuthProvider } from "@/lib/AuthContext";
 import ServiceWorkerRegistration from "@/components/ServiceWorkerRegistration";
 import InstallPrompt from "@/components/InstallPrompt";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const lora = Lora({
   subsets: ["latin"],
@@ -124,6 +125,7 @@ export default function RootLayout({
         <ServiceWorkerRegistration />
         <InstallPrompt />
         <AuthProvider>{children}</AuthProvider>
+        <SpeedInsights />
       </body>
     </html>
   );
