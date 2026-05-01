@@ -40,6 +40,9 @@ const FONT_OPTIONS = [
   { label: "Regal",    value: "regal",    family: "'Cinzel', Georgia, serif",                italic: false },
   { label: "Elegant",  value: "elegant",  family: "'Cormorant Garamond', Georgia, serif",    italic: true  },
   { label: "Lora",     value: "lora",     family: "'Lora', Georgia, serif",                  italic: true  },
+  { label: "Pinyon",   value: "pinyon",   family: "'Pinyon Script', cursive",                 italic: false },
+  { label: "Garamond", value: "garamond", family: "'EB Garamond', Georgia, serif",             italic: true  },
+  { label: "Italiana", value: "italiana", family: "'Italiana', Georgia, serif",                italic: false },
 ];
 
 interface Props {
