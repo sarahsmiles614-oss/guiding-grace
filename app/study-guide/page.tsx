@@ -12,6 +12,7 @@ interface StudyGuide {
   title: string;
   verse_reference: string;
   background: string;
+  interpretation: string;
   questions: string[];
   application: string;
   related_verses: { reference: string; text: string }[];
@@ -182,6 +183,15 @@ export default function StudyGuidePage() {
                     {guide.background}
                   </p>
                 </div>
+
+                {guide.interpretation && (
+                  <div>
+                    <p className="text-white/50 text-xs uppercase tracking-widest mb-3">Interpretation</p>
+                    <p className="text-white/90 text-sm leading-relaxed" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
+                      {guide.interpretation}
+                    </p>
+                  </div>
+                )}
 
                 <div>
                   <p className="text-white/50 text-xs uppercase tracking-widest mb-3">Reflection Questions</p>

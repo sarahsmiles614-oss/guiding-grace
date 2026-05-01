@@ -41,6 +41,7 @@ Return ONLY a JSON object, no markdown, no preamble:
   "title": "A short compelling title drawn from these passages",
   "verse_reference": "The key verse or passage reference (e.g. Genesis 1:1-3)",
   "background": "3-4 sentences of historical and spiritual context for these passages. Who wrote them, when, and why they matter today.",
+  "interpretation": "3-4 sentences explaining what these passages mean — the literary genre, key themes, what the original audience understood, and what God is communicating through them. Help the reader understand the 'what does this mean' before asking 'what does this mean for me'.",
   "questions": [
     "A personal reflection question about the passages",
     "A question about how this applies to daily life",
@@ -119,6 +120,7 @@ Return ONLY a JSON object, no markdown, no preamble:
   "title": "Same as devotion title",
   "verse_reference": "${devotion.verse_reference}",
   "background": "3-4 sentences of historical and spiritual context for this passage. Who wrote it, when, and why it matters today.",
+  "interpretation": "3-4 sentences explaining what this passage means — the literary genre, key themes, what the original audience understood, and what God is communicating through it. Help the reader understand the 'what does this mean' before asking 'what does this mean for me'.",
   "questions": [
     "A personal reflection question about the verse",
     "A question about how this applies to daily life",
