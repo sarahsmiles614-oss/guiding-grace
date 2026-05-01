@@ -27,6 +27,10 @@ const fontStyles = [
   { name: "Refined Serif", value: "Cormorant Garamond" },
   { name: "Casual Script", value: "Satisfy" },
   { name: "Old Manuscript", value: "IM Fell English" },
+  { name: "Ornate Calligraphy", value: "Pinyon Script" },
+  { name: "Delicate Script", value: "Petit Formal Script" },
+  { name: "Stately Italic", value: "Italiana" },
+  { name: "Royal Display", value: "Yeseva One" },
 ];
 
 function fontFamily(fontValue: string) {
@@ -66,7 +70,7 @@ export default function HeavensHeartsPage() {
 
   // Load Google Fonts
   useEffect(() => {
-    const fonts = ["Cinzel", "Great+Vibes", "Cormorant+Garamond", "Satisfy", "IM+Fell+English", "Dancing+Script", "Quicksand"];
+    const fonts = ["Cinzel", "Great+Vibes", "Cormorant+Garamond", "Satisfy", "IM+Fell+English", "Dancing+Script", "Quicksand", "Pinyon+Script", "Petit+Formal+Script", "Italiana", "Yeseva+One"];
     const link = document.createElement("link");
     link.rel = "stylesheet";
     link.href = `https://fonts.googleapis.com/css2?${fonts.map((f) => `family=${f}`).join("&")}&display=swap`;
