@@ -117,7 +117,7 @@ export default function StudyGuidePage() {
   }
 
   const MODES: { id: GuideMode; label: string; sub: string }[] = [
-    { id: "devotion",       label: "Daily Devotion",  sub: "Today's scripture" },
+    { id: "devotion",       label: "Daily Deep Dive", sub: "Today's scripture" },
     { id: "canonical",      label: "📖 Canonical",    sub: `Day ${planDay}` },
     { id: "chronological",  label: "🕰️ Chronological", sub: `Day ${planDay}` },
   ];
