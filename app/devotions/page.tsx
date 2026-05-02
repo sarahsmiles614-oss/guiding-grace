@@ -315,6 +315,15 @@ export default function DevotionsPage() {
                     </button>
                   </Link>
                 </div>
+
+                {/* Dive Deeper CTA */}
+                <div className="mt-6 text-center">
+                  <Link href="/dive-deeper">
+                    <button className="bg-white/15 hover:bg-white/25 border border-white/30 text-white font-semibold px-8 py-3 rounded-xl transition text-sm" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
+                      📔 Dive Deeper — Open Journal
+                    </button>
+                  </Link>
+                </div>
               </>
             )}
           </div>

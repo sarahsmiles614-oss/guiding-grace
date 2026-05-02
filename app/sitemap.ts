@@ -11,7 +11,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${base}/subscribe`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
     { url: `${base}/devotions`, lastModified: now, changeFrequency: "daily", priority: 0.9 },
     { url: `${base}/bible-365`, lastModified: now, changeFrequency: "daily", priority: 0.9 },
-    { url: `${base}/study-guide`, lastModified: now, changeFrequency: "daily", priority: 0.8 },
+    { url: `${base}/dive-deeper`, lastModified: now, changeFrequency: "daily", priority: 0.8 },
     { url: `${base}/grace-challenge`, lastModified: now, changeFrequency: "daily", priority: 0.8 },
     { url: `${base}/scripture-match`, lastModified: now, changeFrequency: "daily", priority: 0.8 },
     { url: `${base}/promises`, lastModified: now, changeFrequency: "weekly", priority: 0.7 },
