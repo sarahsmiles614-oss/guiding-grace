@@ -50,7 +50,6 @@ export default function DashboardContent() {
     { label: "Nightly Reflections", href: "/nightly-reflections", icon: "🌙", desc: "End your day with gratitude and surrender" },
     { label: "Heroes & Villains", href: "/heroes-villains", icon: "⚔️", desc: "Explore the stories of the bold heroes and notorious villains of the Bible" },
     { label: "P.U.S.H. Prayer Wall", href: "/prayer-wall", icon: "🙏", desc: "Pray Until Something Happens — post and pray together" },
-    { label: "Truth Testimonies", href: "/testimony-wall", icon: "✨", desc: "Share what God has done in your life" },
     { label: "Scripture Match", href: "/scripture-match", icon: "🎮", desc: "Match verses and characters — beat your best time" },
     { label: "Study Groups", href: "/study-groups", icon: "✝️", desc: "Study the Word together — group discussion, Q&A, and Bible trivia" },
   ];

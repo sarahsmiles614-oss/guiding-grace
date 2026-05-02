@@ -207,7 +207,6 @@ export default function TodayPage() {
                   {[
                     { href: "/promises", icon: "🕊️", label: "Promises" },
                     { href: "/prayer-wall", icon: "🙏", label: "Prayer Wall" },
-                    { href: "/testimony-wall", icon: "✨", label: "Testimonies" },
                     { href: "/heavens-hearts", icon: "💜", label: "Heaven's Hearts" },
                     { href: "/heroes-villains", icon: "⚔️", label: "Heroes & Villains" },
                     { href: "/shame-recycle", icon: "🗑️", label: "Shame Recycle" },
