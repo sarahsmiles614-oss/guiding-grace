@@ -12,7 +12,7 @@ function isAfterDeadline() {
   const nyHour = parseInt(new Intl.DateTimeFormat("en-US", {
     timeZone: "America/New_York", hour: "numeric", hour12: false,
   }).format(now));
-  return nyHour >= 7;
+  return nyHour >= 23;
 }
 
 function getToday() {
@@ -104,7 +104,7 @@ export default function FavoritesPage() {
                 </div>
                 {usedAll
                   ? <p className="text-green-300 text-xs">✓ Heart given — your received votes will count!</p>
-                  : <p className="text-white/50 text-xs">{heartsLeft} heart{heartsLeft !== 1 ? "s" : ""} left · You can change votes until 7am EST</p>
+                  : <p className="text-white/50 text-xs">{heartsLeft} heart{heartsLeft !== 1 ? "s" : ""} left · You can change votes until midnight EST</p>
                 }
               </div>
             )}

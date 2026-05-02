@@ -86,7 +86,7 @@ export default function StudyGuidePage() {
     setGenerating(true);
     const res = await fetch("/api/generate-study-guide", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({}) });
     const json = await res.json();
-    if (json.error) setError("Could not load today's study guide. Check back after 7am.");
+    if (json.error) setError("Could not load today's study guide. Check back after midnight.");
     else setGuide(json.guide);
     setGenerating(false);
     setLoading(false);

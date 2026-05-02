@@ -113,7 +113,7 @@ export default async function DailyPage() {
             </>
           ) : (
             <div className="text-center py-20">
-              <p className="text-white/60 text-sm">Today's devotion is being prepared. Check back shortly after 7am.</p>
+              <p className="text-white/60 text-sm">Today's devotion is being prepared. Check back shortly after midnight.</p>
             </div>
           )}
 

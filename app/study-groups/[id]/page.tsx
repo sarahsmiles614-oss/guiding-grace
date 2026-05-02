@@ -228,7 +228,7 @@ export default function GroupPage({ params }: { params: Promise<{ id: string }> 
             {tab === "discussion" && (
               <div className="space-y-6">
                 {questions.length === 0 && (
-                  <p className="text-white/85 text-sm text-center py-10" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>Today's study guide hasn't been generated yet. Check back after 7am.</p>
+                  <p className="text-white/85 text-sm text-center py-10" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>Today's study guide hasn't been generated yet. Check back after midnight.</p>
                 )}
                 {questions.map((q, i) => {
                   const qAnswers = answers.filter(a => a.question_index === i);

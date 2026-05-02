@@ -14,7 +14,7 @@ function isAfterDeadline() {
   const nyHour = parseInt(new Intl.DateTimeFormat("en-US", {
     timeZone: "America/New_York", hour: "numeric", hour12: false,
   }).format(now));
-  return nyHour >= 7;
+  return nyHour >= 23;
 }
 
 function todayEST() {
@@ -378,7 +378,7 @@ export default function GraceChallengeContent() {
                   {usedAllHearts ? (
                     <p className="text-green-300 text-sm text-center" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>✓ Heart given — your votes count!</p>
                   ) : (
-                    <p className="text-white/80 text-sm text-center" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>Give your heart or your received votes won't count. Closes 7am EST.</p>
+                    <p className="text-white/80 text-sm text-center" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>Give your heart or your received votes won't count. Closes midnight EST.</p>
                   )}
                 </div>
 
@@ -449,7 +449,7 @@ export default function GraceChallengeContent() {
 
                 {/* Community responses */}
                 <p className="text-white/80 text-sm uppercase tracking-widest mb-4 text-center" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>
-                  Community Responses · Voting closes at 7am EST
+                  Community Responses · Voting closes at midnight EST
                 </p>
 
                 <div className="space-y-6">

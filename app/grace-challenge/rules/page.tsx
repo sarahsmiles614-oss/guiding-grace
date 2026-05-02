@@ -17,7 +17,7 @@ const rules = [
   {
     icon: "💛",
     title: "1 Heart to Give",
-    body: "Every day you receive 1 heart to award to the response that moves you most. You can't vote for yourself. You can change your vote as many times as you want until the 7am EST deadline.",
+    body: "Every day you receive 1 heart to award to the response that moves you most. You can't vote for yourself. You can change your vote as many times as you want until the midnight EST deadline.",
   },
   {
     icon: "🔖",
@@ -32,17 +32,17 @@ const rules = [
   {
     icon: "✏️",
     title: "Editing Forfeits Your Votes",
-    body: "You can edit your entry at any time before the 7am EST deadline — but doing so will erase all votes you've received so far. Your entry re-enters the running and any new votes will count fresh.",
+    body: "You can edit your entry at any time before the midnight EST deadline — but doing so will erase all votes you've received so far. Your entry re-enters the running and any new votes will count fresh.",
   },
   {
     icon: "🔒",
-    title: "Anonymous Until 7am EST",
-    body: "Voting is completely anonymous. You can't see how many hearts your entry has received until the deadline. Results are revealed every morning at 7am Eastern time.",
+    title: "Anonymous Until Midnight EST",
+    body: "Voting is completely anonymous. You can't see how many hearts your entry has received until the deadline. Results are revealed every day at midnight Eastern time.",
   },
   {
     icon: "🏆",
     title: "Most Loved Award",
-    body: "After 7am EST, the community votes are tallied. The entry with the most valid hearts is declared Most Loved. A banner celebrates the winner: \"Your community has voted — you have earned the Most Loved award for Guiding Grace.\"",
+    body: "At midnight EST, the community votes are tallied. The entry with the most valid hearts is declared Most Loved. A banner celebrates the winner: \"Your community has voted — you have earned the Most Loved award for Guiding Grace.\"",
   },
   {
     icon: "📊",
