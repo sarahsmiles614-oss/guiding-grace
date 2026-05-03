@@ -28,7 +28,7 @@ export default function AuthForm() {
   function reset() { setError(""); setSuccess(""); }
 
   function getCallbackUrl() {
-    const hasIntent = typeof window !== "undefined" && localStorage.getItem("subscribe_intent");
+    const hasIntent = isNewUser && typeof window !== "undefined" && localStorage.getItem("subscribe_intent");
     const next = hasIntent ? "/subscribe" : "/dashboard";
     return `${window.location.origin}/auth/callback?next=${next}`;
   }
@@ -46,8 +46,8 @@ export default function AuthForm() {
   async function handleEmailSubmit() {
     if (!email || !password || (isNewUser && !name)) return;
     setLoading(true); reset();
-    const dest = typeof window !== "undefined" && localStorage.getItem("subscribe_intent") ? "/subscribe" : "/dashboard";
     if (isNewUser) {
+      const dest = typeof window !== "undefined" && localStorage.getItem("subscribe_intent") ? "/subscribe" : "/dashboard";
       const { error } = await supabase.auth.signUp({
         email, password,
         options: { data: { full_name: name }, emailRedirectTo: `${window.location.origin}/auth/callback` },
@@ -57,7 +57,7 @@ export default function AuthForm() {
     } else {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) { setError(error.message); setLoading(false); }
-      else router.push(dest);
+      else router.push("/dashboard");
     }
   }
 
