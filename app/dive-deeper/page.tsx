@@ -200,14 +200,15 @@ export default function DiveDeeperPage() {
     <SubscriptionGuard>
       <PageBackground url={BG} overlayOpacity={0.35} bgSize="120%" bgPosition="center 75%">
         <style>{`
+          @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@900&display=swap');
           .dd-content, .dd-content * {
-            font-family: 'Inter', system-ui, sans-serif !important;
-            font-weight: 700 !important;
+            font-family: 'Nunito', sans-serif !important;
+            font-weight: 900 !important;
             color: #fff !important;
             text-shadow: 0 2px 8px rgba(0,0,0,0.9) !important;
           }
           .dd-content textarea, .dd-content input {
-            font-weight: 500 !important;
+            font-weight: 700 !important;
           }
         `}</style>
         <main className="flex-1 p-6 pb-24 flex flex-col items-center dd-content">
