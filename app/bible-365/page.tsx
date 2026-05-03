@@ -577,31 +577,81 @@ function Bible365Inner() {
                   )}
                 </div>
 
-                {/* Intro description — shown only on book step */}
+                {/* Intro — shown only on book step */}
                 {pickerStep === "book" && (
-                  <div className="pt-4 pb-2">
-                    {/* Plan order toggle */}
-                    <div className="grid grid-cols-2 gap-2 mb-4">
-                      {(Object.keys(PLAN_INFO) as PlanOrder[]).map(id => {
-                        const info = PLAN_INFO[id];
-                        return (
-                          <button
-                            key={id}
-                            onClick={() => {
-                              setPlanOrder(id);
-                              localStorage.setItem("bible365_order", id);
-                              setSavedDay(1); setDay(1); setView("toc");
-                            }}
-                            className={`py-2.5 px-3 rounded-xl border text-xs font-semibold transition text-left ${planOrder === id ? "bg-white/25 border-white/50 text-white" : "bg-white/5 border-white/15 text-white/50 hover:text-white"}`}
-                          >
-                            <div>{info.emoji} {info.label}</div>
-                            <div className={`text-xs font-normal mt-0.5 ${planOrder === id ? "text-white/70" : "text-white/30"}`}>{info.desc}</div>
-                          </button>
-                        );
-                      })}
+                  <div className="pt-4 pb-2 space-y-4">
+
+                    {/* Currently On card */}
+                    <div className="bg-black/30 border border-white/20 rounded-2xl p-4">
+                      <p className="text-white/50 text-xs uppercase tracking-widest mb-1">Currently On</p>
+                      <p className="text-white font-bold text-base mb-0.5" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+                        Day {savedDay} of {PLAN_INFO[planOrder].days}
+                      </p>
+                      <p className="text-white/70 text-xs mb-3">{plan[savedDay - 1]?.label}</p>
+                      {/* Progress bar */}
+                      <div className="w-full h-1.5 bg-white/10 rounded-full mb-3">
+                        <div className="h-1.5 bg-white/50 rounded-full transition-all" style={{ width: `${Math.round((completedCount / PLAN_INFO[planOrder].days) * 100)}%` }} />
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => { cancelSpeech(); setDay(savedDay); setView("reading"); window.scrollTo({ top: 0 }); }}
+                          className="flex-1 bg-white/20 hover:bg-white/30 border border-white/30 text-white font-semibold text-sm py-2.5 rounded-xl transition"
+                        >
+                          Continue Reading →
+                        </button>
+                        <button
+                          onClick={() => completedDays.has(savedDay) ? unmarkRead(savedDay) : markRead(savedDay)}
+                          className={`w-10 h-10 rounded-xl border flex items-center justify-center flex-shrink-0 transition ${
+                            completedDays.has(savedDay) ? "bg-green-400/25 border-green-400/50" : "border-white/20 hover:border-white/50"
+                          }`}
+                        >
+                          {completedDays.has(savedDay)
+                            ? <svg width="14" height="11" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#4ade80" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                            : <svg width="14" height="11" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="rgba(255,255,255,0.3)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                          }
+                        </button>
+                      </div>
                     </div>
 
-                    <div className="mb-4">
+                    {/* Jump to day dropdown */}
+                    <div>
+                      <p className="text-white/50 text-xs uppercase tracking-widest mb-2">Jump to a Day</p>
+                      <select
+                        value={day}
+                        onChange={e => { const d = parseInt(e.target.value); cancelSpeech(); setDay(d); setSavedDay(d); setView("reading"); window.scrollTo({ top: 0 }); }}
+                        className="w-full bg-black/40 border border-white/20 text-white text-sm rounded-xl px-4 py-3 focus:outline-none focus:border-white/40 appearance-none cursor-pointer"
+                        style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='rgba(255,255,255,0.4)' strokeWidth='1.5' fill='none' strokeLinecap='round'/%3E%3C/svg%3E")`, backgroundRepeat: "no-repeat", backgroundPosition: "right 16px center" }}
+                      >
+                        {plan.map(entry => (
+                          <option key={entry.day} value={entry.day} style={{ background: "#1a1a2e", color: "white" }}>
+                            {completedDays.has(entry.day) ? "✓ " : ""}Day {entry.day} — {entry.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {/* Reading Plans */}
+                    <div>
+                      <p className="text-white/50 text-xs uppercase tracking-widest mb-2">Reading Plans</p>
+                      <div className="grid grid-cols-2 gap-2">
+                        {(Object.keys(PLAN_INFO) as PlanOrder[]).map(id => {
+                          const info = PLAN_INFO[id];
+                          return (
+                            <button
+                              key={id}
+                              onClick={() => { setPlanOrder(id); localStorage.setItem("bible365_order", id); setSavedDay(1); setDay(1); setView("toc"); }}
+                              className={`py-2.5 px-3 rounded-xl border text-xs font-semibold transition text-left ${planOrder === id ? "bg-white/25 border-white/50 text-white" : "bg-white/5 border-white/15 text-white/60 hover:text-white hover:bg-white/10"}`}
+                            >
+                              <div>{info.emoji} {info.label}</div>
+                              <div className={`text-xs font-normal mt-0.5 ${planOrder === id ? "text-white/70" : "text-white/30"}`}>{info.desc}</div>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    {/* How it works */}
+                    <div>
                       <button
                         onClick={() => setShowHowItWorks(v => !v)}
                         className="w-full flex items-center justify-between bg-black/25 rounded-xl px-4 py-3 text-left transition hover:bg-black/35"
@@ -623,43 +673,6 @@ function Bible365Inner() {
                       )}
                     </div>
 
-                    {/* 365-Day Reading Plan */}
-                    <div className="px-0 pb-4">
-                      <p className="text-white/60 text-xs font-bold tracking-widest uppercase mb-3 pt-2">365-Day Reading Plan</p>
-                      <div className="space-y-1">
-                        {plan.map((entry) => {
-                          const isCompleted = completedDays.has(entry.day);
-                          const isToday = entry.day === savedDay;
-                          return (
-                            <div
-                              key={entry.day}
-                              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl border transition ${
-                                isToday ? "bg-white/20 border-white/35" : isCompleted ? "bg-black/10 border-white/8" : "bg-black/15 border-white/10 hover:bg-white/10"
-                              }`}
-                            >
-                              {/* Circle checkbox */}
-                              <button
-                                onClick={() => isCompleted ? unmarkRead(entry.day) : markRead(entry.day)}
-                                className={`w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition ${
-                                  isCompleted ? "bg-green-400 border-green-400" : isToday ? "border-white/70 hover:border-white" : "border-white/30 hover:border-white/60"
-                                }`}
-                              >
-                                {isCompleted && <svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#000" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>}
-                              </button>
-                              {/* Row — taps to open reading */}
-                              <button
-                                onClick={() => { cancelSpeech(); setDay(entry.day); setView("reading"); window.scrollTo({ top: 0 }); }}
-                                className="flex-1 min-w-0 text-left"
-                              >
-                                <span className={`text-xs mr-2 ${isToday ? "text-white/70" : "text-white/40"}`}>Day {entry.day}</span>
-                                <span className={`text-sm ${isToday ? "text-white font-bold" : isCompleted ? "text-white/40" : "text-white"}`}>{entry.label}</span>
-                              </button>
-                              {isToday && <span className="text-white/70 text-xs font-bold flex-shrink-0">Today →</span>}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
                   </div>
                 )}
 
