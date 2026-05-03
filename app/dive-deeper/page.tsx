@@ -223,8 +223,8 @@ export default function DiveDeeperPage() {
                   onClick={() => setActiveTab(tab.id)}
                   className={`flex-1 py-2.5 text-xs font-semibold transition ${
                     activeTab === tab.id
-                      ? "bg-white/25 text-white"
-                      : "bg-white/5 text-white/50 hover:text-white hover:bg-white/10"
+                      ? "text-white border-b-2 border-white"
+                      : "text-white/50 hover:text-white"
                   }`}
                 >
                   {tab.label}
@@ -256,7 +256,7 @@ export default function DiveDeeperPage() {
                           <button
                             key={entry.devotion_date}
                             onClick={() => { loadDay(entry.devotion_date, userId!); setShowPast(false); }}
-                            className="w-full text-left bg-white/10 hover:bg-white/20 border border-white/15 rounded-xl px-4 py-3 transition"
+                            className="w-full text-left hover:text-white/80 rounded-xl px-4 py-3 transition"
                           >
                             <p className="text-white text-sm font-semibold" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
                               {formatDate(entry.devotion_date)}
