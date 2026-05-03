@@ -13,6 +13,8 @@ const DEFAULT_QUESTIONS = [
   "What is God asking me to do or change?",
 ];
 
+type Tab = "journal" | "scripture" | "reflections";
+
 function getToday() {
   const ny = new Intl.DateTimeFormat("en-US", {
     timeZone: "America/New_York", year: "numeric", month: "2-digit", day: "2-digit",
@@ -28,6 +30,7 @@ function formatDate(dateStr: string) {
 
 export default function DiveDeeperPage() {
   const [userId, setUserId] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<Tab>("journal");
   const [devotion, setDevotion] = useState<any>(null);
   const [questions, setQuestions] = useState<string[]>(DEFAULT_QUESTIONS);
   const [challenge, setChallenge] = useState<any>(null);
@@ -38,6 +41,8 @@ export default function DiveDeeperPage() {
   const [pastEntries, setPastEntries] = useState<any[]>([]);
   const [showPast, setShowPast] = useState(false);
   const [highlights, setHighlights] = useState<any[]>([]);
+  const [expandedHighlight, setExpandedHighlight] = useState<string | null>(null);
+  const [copiedRef, setCopiedRef] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
   // Journal fields
@@ -45,6 +50,11 @@ export default function DiveDeeperPage() {
   const [questionNotes, setQuestionNotes] = useState<string[]>([]);
   const [challengeResponse, setChallengeResponse] = useState("");
   const [prayer, setPrayer] = useState("");
+
+  // My Reflections
+  const [reflections, setReflections] = useState("");
+  const [savingReflections, setSavingReflections] = useState(false);
+  const [reflectionsSaved, setReflectionsSaved] = useState(false);
 
   useEffect(() => { init(); }, []);
 
@@ -55,6 +65,7 @@ export default function DiveDeeperPage() {
     await loadDay(getToday(), user.id);
     await loadPastEntries(user.id);
     await loadHighlights(user.id);
+    await loadReflections(user.id);
   }
 
   async function loadDay(date: string, uid: string) {
@@ -93,16 +104,36 @@ export default function DiveDeeperPage() {
   async function loadHighlights(uid: string) {
     const { data } = await supabase
       .from("bible_highlights")
-      .select("id, verse_reference, verse_text, note, created_at")
+      .select("id, verse_reference, verse_text, note, created_at, day, plan_order")
       .eq("user_id", uid)
       .order("created_at", { ascending: false })
-      .limit(20);
+      .limit(50);
     if (data) setHighlights(data);
+  }
+
+  async function loadReflections(uid: string) {
+    const { data } = await supabase
+      .from("user_reflections")
+      .select("content")
+      .eq("user_id", uid)
+      .single();
+    if (data?.content) setReflections(data.content);
   }
 
   async function deleteHighlight(id: string) {
     await supabase.from("bible_highlights").delete().eq("id", id);
     setHighlights(prev => prev.filter(h => h.id !== id));
+  }
+
+  async function shareHighlight(h: any) {
+    const text = `"${h.verse_text}" — ${h.verse_reference}${h.note ? `\n\n${h.note}` : ""}`;
+    if (navigator.share) {
+      await navigator.share({ title: h.verse_reference, text });
+    } else {
+      await navigator.clipboard.writeText(text);
+      setCopiedRef(h.id);
+      setTimeout(() => setCopiedRef(null), 2500);
+    }
   }
 
   async function handleShare() {
@@ -151,6 +182,18 @@ export default function DiveDeeperPage() {
     if (userId) loadPastEntries(userId);
   }
 
+  async function handleSaveReflections() {
+    if (!userId) return;
+    setSavingReflections(true);
+    await supabase.from("user_reflections").upsert(
+      { user_id: userId, content: reflections, updated_at: new Date().toISOString() },
+      { onConflict: "user_id" }
+    );
+    setSavingReflections(false);
+    setReflectionsSaved(true);
+    setTimeout(() => setReflectionsSaved(false), 3000);
+  }
+
   const isToday = viewingDate === getToday();
 
   return (
@@ -160,191 +203,289 @@ export default function DiveDeeperPage() {
           <div className="max-w-2xl w-full">
 
             {/* Header */}
-            <div className="flex justify-between items-center mb-8">
+            <div className="flex justify-between items-center mb-5">
               <Link href="/dashboard" className="text-white hover:text-white text-sm transition">← Back</Link>
               <h1 className="text-xl font-bold text-white" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 8px rgba(0,0,0,0.9)" }}>
                 Dive Deeper
               </h1>
-              <button
-                onClick={() => setShowPast(!showPast)}
-                className="text-white hover:text-white text-sm transition"
-              >
-                {showPast ? "← Today" : "📔 Past"}
-              </button>
+              <Link href="/bible-365" className="text-white/60 hover:text-white text-sm transition">📖 Bible</Link>
             </div>
 
-            {/* Past Entries */}
-            {showPast && (
-              <div className="bg-black/50 border border-white/20 rounded-2xl p-5 mb-6">
-                <p className="text-white text-xs uppercase tracking-widest mb-4">Your Journal Entries</p>
-                {pastEntries.length === 0 ? (
-                  <p className="text-white/60 text-sm text-center py-4">No entries yet — start writing today.</p>
+            {/* Tab bar */}
+            <div className="flex rounded-xl overflow-hidden border border-white/15 mb-6">
+              {([
+                { id: "journal", label: "Journal" },
+                { id: "scripture", label: "Saved Scripture" },
+                { id: "reflections", label: "My Reflections" },
+              ] as { id: Tab; label: string }[]).map(tab => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex-1 py-2.5 text-xs font-semibold transition ${
+                    activeTab === tab.id
+                      ? "bg-white/25 text-white"
+                      : "bg-white/5 text-white/50 hover:text-white hover:bg-white/10"
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+
+            {/* ── JOURNAL TAB ── */}
+            {activeTab === "journal" && (
+              <>
+                {/* Past entries toggle */}
+                <div className="flex justify-end mb-4">
+                  <button
+                    onClick={() => setShowPast(!showPast)}
+                    className="text-white/60 hover:text-white text-xs transition"
+                  >
+                    {showPast ? "← Today" : "📔 Past Entries"}
+                  </button>
+                </div>
+
+                {showPast && (
+                  <div className="bg-black/50 border border-white/20 rounded-2xl p-5 mb-6">
+                    <p className="text-white text-xs uppercase tracking-widest mb-4">Your Journal Entries</p>
+                    {pastEntries.length === 0 ? (
+                      <p className="text-white/60 text-sm text-center py-4">No entries yet — start writing today.</p>
+                    ) : (
+                      <div className="space-y-2">
+                        {pastEntries.map(entry => (
+                          <button
+                            key={entry.devotion_date}
+                            onClick={() => { loadDay(entry.devotion_date, userId!); setShowPast(false); }}
+                            className="w-full text-left bg-white/10 hover:bg-white/20 border border-white/15 rounded-xl px-4 py-3 transition"
+                          >
+                            <p className="text-white text-sm font-semibold" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
+                              {formatDate(entry.devotion_date)}
+                            </p>
+                            {entry.stood_out && (
+                              <p className="text-white/60 text-xs mt-0.5 truncate">{entry.stood_out}</p>
+                            )}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {loading ? (
+                  <div className="text-center py-20">
+                    <p className="text-white/70 text-sm">Loading your worksheet...</p>
+                  </div>
                 ) : (
-                  <div className="space-y-2">
-                    {pastEntries.map(entry => (
-                      <button
-                        key={entry.devotion_date}
-                        onClick={() => { loadDay(entry.devotion_date, userId!); setShowPast(false); }}
-                        className="w-full text-left bg-white/10 hover:bg-white/20 border border-white/15 rounded-xl px-4 py-3 transition"
-                      >
-                        <p className="text-white text-sm font-semibold" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
-                          {formatDate(entry.devotion_date)}
+                  <>
+                    <p className="text-white/70 text-xs uppercase tracking-widest text-center mb-5" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
+                      {formatDate(viewingDate)}{!isToday && " · Past Entry"}
+                    </p>
+
+                    {devotion ? (
+                      <div className="bg-black/50 border border-white/20 rounded-2xl p-5 mb-8">
+                        <p className="text-amber-300/90 text-xs font-semibold uppercase tracking-widest mb-2">Today's Word</p>
+                        <h2 className="text-white font-bold text-lg mb-3 leading-snug" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>
+                          {devotion.title}
+                        </h2>
+                        <p className="text-white italic text-sm leading-relaxed mb-2" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
+                          &ldquo;{devotion.verse_text}&rdquo;
                         </p>
-                        {entry.stood_out && (
-                          <p className="text-white/60 text-xs mt-0.5 truncate">{entry.stood_out}</p>
+                        <p className="text-amber-300/80 text-xs font-semibold">— {devotion.verse_reference}</p>
+                      </div>
+                    ) : (
+                      <div className="bg-black/40 border border-white/20 rounded-2xl p-5 mb-8 text-center">
+                        <p className="text-white/60 text-sm">No devotion found for this date.</p>
+                      </div>
+                    )}
+
+                    <div className="space-y-7">
+                      <div>
+                        <p className="text-white font-semibold text-sm mb-1" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>What stood out to me</p>
+                        <p className="text-white/60 text-xs mb-2">What did God place on your heart from this passage?</p>
+                        <textarea
+                          value={stoodOut}
+                          onChange={e => setStoodOut(e.target.value)}
+                          placeholder="Write freely..."
+                          rows={4}
+                          className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/35 text-sm resize-none focus:outline-none focus:border-white/50 leading-relaxed"
+                        />
+                      </div>
+
+                      {questions.map((q, i) => (
+                        <div key={i}>
+                          <p className="text-white/60 text-xs uppercase tracking-widest mb-1">Reflection {i + 1}</p>
+                          <p className="text-white font-semibold text-sm mb-2 leading-relaxed" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>{q}</p>
+                          <textarea
+                            value={questionNotes[i] ?? ""}
+                            onChange={e => {
+                              const updated = [...questionNotes];
+                              updated[i] = e.target.value;
+                              setQuestionNotes(updated);
+                            }}
+                            placeholder="Your thoughts..."
+                            rows={3}
+                            className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/35 text-sm resize-none focus:outline-none focus:border-white/50 leading-relaxed"
+                          />
+                        </div>
+                      ))}
+
+                      <div>
+                        <p className="text-white/60 text-xs uppercase tracking-widest mb-1">Today's Challenge</p>
+                        {challenge ? (
+                          <div className="bg-amber-500/15 border border-amber-400/30 rounded-xl px-4 py-3 mb-2">
+                            <p className="text-amber-100 text-sm leading-relaxed">{challenge.challenge_text}</p>
+                          </div>
+                        ) : (
+                          <div className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 mb-2">
+                            <p className="text-white/40 text-sm italic">No challenge found for this date.</p>
+                          </div>
                         )}
-                      </button>
-                    ))}
+                        <p className="text-white font-semibold text-sm mb-2" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>How I responded — or plan to</p>
+                        <textarea
+                          value={challengeResponse}
+                          onChange={e => setChallengeResponse(e.target.value)}
+                          placeholder="Be honest. Even small steps count."
+                          rows={3}
+                          className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/35 text-sm resize-none focus:outline-none focus:border-white/50 leading-relaxed"
+                        />
+                      </div>
+
+                      <div>
+                        <p className="text-white font-semibold text-sm mb-1" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>My Prayer</p>
+                        <p className="text-white/60 text-xs mb-2">Write your prayer for today in your own words.</p>
+                        <textarea
+                          value={prayer}
+                          onChange={e => setPrayer(e.target.value)}
+                          placeholder="Dear Lord..."
+                          rows={5}
+                          className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/35 text-sm resize-none focus:outline-none focus:border-white/50 leading-relaxed"
+                        />
+                      </div>
+
+                      <div className="flex gap-3">
+                        <button
+                          onClick={handleSave}
+                          disabled={saving}
+                          className={`flex-1 font-semibold py-4 rounded-2xl border transition text-sm ${saved ? "bg-green-500/30 border-green-400/50 text-green-200" : "bg-white/20 hover:bg-white/30 border-white/40 text-white disabled:opacity-40"}`}
+                        >
+                          {saving ? "Saving..." : saved ? "✓ Saved" : "Save Entry"}
+                        </button>
+                        <button
+                          onClick={handleShare}
+                          className={`px-5 py-4 rounded-2xl border font-semibold text-sm transition ${copied ? "bg-green-500/25 border-green-400/40 text-green-200" : "bg-white/10 hover:bg-white/20 border-white/30 text-white hover:text-white"}`}
+                        >
+                          {copied ? "Copied!" : "Share"}
+                        </button>
+                      </div>
+                    </div>
+                  </>
+                )}
+              </>
+            )}
+
+            {/* ── SAVED SCRIPTURE TAB ── */}
+            {activeTab === "scripture" && (
+              <div>
+                <p className="text-white/60 text-xs uppercase tracking-widest mb-4">Verses You've Saved</p>
+                {highlights.length === 0 ? (
+                  <div className="text-center py-12">
+                    <p className="text-white/40 text-sm mb-2">No saved scriptures yet.</p>
+                    <p className="text-white/30 text-xs">While reading the Bible, tap ✍️ on any verse to save it here.</p>
+                    <Link href="/bible-365" className="inline-block mt-4 text-white/60 hover:text-white text-xs border border-white/20 px-4 py-2 rounded-xl transition">
+                      📖 Go to Bible
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {highlights.map(h => {
+                      const isExpanded = expandedHighlight === h.id;
+                      const isCopied = copiedRef === h.id;
+                      return (
+                        <div key={h.id} className="bg-black/40 border border-white/15 rounded-2xl overflow-hidden">
+                          {/* Reference row — always visible */}
+                          <div className="flex items-center justify-between px-4 py-3">
+                            <button
+                              onClick={() => setExpandedHighlight(isExpanded ? null : h.id)}
+                              className="flex items-center gap-2 text-left flex-1 min-w-0"
+                            >
+                              <span className="text-amber-200/90 text-sm font-semibold">{h.verse_reference}</span>
+                              <span className="text-white/30 text-xs">{isExpanded ? "▲" : "▼"}</span>
+                            </button>
+                            <div className="flex items-center gap-2 flex-shrink-0 ml-2">
+                              {/* Find in Bible */}
+                              {h.day && (
+                                <Link
+                                  href={`/bible-365?day=${h.day}`}
+                                  className="text-white/40 hover:text-white/80 text-xs transition"
+                                  title="Find in Bible"
+                                >
+                                  📖
+                                </Link>
+                              )}
+                              {/* Share */}
+                              <button
+                                onClick={() => shareHighlight(h)}
+                                className={`text-xs transition ${isCopied ? "text-green-300" : "text-white/40 hover:text-white/80"}`}
+                                title="Share"
+                              >
+                                {isCopied ? "✓" : "↑"}
+                              </button>
+                              {/* Delete */}
+                              <button
+                                onClick={() => deleteHighlight(h.id)}
+                                className="text-white/20 hover:text-white/60 text-xs transition"
+                                title="Remove"
+                              >✕</button>
+                            </div>
+                          </div>
+
+                          {/* Expanded content */}
+                          {isExpanded && (
+                            <div className="border-t border-white/10 px-4 py-3">
+                              <p className="text-white text-sm italic leading-relaxed mb-2" style={{ fontFamily: "'Lora', Georgia, serif" }}>
+                                "{h.verse_text}"
+                              </p>
+                              {h.note && (
+                                <p className="text-white/60 text-xs leading-relaxed border-t border-white/10 pt-2 mt-2">{h.note}</p>
+                              )}
+                              {h.day && (
+                                <Link
+                                  href={`/bible-365?day=${h.day}`}
+                                  className="inline-flex items-center gap-1 mt-3 text-white/50 hover:text-white text-xs border border-white/15 hover:border-white/30 rounded-lg px-3 py-1.5 transition"
+                                >
+                                  📖 Find in Bible — Day {h.day}
+                                </Link>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
                   </div>
                 )}
               </div>
             )}
 
-            {loading ? (
-              <div className="text-center py-20">
-                <p className="text-white/70 text-sm">Loading your worksheet...</p>
+            {/* ── MY REFLECTIONS TAB ── */}
+            {activeTab === "reflections" && (
+              <div>
+                <p className="text-white font-semibold text-sm mb-1" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>My Reflections</p>
+                <p className="text-white/60 text-xs mb-4">A private space for your ongoing thoughts, insights, and personal notes about your faith journey.</p>
+                <textarea
+                  value={reflections}
+                  onChange={e => setReflections(e.target.value)}
+                  placeholder="Write whatever is on your heart..."
+                  rows={16}
+                  className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/35 text-sm resize-none focus:outline-none focus:border-white/50 leading-relaxed mb-4"
+                />
+                <button
+                  onClick={handleSaveReflections}
+                  disabled={savingReflections}
+                  className={`w-full font-semibold py-4 rounded-2xl border transition text-sm ${reflectionsSaved ? "bg-green-500/30 border-green-400/50 text-green-200" : "bg-white/20 hover:bg-white/30 border-white/40 text-white disabled:opacity-40"}`}
+                >
+                  {savingReflections ? "Saving..." : reflectionsSaved ? "✓ Saved" : "Save Reflections"}
+                </button>
               </div>
-            ) : (
-              <>
-                {/* Date label */}
-                <p className="text-white/70 text-xs uppercase tracking-widest text-center mb-5" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
-                  {formatDate(viewingDate)}{!isToday && " · Past Entry"}
-                </p>
-
-                {/* Devotion card */}
-                {devotion ? (
-                  <div className="bg-black/50 border border-white/20 rounded-2xl p-5 mb-8">
-                    <p className="text-amber-300/90 text-xs font-semibold uppercase tracking-widest mb-2">Today's Word</p>
-                    <h2 className="text-white font-bold text-lg mb-3 leading-snug" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>
-                      {devotion.title}
-                    </h2>
-                    <p className="text-white italic text-sm leading-relaxed mb-2" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
-                      &ldquo;{devotion.verse_text}&rdquo;
-                    </p>
-                    <p className="text-amber-300/80 text-xs font-semibold">— {devotion.verse_reference}</p>
-                  </div>
-                ) : (
-                  <div className="bg-black/40 border border-white/20 rounded-2xl p-5 mb-8 text-center">
-                    <p className="text-white/60 text-sm">No devotion found for this date.</p>
-                  </div>
-                )}
-
-                {/* Worksheet */}
-                <div className="space-y-7">
-
-                  {/* What stood out */}
-                  <div>
-                    <p className="text-white font-semibold text-sm mb-1" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>What stood out to me</p>
-                    <p className="text-white/60 text-xs mb-2">What did God place on your heart from this passage?</p>
-                    <textarea
-                      value={stoodOut}
-                      onChange={e => setStoodOut(e.target.value)}
-                      placeholder="Write freely..."
-                      rows={4}
-                      className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/35 text-sm resize-none focus:outline-none focus:border-white/50 leading-relaxed"
-                    />
-                  </div>
-
-                  {/* Reflection questions */}
-                  {questions.map((q, i) => (
-                    <div key={i}>
-                      <p className="text-white/60 text-xs uppercase tracking-widest mb-1">Reflection {i + 1}</p>
-                      <p className="text-white font-semibold text-sm mb-2 leading-relaxed" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>{q}</p>
-                      <textarea
-                        value={questionNotes[i] ?? ""}
-                        onChange={e => {
-                          const updated = [...questionNotes];
-                          updated[i] = e.target.value;
-                          setQuestionNotes(updated);
-                        }}
-                        placeholder="Your thoughts..."
-                        rows={3}
-                        className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/35 text-sm resize-none focus:outline-none focus:border-white/50 leading-relaxed"
-                      />
-                    </div>
-                  ))}
-
-                  {/* Challenge response */}
-                  <div>
-                    <p className="text-white/60 text-xs uppercase tracking-widest mb-1">Today's Challenge</p>
-                    {challenge ? (
-                      <div className="bg-amber-500/15 border border-amber-400/30 rounded-xl px-4 py-3 mb-2">
-                        <p className="text-amber-100 text-sm leading-relaxed">{challenge.challenge_text}</p>
-                      </div>
-                    ) : (
-                      <div className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 mb-2">
-                        <p className="text-white/40 text-sm italic">No challenge found for this date.</p>
-                      </div>
-                    )}
-                    <p className="text-white font-semibold text-sm mb-2" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>How I responded — or plan to</p>
-                    <textarea
-                      value={challengeResponse}
-                      onChange={e => setChallengeResponse(e.target.value)}
-                      placeholder="Be honest. Even small steps count."
-                      rows={3}
-                      className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/35 text-sm resize-none focus:outline-none focus:border-white/50 leading-relaxed"
-                    />
-                  </div>
-
-                  {/* Prayer */}
-                  <div>
-                    <p className="text-white font-semibold text-sm mb-1" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>My Prayer</p>
-                    <p className="text-white/60 text-xs mb-2">Write your prayer for today in your own words.</p>
-                    <textarea
-                      value={prayer}
-                      onChange={e => setPrayer(e.target.value)}
-                      placeholder="Dear Lord..."
-                      rows={5}
-                      className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/35 text-sm resize-none focus:outline-none focus:border-white/50 leading-relaxed"
-                    />
-                  </div>
-
-                  {/* Save + Share */}
-                  <div className="flex gap-3">
-                    <button
-                      onClick={handleSave}
-                      disabled={saving}
-                      className={`flex-1 font-semibold py-4 rounded-2xl border transition text-sm ${saved ? "bg-green-500/30 border-green-400/50 text-green-200" : "bg-white/20 hover:bg-white/30 border-white/40 text-white disabled:opacity-40"}`}
-                    >
-                      {saving ? "Saving..." : saved ? "✓ Saved" : "Save Entry"}
-                    </button>
-                    <button
-                      onClick={handleShare}
-                      className={`px-5 py-4 rounded-2xl border font-semibold text-sm transition ${copied ? "bg-green-500/25 border-green-400/40 text-green-200" : "bg-white/10 hover:bg-white/20 border-white/30 text-white hover:text-white"}`}
-                    >
-                      {copied ? "Copied!" : "Share"}
-                    </button>
-                  </div>
-
-                </div>
-
-                {/* Bible Highlights */}
-                {highlights.length > 0 && (
-                  <div className="mt-10">
-                    <p className="text-white/50 text-xs uppercase tracking-widest mb-4">Verses You've Highlighted</p>
-                    <div className="space-y-3">
-                      {highlights.map(h => (
-                        <div key={h.id} className="bg-black/40 border border-white/15 rounded-2xl p-4 group">
-                          <div className="flex justify-between items-start mb-2">
-                            <p className="text-amber-200/80 text-xs font-semibold uppercase tracking-widest">{h.verse_reference}</p>
-                            <button
-                              onClick={() => deleteHighlight(h.id)}
-                              className="text-white/20 hover:text-white/60 text-xs transition opacity-0 group-hover:opacity-100"
-                            >✕</button>
-                          </div>
-                          <p className="text-white text-sm italic leading-relaxed mb-2" style={{ fontFamily: "'Lora', Georgia, serif" }}>
-                            "{h.verse_text}"
-                          </p>
-                          {h.note && (
-                            <p className="text-white/60 text-xs leading-relaxed border-t border-white/10 pt-2 mt-2">{h.note}</p>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-              </>
             )}
 
           </div>

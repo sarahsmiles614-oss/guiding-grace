@@ -78,7 +78,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "No invoice found on subscription." }, { status: 500 });
     }
     const invoice = await stripe.invoices.retrieve(invoiceId);
-    const paymentIntentId = resolveId(invoice.payment_intent);
+    const paymentIntentId = resolveId((invoice as any).payment_intent);
 
     if (!paymentIntentId) {
       return NextResponse.json({ error: "No payment intent on invoice." }, { status: 500 });

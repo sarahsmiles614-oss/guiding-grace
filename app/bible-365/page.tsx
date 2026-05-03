@@ -111,6 +111,8 @@ function Bible365Inner() {
 
   // Completed days (persisted in localStorage)
   const [completedDays, setCompletedDays] = useState<Set<number>>(new Set());
+  // Completion dates: day -> ISO string
+  const [completedDates, setCompletedDates] = useState<Map<number, string>>(new Map());
 
   const [userId, setUserId] = useState<string | null>(null);
   const [savedDay, setSavedDay] = useState(1);
@@ -180,9 +182,6 @@ function Bible365Inner() {
   const [savingHighlight, setSavingHighlight] = useState(false);
   const [highlightSaved, setHighlightSaved] = useState(false);
 
-  // Bookmarks
-  const [bookmarks, setBookmarks] = useState<Set<string>>(new Set());
-
   const verseEls = useRef<(HTMLDivElement | null)[]>([]);
 
   const todayReading = plan[day - 1];
@@ -190,6 +189,18 @@ function Bible365Inner() {
   const progress = Math.round((completedCount / 365) * 100);
   const hasSpeech = typeof window !== "undefined" && "speechSynthesis" in window;
   const hl = HIGHLIGHT[highlightColor];
+
+  // ── Streak: longest run of consecutive completed day numbers ending at the highest completed day ──
+  const currentStreak = useMemo(() => {
+    if (completedDays.size === 0) return 0;
+    const sorted = [...completedDays].sort((a, b) => b - a);
+    let streak = 1;
+    for (let i = 0; i < sorted.length - 1; i++) {
+      if (sorted[i] - sorted[i + 1] === 1) streak++;
+      else break;
+    }
+    return streak;
+  }, [completedDays]);
 
   // ── Book → first day mapping ──────────────────────────────────────────────
   const bookStartDay = useMemo(() => {
@@ -223,17 +234,17 @@ function Bible365Inner() {
   }, [planOrder]);
 
   function markRead(d: number) {
-    // Optimistic UI — update localStorage immediately
+    const now = new Date().toISOString();
     setCompletedDays(prev => {
       const next = new Set(prev);
       next.add(d);
       try { localStorage.setItem(`bible365_completed_${planOrder}`, JSON.stringify([...next])); } catch {}
       return next;
     });
-    // Persist to Supabase in background
+    setCompletedDates(prev => { const next = new Map(prev); next.set(d, now); return next; });
     if (userId) {
       supabase.from("bible365_completed_days")
-        .upsert({ user_id: userId, plan_order: planOrder, day: d }, { onConflict: "user_id,plan_order,day" })
+        .upsert({ user_id: userId, plan_order: planOrder, day: d, completed_at: now }, { onConflict: "user_id,plan_order,day" })
         .then();
     }
   }
@@ -286,22 +297,18 @@ function Bible365Inner() {
       const currentPlan = (prog?.plan_order as PlanOrder) ?? planOrder;
       const { data: completed } = await supabase
         .from("bible365_completed_days")
-        .select("day")
+        .select("day, completed_at")
         .eq("user_id", user.id)
         .eq("plan_order", currentPlan);
 
       if (completed && completed.length > 0) {
         const days = new Set<number>(completed.map((r: any) => r.day));
         setCompletedDays(days);
+        const dates = new Map<number, string>(completed.map((r: any) => [r.day, r.completed_at]));
+        setCompletedDates(dates);
         try { localStorage.setItem(`bible365_completed_${currentPlan}`, JSON.stringify([...days])); } catch {}
       }
 
-      const { data: bks } = await supabase
-        .from("bible365_bookmarks")
-        .select("verse_reference")
-        .eq("user_id", user.id);
-
-      if (bks) setBookmarks(new Set(bks.map((b: any) => b.verse_reference)));
     });
   }, []);
 
@@ -392,7 +399,7 @@ function Bible365Inner() {
     return new Promise((resolve) => {
       const utt = new SpeechSynthesisUtterance(text);
       utt.rate = speedRef.current; utt.lang = "en-US";
-      utt.onend = resolve; utt.onerror = resolve;
+      utt.onend = () => resolve(); utt.onerror = () => resolve();
       window.speechSynthesis.speak(utt);
     });
   }
@@ -493,19 +500,6 @@ function Bible365Inner() {
     window.scrollTo({ top: 0 });
   }
 
-  // ── Bookmarks ──────────────────────────────────────────────────────────────
-  async function toggleBookmark(verse: Verse) {
-    if (!userId) return;
-    const ref = verse.reference;
-    if (bookmarks.has(ref)) {
-      await supabase.from("bible365_bookmarks").delete().eq("user_id", userId).eq("verse_reference", ref);
-      setBookmarks(prev => { const n = new Set(prev); n.delete(ref); return n; });
-    } else {
-      await supabase.from("bible365_bookmarks").insert({ user_id: userId, day, verse_reference: ref, verse_text: verse.text });
-      setBookmarks(prev => new Set(prev).add(ref));
-    }
-  }
-
   const chapterGroups = useMemo(() => {
     const groups: { label: string; start: number; end: number }[] = [];
     verses.forEach((v, i) => {
@@ -522,6 +516,10 @@ function Bible365Inner() {
   const resumeLabel = resumeVerse > 0 && verses.length > 0
     ? verses[Math.min(resumeVerse, verses.length - 1)]?.reference
     : null;
+
+  function formatCompletedDate(iso: string) {
+    return new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+  }
 
   const activeBook = tocTab === "ot" ? activeOtBook : activeNtBook;
   const categories = tocTab === "ot" ? OT_CATEGORIES : NT_CATEGORIES;
@@ -540,7 +538,34 @@ function Bible365Inner() {
                 <div className="sticky top-0 z-10 bg-black/40 backdrop-blur-sm -mx-6 px-6 mb-0">
                   {pickerStep === "book" ? (
                     <>
-                      <h1 className="text-2xl font-bold text-white text-center py-4">Choose a Book</h1>
+                      <div className="flex items-center justify-between pt-4 pb-1">
+                        <button
+                          onClick={() => setShowHowItWorks(v => !v)}
+                          className="text-white/50 hover:text-white text-xs flex items-center gap-1 transition"
+                        >
+                          ℹ️ How it works
+                        </button>
+                        <h1 className="text-2xl font-bold text-white text-center">Bible 365</h1>
+                        <div className="flex items-center gap-2">
+                          {currentStreak > 0 && (
+                            <span className="flex items-center gap-1 bg-orange-500/20 border border-orange-400/30 text-orange-300 text-xs font-semibold px-2 py-1 rounded-lg">
+                              🔥 {currentStreak}
+                            </span>
+                          )}
+                          <Link href="/dive-deeper" className="text-white/50 hover:text-white text-xs transition">📔 Journal</Link>
+                        </div>
+                      </div>
+
+                      {/* How it works dropdown — shown only when toggled */}
+                      {showHowItWorks && (
+                        <div className="bg-black/60 border border-white/10 rounded-xl mx-0 px-4 py-3 mb-2 space-y-1.5">
+                          <p className="text-white/70 text-xs leading-relaxed">1. <span className="text-white">Pick a book</span> below, then select a chapter to jump to that day's reading.</p>
+                          <p className="text-white/70 text-xs leading-relaxed">2. <span className="text-white">Read or listen</span> — use the audio player to follow along hands-free.</p>
+                          <p className="text-white/70 text-xs leading-relaxed">3. <span className="text-white">Check off each day</span> — tap the circle to mark it complete. Your progress is saved automatically.</p>
+                          <p className="text-white/70 text-xs leading-relaxed">4. <span className="text-white">Highlight a verse</span> — tap ✍️ on any verse to save it with a note to your journal.</p>
+                          <p className="text-white/70 text-xs leading-relaxed">5. <span className="text-white">No screen timeout</span> — while you're reading, your screen stays awake so it won't go dark mid-passage.</p>
+                        </div>
+                      )}
                       {/* OT/NT toggle — flat full-width halves */}
                       <div className="flex">
                         <button
@@ -582,17 +607,18 @@ function Bible365Inner() {
                   <div className="pt-4 pb-2 space-y-4">
 
                     {/* Currently On card */}
-                    <div className="bg-black/30 border border-white/20 rounded-2xl p-4">
+                    <div className="bg-black/30 border border-white/20 rounded-2xl p-5">
                       <p className="text-white/50 text-xs uppercase tracking-widest mb-1">Currently On</p>
-                      <p className="text-white font-bold text-base mb-0.5" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+                      <p className="text-white font-bold text-2xl mb-1" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
                         Day {savedDay} of {PLAN_INFO[planOrder].days}
                       </p>
-                      <p className="text-white/70 text-xs mb-3">{plan[savedDay - 1]?.label}</p>
+                      <p className="text-white/80 text-sm mb-1">{plan[savedDay - 1]?.label}</p>
+                      <p className="text-white/40 text-xs mb-3">{completedCount} day{completedCount !== 1 ? "s" : ""} completed · {Math.round((completedCount / PLAN_INFO[planOrder].days) * 100)}%</p>
                       {/* Progress bar */}
                       <div className="w-full h-1.5 bg-white/10 rounded-full mb-3">
                         <div className="h-1.5 bg-white/50 rounded-full transition-all" style={{ width: `${Math.round((completedCount / PLAN_INFO[planOrder].days) * 100)}%` }} />
                       </div>
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 mb-3">
                         <button
                           onClick={() => { cancelSpeech(); setDay(savedDay); setView("reading"); window.scrollTo({ top: 0 }); }}
                           className="flex-1 bg-white/20 hover:bg-white/30 border border-white/30 text-white font-semibold text-sm py-2.5 rounded-xl transition"
@@ -611,11 +637,29 @@ function Bible365Inner() {
                           }
                         </button>
                       </div>
+                      {/* Recent completions */}
+                      {completedDates.size > 0 && (
+                        <div className="border-t border-white/10 pt-3">
+                          <p className="text-white/30 text-xs mb-2">Recent completions</p>
+                          <div className="space-y-1">
+                            {[...completedDates.entries()]
+                              .sort((a, b) => new Date(b[1]).getTime() - new Date(a[1]).getTime())
+                              .slice(0, 3)
+                              .map(([d, iso]) => (
+                                <div key={d} className="flex items-center justify-between">
+                                  <span className="text-white/50 text-xs">Day {d} — {plan[d - 1]?.label?.split(",")[0]}</span>
+                                  <span className="text-white/30 text-xs">{formatCompletedDate(iso)}</span>
+                                </div>
+                              ))
+                            }
+                          </div>
+                        </div>
+                      )}
                     </div>
 
                     {/* Jump to day dropdown */}
                     <div>
-                      <p className="text-white/50 text-xs uppercase tracking-widest mb-2">Jump to a Day</p>
+                      <p className="text-white/60 text-sm font-semibold mb-2">Jump to a Day</p>
                       <select
                         value={day}
                         onChange={e => { const d = parseInt(e.target.value); cancelSpeech(); setDay(d); setSavedDay(d); setView("reading"); window.scrollTo({ top: 0 }); }}
@@ -624,7 +668,7 @@ function Bible365Inner() {
                       >
                         {plan.map(entry => (
                           <option key={entry.day} value={entry.day} style={{ background: "#1a1a2e", color: "white" }}>
-                            {completedDays.has(entry.day) ? "✓ " : ""}Day {entry.day} — {entry.label}
+                            {completedDays.has(entry.day) ? "✓ " : ""}Day {entry.day} — {entry.label}{completedDates.has(entry.day) ? ` (${formatCompletedDate(completedDates.get(entry.day)!)})` : ""}
                           </option>
                         ))}
                       </select>
@@ -632,7 +676,7 @@ function Bible365Inner() {
 
                     {/* Reading Plans */}
                     <div>
-                      <p className="text-white/50 text-xs uppercase tracking-widest mb-2">Reading Plans</p>
+                      <p className="text-white text-base font-semibold mb-2">Reading Plans</p>
                       <div className="grid grid-cols-2 gap-2">
                         {(Object.keys(PLAN_INFO) as PlanOrder[]).map(id => {
                           const info = PLAN_INFO[id];
@@ -640,38 +684,16 @@ function Bible365Inner() {
                             <button
                               key={id}
                               onClick={() => { setPlanOrder(id); localStorage.setItem("bible365_order", id); setSavedDay(1); setDay(1); setView("toc"); }}
-                              className={`py-2.5 px-3 rounded-xl border text-xs font-semibold transition text-left ${planOrder === id ? "bg-white/25 border-white/50 text-white" : "bg-white/5 border-white/15 text-white/60 hover:text-white hover:bg-white/10"}`}
+                              className={`py-4 px-4 rounded-xl border text-lg font-bold transition text-left ${planOrder === id ? "bg-white/25 border-white/50 text-white" : "bg-white/10 border-white/25 text-white hover:bg-white/20"}`}
                             >
                               <div>{info.emoji} {info.label}</div>
-                              <div className={`text-xs font-normal mt-0.5 ${planOrder === id ? "text-white/70" : "text-white/30"}`}>{info.desc}</div>
+                              <div className={`text-sm font-normal mt-1 ${planOrder === id ? "text-white/90" : "text-white/70"}`}>{info.desc}</div>
                             </button>
                           );
                         })}
                       </div>
                     </div>
 
-                    {/* How it works */}
-                    <div>
-                      <button
-                        onClick={() => setShowHowItWorks(v => !v)}
-                        className="w-full flex items-center justify-between bg-black/25 rounded-xl px-4 py-3 text-left transition hover:bg-black/35"
-                      >
-                        <span className="text-white font-semibold text-sm">How it works</span>
-                        <span className="text-white/50 text-xs">{showHowItWorks ? "▲ Hide" : "▼ Show"}</span>
-                      </button>
-                      {showHowItWorks && (
-                        <div className="bg-black/20 border border-white/10 rounded-b-xl px-4 py-3 -mt-1 space-y-1.5">
-                          <p className="text-white/70 text-xs leading-relaxed">1. <span className="text-white">Pick a book</span> from the Old or New Testament below.</p>
-                          <p className="text-white/70 text-xs leading-relaxed">2. <span className="text-white">Select a chapter</span> to jump to that day's reading.</p>
-                          <p className="text-white/70 text-xs leading-relaxed">3. <span className="text-white">Read or listen</span> — use the audio player to follow along hands-free.</p>
-                          <p className="text-white/70 text-xs leading-relaxed">4. <span className="text-white">Check off each day</span> — tap the circle next to any day to mark it complete.</p>
-                          <p className="text-white/70 text-xs leading-relaxed">5. <span className="text-white">Highlight a verse</span> — tap ✍️ on any verse to save it with a note to your journal.</p>
-                          <p className="text-white/70 text-xs leading-relaxed">6. <span className="text-white">Bookmark verses</span> — tap 🔖 to save favorites you can return to anytime.</p>
-                          <p className="text-white/70 text-xs leading-relaxed">7. <span className="text-white">Come back tomorrow</span> — your place is saved so you never lose track.</p>
-                          <p className="text-white/70 text-xs leading-relaxed">8. <span className="text-white">No screen timeout</span> — while you're reading, your screen's auto-lock is disabled so it won't go dark mid-passage. It turns back on when you leave.</p>
-                        </div>
-                      )}
-                    </div>
 
                   </div>
                 )}
@@ -681,14 +703,14 @@ function Bible365Inner() {
                   <div className="-mx-6">
                     {categories.map(category => (
                       <div key={category.label}>
-                        <p className="text-white/60 text-xs font-bold tracking-widest uppercase px-4 pt-5 pb-2">
+                        <p className="text-white/90 text-sm font-bold tracking-widest uppercase px-4 pt-5 pb-2">
                           {category.label}
                         </p>
                         {category.books.map(book => (
                           <button
                             key={book}
                             onClick={() => { setPickerBook(book); setPickerStep("chapter"); }}
-                            className="w-full text-left px-5 py-3 bg-white/10 hover:bg-white/20 border-b border-white/10 text-white font-semibold text-base transition flex items-center justify-between"
+                            className="w-full text-left px-5 py-4 bg-white/10 hover:bg-white/20 border-b border-white/10 text-white font-semibold text-xl transition flex items-center justify-between"
                           >
                             <span>{book}</span>
                             <span className="text-white/50">›</span>
@@ -736,7 +758,7 @@ function Bible365Inner() {
                   <h1 className="text-lg font-bold text-white" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>
                     Day {day}
                   </h1>
-                  <Link href="/bible-365/bookmarks" className="text-white/70 hover:text-white text-sm transition">🔖</Link>
+                  <Link href="/dive-deeper" className="text-white/70 hover:text-white text-sm transition">📔 Journal</Link>
                 </div>
 
                 {/* Day heading */}
@@ -748,7 +770,7 @@ function Bible365Inner() {
                 </div>
 
                 {/* Mark as Read */}
-                <div className="mb-5">
+                <div className="mb-5 flex items-center gap-3">
                   <button
                     onClick={() => completedDays.has(day) ? unmarkRead(day) : markRead(day)}
                     className={`flex items-center gap-2 text-sm px-4 py-2 rounded-xl border transition font-semibold ${
@@ -759,6 +781,11 @@ function Bible365Inner() {
                   >
                     {completedDays.has(day) ? "✓ Marked as Read" : "Mark as Read"}
                   </button>
+                  {completedDays.has(day) && completedDates.has(day) && (
+                    <span className="text-white/40 text-xs">
+                      Completed {formatCompletedDate(completedDates.get(day)!)}
+                    </span>
+                  )}
                 </div>
 
                 {/* Playback controls */}
@@ -890,7 +917,6 @@ function Bible365Inner() {
                     {verses.slice(group.start, group.end).map((verse, localIdx) => {
                       const globalIdx = group.start + localIdx;
                       const isActive = currentVerse === globalIdx;
-                      const isBookmarked = bookmarks.has(verse.reference);
                       return (
                         <div
                           key={verse.reference}
@@ -905,11 +931,8 @@ function Bible365Inner() {
                             {verse.text}
                           </p>
                           <div className="flex flex-col gap-1.5 flex-shrink-0">
-                            <button onClick={() => toggleBookmark(verse)}
-                              className={`text-sm leading-none transition-all ${isBookmarked ? `${hl.num} opacity-100` : "text-white/20 opacity-0 group-hover:opacity-100 hover:text-white/60"}`}
-                              title={isBookmarked ? "Remove bookmark" : "Bookmark"}>🔖</button>
                             <button onClick={() => { setSelectedVerse(verse); setJournalNote(""); }}
-                              className="text-sm leading-none text-white/20 opacity-0 group-hover:opacity-100 hover:text-white/60 transition-all"
+                              className="text-base leading-none text-white/50 hover:text-white transition-all"
                               title="Send to Journal">✍️</button>
                           </div>
                         </div>
@@ -929,6 +952,23 @@ function Bible365Inner() {
                     >{completedDays.has(day) ? "✓ Read" : "Mark Read"}</button>
                     <button onClick={() => goToDay(day + 1)} disabled={day === 365}
                       className="text-white/70 hover:text-white disabled:opacity-20 transition text-sm">Day {day + 1} →</button>
+                  </div>
+                )}
+
+                {/* Next Lesson card — shown after completing current day */}
+                {!loading && !fetchError && completedDays.has(day) && day < plan.length && (
+                  <div className="mt-6 bg-white/8 border border-white/20 rounded-2xl p-5">
+                    <p className="text-white/40 text-xs uppercase tracking-widest mb-2">Up Next</p>
+                    <p className="text-white font-bold text-lg leading-snug mb-1" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+                      Day {day + 1}
+                    </p>
+                    <p className="text-amber-200/80 text-sm mb-4">{plan[day]?.otLabel}</p>
+                    <button
+                      onClick={() => goToDay(day + 1)}
+                      className="w-full bg-white/15 hover:bg-white/25 border border-white/30 text-white font-semibold text-sm py-3 rounded-xl transition"
+                    >
+                      Start Day {day + 1} →
+                    </button>
                   </div>
                 )}
               </>

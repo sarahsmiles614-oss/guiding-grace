@@ -32,7 +32,8 @@ export default function StudyGuidePage() {
 
   useEffect(() => {
     // Read saved Bible 365 state from localStorage
-    const order = (localStorage.getItem("bible365_order") as PlanOrder) ?? "canonical";
+    const raw = localStorage.getItem("bible365_order");
+    const order: GuideMode = raw === "devotion" || raw === "canonical" || raw === "chronological" ? raw : "canonical";
     setMode(order);
 
     supabase.auth.getUser().then(async ({ data: { user } }) => {
@@ -67,14 +68,14 @@ export default function StudyGuidePage() {
 
     let { data } = await supabase
       .from("study_guides")
-      .select("title, verse_reference, background, questions, application, related_verses")
+      .select("title, verse_reference, background, interpretation, questions, application, related_verses")
       .eq("guide_date", today)
       .single();
 
     if (!data) {
       const { data: latest } = await supabase
         .from("study_guides")
-        .select("title, verse_reference, background, questions, application, related_verses")
+        .select("title, verse_reference, background, interpretation, questions, application, related_verses")
         .order("guide_date", { ascending: false })
         .limit(1)
         .single();
@@ -98,7 +99,7 @@ export default function StudyGuidePage() {
 
     const { data } = await supabase
       .from("study_guides")
-      .select("title, verse_reference, background, questions, application, related_verses")
+      .select("title, verse_reference, background, interpretation, questions, application, related_verses")
       .eq("guide_date", planKey)
       .single();
 
