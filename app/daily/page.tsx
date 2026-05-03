@@ -57,7 +57,7 @@ export default async function DailyPage() {
       className="min-h-screen bg-cover bg-center"
       style={{ backgroundImage: "url('https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/hoai-thu-pt-nv4FFbP8IuE-unsplash.jpg')" }}
     >
-      <div className="min-h-screen bg-black/30 flex flex-col">
+      <div className="min-h-screen bg-black/40 flex flex-col">
         <nav className="flex justify-between items-center px-6 pt-6 pb-4">
           <Link href="/" className="text-white/60 text-sm hover:text-white transition">Guiding Grace</Link>
           <Link href="/" className="text-white/60 text-xs hover:text-white transition border border-white/20 px-3 py-1.5 rounded-xl">Sign In</Link>
@@ -79,13 +79,13 @@ export default async function DailyPage() {
 
               <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-6 mb-6 w-full">
                 <p className="text-amber-200 text-xs font-semibold uppercase tracking-widest mb-3">{devotion.verse_reference}</p>
-                <p className="text-white text-base leading-relaxed italic mb-4" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.8)", fontFamily: "'Lora', Georgia, serif" }}>
+                <p className="text-white text-lg leading-relaxed italic mb-4" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.8)", fontFamily: "'Lora', Georgia, serif" }}>
                   "{devotion.verse_text}"
                 </p>
               </div>
 
               <div className="w-full mb-8">
-                <p className="text-white text-base leading-relaxed" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)", fontFamily: "'Lora', Georgia, serif" }}>
+                <p className="text-white text-lg leading-relaxed" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)", fontFamily: "'Lora', Georgia, serif" }}>
                   {devotion.reflection}
                 </p>
               </div>
@@ -115,7 +115,7 @@ export default async function DailyPage() {
                     <span className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse" />
                     <p className="text-yellow-300 text-xs uppercase tracking-widest font-semibold">Today's Grace Challenge</p>
                   </div>
-                  <p className="text-white text-sm leading-relaxed">{challenge.challenge_text}</p>
+                  <p className="text-white text-base leading-relaxed">{challenge.challenge_text}</p>
                   <p className="text-white/40 text-xs mt-3">Sign in to respond and see how the community is living it out.</p>
                 </div>
               )}
