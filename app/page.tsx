@@ -42,10 +42,11 @@ export default async function Home() {
   ]);
 
   return (
-    <div className="min-h-screen bg-cover bg-center flex flex-col" style={{ backgroundImage: `url('${BG}')` }}>
-      <div className="min-h-screen flex flex-col bg-black/55">
+    <div className="min-h-screen w-full bg-cover bg-center" style={{ backgroundImage: `url('${BG}')` }}>
+      <div className="min-h-screen w-full bg-black/55 flex flex-col">
 
-        <nav className="flex justify-between items-center px-6 pt-6 pb-2">
+        {/* Nav */}
+        <nav className="w-full flex justify-between items-center px-6 pt-6 pb-2">
           <p className="text-white font-semibold text-sm" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>Guiding Grace</p>
           <div className="flex gap-4 text-white/50 text-xs">
             <Link href="/terms" className="hover:text-white/80">Terms</Link>
@@ -53,74 +54,79 @@ export default async function Home() {
           </div>
         </nav>
 
-        <main className="flex-1 flex flex-col items-center px-6 py-8 max-w-2xl mx-auto w-full">
+        {/* All content centered */}
+        <div className="flex-1 w-full flex flex-col items-center px-4 py-8">
+          <div className="w-full max-w-lg">
 
-          {/* Hero */}
-          <p className="text-white/50 text-xs uppercase tracking-widest mb-3">Your Daily Faith Companion</p>
-          <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4 leading-tight text-center" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 4px 20px rgba(0,0,0,0.8)" }}>
-            365 Days of Grace,<br />Community & Scripture
-          </h1>
-          <p className="text-white/80 text-base mb-3 max-w-md leading-relaxed text-center" style={{ textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>
-            Not just a reading plan. A daily faith experience with devotions, live community challenges, a prayer wall, and sacred spaces you will not find anywhere else.
-          </p>
-          <p className="text-white/50 text-xs mb-8 max-w-xs leading-relaxed text-center">
-            Release shame. Honor the lost. Pray together. Walk in grace every single day.
-          </p>
+            {/* Hero */}
+            <div className="text-center mb-8">
+              <p className="text-white/50 text-xs uppercase tracking-widest mb-3">Your Daily Faith Companion</p>
+              <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4 leading-tight" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 4px 20px rgba(0,0,0,0.8)" }}>
+                365 Days of Grace,<br />Community & Scripture
+              </h1>
+              <p className="text-white/80 text-sm mb-6 leading-relaxed" style={{ textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>
+                Not just a reading plan. A daily faith experience with devotions, live community challenges, a prayer wall, and sacred spaces you will not find anywhere else.
+              </p>
+              <Link href="/subscribe">
+                <button className="bg-white/20 hover:bg-white/30 border border-white/40 text-white font-bold py-3 px-10 rounded-2xl transition text-sm">
+                  ✨ Start Free Trial — No Card Required
+                </button>
+              </Link>
+            </div>
 
-          {/* Today's Devotion */}
-          {devotion && (
-            <div className="w-full mb-8">
-              <p className="text-white/40 text-xs uppercase tracking-widest text-center mb-1">{todayLabel}</p>
-              <p className="text-white/50 text-xs uppercase tracking-widest text-center mb-5">Today's Devotion</p>
-
-              <h2 className="text-2xl sm:text-3xl font-bold text-white text-center mb-5 leading-tight"
-                style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 4px 20px rgba(0,0,0,0.8)" }}>
-                {devotion.title}
-              </h2>
-
-              <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-5 mb-5">
-                <p className="text-amber-200 text-xs font-semibold uppercase tracking-widest mb-3">{devotion.verse_reference}</p>
-                <p className="text-white text-base leading-relaxed italic" style={{ fontFamily: "'Lora', Georgia, serif", textShadow: "0 1px 6px rgba(0,0,0,0.8)" }}>
-                  "{devotion.verse_text}"
+            {/* Today's Devotion */}
+            {devotion && (
+              <div className="mb-8">
+                <p className="text-white/40 text-xs uppercase tracking-widest text-center mb-1">{todayLabel}</p>
+                <p className="text-white/50 text-xs uppercase tracking-widest text-center mb-5">Today's Devotion</p>
+                <h2 className="text-2xl font-bold text-white text-center mb-5 leading-tight" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 4px 16px rgba(0,0,0,0.9)" }}>
+                  {devotion.title}
+                </h2>
+                <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-5 mb-4">
+                  <p className="text-amber-200 text-xs font-semibold uppercase tracking-widest mb-3">{devotion.verse_reference}</p>
+                  <p className="text-white text-sm leading-relaxed italic" style={{ fontFamily: "'Lora', Georgia, serif", textShadow: "0 1px 6px rgba(0,0,0,0.8)" }}>
+                    "{devotion.verse_text}"
+                  </p>
+                </div>
+                <p className="text-white/90 text-sm leading-relaxed" style={{ fontFamily: "'Lora', Georgia, serif", textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
+                  {devotion.reflection}
                 </p>
               </div>
+            )}
 
-              <p className="text-white/90 text-sm leading-relaxed mb-6" style={{ fontFamily: "'Lora', Georgia, serif", textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
-                {devotion.reflection}
-              </p>
-            </div>
-          )}
-
-          {/* Grace Challenge */}
-          {challenge && (
-            <div className="w-full bg-white/10 backdrop-blur-sm border border-yellow-300/30 rounded-2xl p-5 mb-8">
-              <div className="flex items-center gap-2 mb-3">
-                <span className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse" />
-                <p className="text-yellow-300 text-xs uppercase tracking-widest font-semibold">Today's Grace Challenge</p>
-                <span className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse" />
+            {/* Grace Challenge */}
+            {challenge && (
+              <div className="bg-white/10 backdrop-blur-sm border border-yellow-300/30 rounded-2xl p-5 mb-8">
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse" />
+                  <p className="text-yellow-300 text-xs uppercase tracking-widest font-semibold">Today's Grace Challenge</p>
+                  <span className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse" />
+                </div>
+                <p className="text-white/90 text-sm leading-relaxed mb-2">{challenge.challenge_text}</p>
+                <p className="text-white/40 text-xs">Sign in to respond and see who the community honors as Most Loved 💛</p>
               </div>
-              <p className="text-white text-sm leading-relaxed mb-3" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.6)" }}>
-                {challenge.challenge_text}
-              </p>
-              <p className="text-white/45 text-xs">Sign in to respond, vote, and see who the community honors as Most Loved 💛</p>
+            )}
+
+            {/* Feature Previews */}
+            <div className="mb-10">
+              <p className="text-white/50 text-xs uppercase tracking-widest text-center mb-2">Everything inside Guiding Grace</p>
+              <p className="text-white/30 text-xs text-center mb-6">Start your free trial to unlock all features</p>
+              <FeaturePreviews />
             </div>
-          )}
 
-          {/* Sign in / Sign up form */}
-          <div className="w-full border-t border-white/10 pt-8 mb-10">
-            <AuthForm />
+            {/* Sign in */}
+            <div className="border-t border-white/10 pt-8 mb-8">
+              <h2 className="text-xl font-bold text-white text-center mb-2" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>
+                Start Walking in Grace
+              </h2>
+              <p className="text-white/50 text-xs text-center mb-6">No credit card required. Cancel anytime.</p>
+              <AuthForm />
+            </div>
+
           </div>
+        </div>
 
-          {/* Feature previews */}
-          <div className="w-full border-t border-white/10 pt-10 mb-10">
-            <p className="text-white/50 text-xs uppercase tracking-widest text-center mb-2">Everything inside Guiding Grace</p>
-            <p className="text-white/30 text-xs text-center mb-8">Start your free trial to unlock all features</p>
-            <FeaturePreviews />
-          </div>
-
-        </main>
-
-        <footer className="text-center py-6 px-6">
+        <footer className="w-full text-center py-6 px-6">
           <p className="text-white/30 text-xs">
             © {new Date().getFullYear()} Guiding Grace ·
             <Link href="/privacy" className="hover:text-white/50 ml-1">Privacy</Link> ·
