@@ -36,6 +36,7 @@ const BG_OPTIONS = [
   { label: "Path",      url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images%204/clicker-babu-aKBtbbVP970-unsplash.jpg" },
   { label: "Horizon",   url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images5/12019-sunset-2080072_1920.jpg" },
   { label: "Falls",     url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images5/20twenty-waterfalls-5607946_1920.jpg" },
+  { label: "Winter",    url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images5/alainaudet-winter-landscape-2995987_1920.jpg" },
 ];
 
 const FONT_OPTIONS = [
