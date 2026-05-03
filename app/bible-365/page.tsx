@@ -887,8 +887,8 @@ function Bible365Inner() {
                           <span className={`text-xs mt-1 w-5 flex-shrink-0 text-right transition-colors ${isActive ? `${hl.num} font-bold` : "text-white/50"}`}>
                             {verse.verseNum}
                           </span>
-                          <p className={`flex-1 leading-relaxed transition-colors ${FONT_CLASSES[fontSize]} ${isActive ? "text-white" : "text-white/90"}`}
-                            style={{ textShadow: isActive ? "0 1px 6px rgba(0,0,0,0.95)" : "0 1px 4px rgba(0,0,0,0.8)" }}>
+                          <p className={`flex-1 leading-relaxed transition-colors ${FONT_CLASSES[fontSize]} ${isActive ? "text-white" : "text-white"}`}
+                            style={{ textShadow: isActive ? "0 1px 6px rgba(0,0,0,0.95)" : "0 2px 8px rgba(0,0,0,0.9)" }}>
                             {verse.text}
                           </p>
                           <div className="flex flex-col gap-1.5 flex-shrink-0">
