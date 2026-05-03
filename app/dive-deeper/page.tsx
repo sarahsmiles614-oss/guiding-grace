@@ -208,7 +208,7 @@ export default function DiveDeeperPage() {
               <h1 className="text-xl font-bold text-white" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 8px rgba(0,0,0,0.9)" }}>
                 Dive Deeper
               </h1>
-              <Link href="/bible-365" className="text-white/60 hover:text-white text-sm transition">📖 Bible</Link>
+              <Link href="/bible-365" className="text-white/90 hover:text-white text-sm transition">📖 Bible</Link>
             </div>
 
             {/* Tab bar */}
@@ -224,7 +224,7 @@ export default function DiveDeeperPage() {
                   className={`flex-1 py-2.5 text-xs font-semibold transition ${
                     activeTab === tab.id
                       ? "text-white border-b-2 border-white"
-                      : "text-white/50 hover:text-white"
+                      : "text-white/90 hover:text-white"
                   }`}
                 >
                   {tab.label}
@@ -239,7 +239,7 @@ export default function DiveDeeperPage() {
                 <div className="flex justify-end mb-4">
                   <button
                     onClick={() => setShowPast(!showPast)}
-                    className="text-white/60 hover:text-white text-xs transition"
+                    className="text-white/90 hover:text-white text-xs transition"
                   >
                     {showPast ? "← Today" : "📔 Past Entries"}
                   </button>
@@ -249,7 +249,7 @@ export default function DiveDeeperPage() {
                   <div className="rounded-2xl p-5 mb-6">
                     <p className="text-white text-xs uppercase tracking-widest mb-4">Your Journal Entries</p>
                     {pastEntries.length === 0 ? (
-                      <p className="text-white/60 text-sm text-center py-4">No entries yet — start writing today.</p>
+                      <p className="text-white/90 text-sm text-center py-4">No entries yet — start writing today.</p>
                     ) : (
                       <div className="space-y-2">
                         {pastEntries.map(entry => (
@@ -262,7 +262,7 @@ export default function DiveDeeperPage() {
                               {formatDate(entry.devotion_date)}
                             </p>
                             {entry.stood_out && (
-                              <p className="text-white/60 text-xs mt-0.5 truncate">{entry.stood_out}</p>
+                              <p className="text-white/90 text-xs mt-0.5 truncate">{entry.stood_out}</p>
                             )}
                           </button>
                         ))}
@@ -273,35 +273,35 @@ export default function DiveDeeperPage() {
 
                 {loading ? (
                   <div className="text-center py-20">
-                    <p className="text-white/70 text-sm">Loading your worksheet...</p>
+                    <p className="text-white/90 text-sm">Loading your worksheet...</p>
                   </div>
                 ) : (
                   <>
-                    <p className="text-white/70 text-xs uppercase tracking-widest text-center mb-5" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
+                    <p className="text-white/90 text-xs uppercase tracking-widest text-center mb-5" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
                       {formatDate(viewingDate)}{!isToday && " · Past Entry"}
                     </p>
 
                     {devotion ? (
                       <div className="rounded-2xl p-5 mb-8">
-                        <p className="text-amber-300/90 text-xs font-semibold uppercase tracking-widest mb-2">Today's Word</p>
+                        <p className="text-amber-300 text-xs font-semibold uppercase tracking-widest mb-2">Today's Word</p>
                         <h2 className="text-white font-bold text-lg mb-3 leading-snug" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>
                           {devotion.title}
                         </h2>
                         <p className="text-white italic text-sm leading-relaxed mb-2" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
                           &ldquo;{devotion.verse_text}&rdquo;
                         </p>
-                        <p className="text-amber-300/80 text-xs font-semibold">— {devotion.verse_reference}</p>
+                        <p className="text-amber-300 text-xs font-semibold">— {devotion.verse_reference}</p>
                       </div>
                     ) : (
                       <div className="rounded-2xl p-5 mb-8 text-center">
-                        <p className="text-white/60 text-sm">No devotion found for this date.</p>
+                        <p className="text-white/90 text-sm">No devotion found for this date.</p>
                       </div>
                     )}
 
                     <div className="space-y-7">
                       <div>
                         <p className="text-white font-semibold text-sm mb-1" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>What stood out to me</p>
-                        <p className="text-white/60 text-xs mb-2">What did God place on your heart from this passage?</p>
+                        <p className="text-white/90 text-xs mb-2">What did God place on your heart from this passage?</p>
                         <textarea
                           value={stoodOut}
                           onChange={e => setStoodOut(e.target.value)}
@@ -313,7 +313,7 @@ export default function DiveDeeperPage() {
 
                       {questions.map((q, i) => (
                         <div key={i}>
-                          <p className="text-white/60 text-xs uppercase tracking-widest mb-1">Reflection {i + 1}</p>
+                          <p className="text-white/90 text-xs uppercase tracking-widest mb-1">Reflection {i + 1}</p>
                           <p className="text-white font-semibold text-sm mb-2 leading-relaxed" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>{q}</p>
                           <textarea
                             value={questionNotes[i] ?? ""}
@@ -330,14 +330,14 @@ export default function DiveDeeperPage() {
                       ))}
 
                       <div>
-                        <p className="text-white/60 text-xs uppercase tracking-widest mb-1">Today's Challenge</p>
+                        <p className="text-white/90 text-xs uppercase tracking-widest mb-1">Today's Challenge</p>
                         {challenge ? (
                           <div className="rounded-xl px-4 py-3 mb-2">
                             <p className="text-amber-100 text-sm leading-relaxed">{challenge.challenge_text}</p>
                           </div>
                         ) : (
                           <div className="rounded-xl px-4 py-3 mb-2">
-                            <p className="text-white/40 text-sm italic">No challenge found for this date.</p>
+                            <p className="text-white/80 text-sm italic">No challenge found for this date.</p>
                           </div>
                         )}
                         <p className="text-white font-semibold text-sm mb-2" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>How I responded — or plan to</p>
@@ -352,7 +352,7 @@ export default function DiveDeeperPage() {
 
                       <div>
                         <p className="text-white font-semibold text-sm mb-1" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>My Prayer</p>
-                        <p className="text-white/60 text-xs mb-2">Write your prayer for today in your own words.</p>
+                        <p className="text-white/90 text-xs mb-2">Write your prayer for today in your own words.</p>
                         <textarea
                           value={prayer}
                           onChange={e => setPrayer(e.target.value)}
@@ -386,12 +386,12 @@ export default function DiveDeeperPage() {
             {/* ── SAVED SCRIPTURE TAB ── */}
             {activeTab === "scripture" && (
               <div>
-                <p className="text-white/60 text-xs uppercase tracking-widest mb-4">Verses You've Saved</p>
+                <p className="text-white/90 text-xs uppercase tracking-widest mb-4">Verses You've Saved</p>
                 {highlights.length === 0 ? (
                   <div className="text-center py-12">
-                    <p className="text-white/40 text-sm mb-2">No saved scriptures yet.</p>
-                    <p className="text-white/30 text-xs">While reading the Bible, tap ✍️ on any verse to save it here.</p>
-                    <Link href="/bible-365" className="inline-block mt-4 text-white/60 hover:text-white text-xs border border-white/20 px-4 py-2 rounded-xl transition">
+                    <p className="text-white/80 text-sm mb-2">No saved scriptures yet.</p>
+                    <p className="text-white/70 text-xs">While reading the Bible, tap ✍️ on any verse to save it here.</p>
+                    <Link href="/bible-365" className="inline-block mt-4 text-white/90 hover:text-white text-xs border border-white/20 px-4 py-2 rounded-xl transition">
                       📖 Go to Bible
                     </Link>
                   </div>
@@ -408,15 +408,15 @@ export default function DiveDeeperPage() {
                               onClick={() => setExpandedHighlight(isExpanded ? null : h.id)}
                               className="flex items-center gap-2 text-left flex-1 min-w-0"
                             >
-                              <span className="text-amber-200/90 text-sm font-semibold">{h.verse_reference}</span>
-                              <span className="text-white/30 text-xs">{isExpanded ? "▲" : "▼"}</span>
+                              <span className="text-amber-200 text-sm font-semibold">{h.verse_reference}</span>
+                              <span className="text-white/70 text-xs">{isExpanded ? "▲" : "▼"}</span>
                             </button>
                             <div className="flex items-center gap-2 flex-shrink-0 ml-2">
                               {/* Find in Bible */}
                               {h.day && (
                                 <Link
                                   href={`/bible-365?day=${h.day}`}
-                                  className="text-white/40 hover:text-white/80 text-xs transition"
+                                  className="text-white/80 hover:text-white/80 text-xs transition"
                                   title="Find in Bible"
                                 >
                                   📖
@@ -425,7 +425,7 @@ export default function DiveDeeperPage() {
                               {/* Share */}
                               <button
                                 onClick={() => shareHighlight(h)}
-                                className={`text-xs transition ${isCopied ? "text-green-300" : "text-white/40 hover:text-white/80"}`}
+                                className={`text-xs transition ${isCopied ? "text-green-300" : "text-white/80 hover:text-white/80"}`}
                                 title="Share"
                               >
                                 {isCopied ? "✓" : "↑"}
@@ -433,7 +433,7 @@ export default function DiveDeeperPage() {
                               {/* Delete */}
                               <button
                                 onClick={() => deleteHighlight(h.id)}
-                                className="text-white/20 hover:text-white/60 text-xs transition"
+                                className="text-white/60 hover:text-white/90 text-xs transition"
                                 title="Remove"
                               >✕</button>
                             </div>
@@ -446,12 +446,12 @@ export default function DiveDeeperPage() {
                                 "{h.verse_text}"
                               </p>
                               {h.note && (
-                                <p className="text-white/60 text-xs leading-relaxed border-t border-white/10 pt-2 mt-2">{h.note}</p>
+                                <p className="text-white/90 text-xs leading-relaxed border-t border-white/10 pt-2 mt-2">{h.note}</p>
                               )}
                               {h.day && (
                                 <Link
                                   href={`/bible-365?day=${h.day}`}
-                                  className="inline-flex items-center gap-1 mt-3 text-white/50 hover:text-white text-xs border border-white/15 hover:border-white/30 rounded-lg px-3 py-1.5 transition"
+                                  className="inline-flex items-center gap-1 mt-3 text-white/90 hover:text-white text-xs border border-white/15 hover:border-white/30 rounded-lg px-3 py-1.5 transition"
                                 >
                                   📖 Find in Bible — Day {h.day}
                                 </Link>
@@ -470,7 +470,7 @@ export default function DiveDeeperPage() {
             {activeTab === "reflections" && (
               <div>
                 <p className="text-white font-semibold text-sm mb-1" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>My Reflections</p>
-                <p className="text-white/60 text-xs mb-4">A private space for your ongoing thoughts, insights, and personal notes about your faith journey.</p>
+                <p className="text-white/90 text-xs mb-4">A private space for your ongoing thoughts, insights, and personal notes about your faith journey.</p>
                 <textarea
                   value={reflections}
                   onChange={e => setReflections(e.target.value)}
