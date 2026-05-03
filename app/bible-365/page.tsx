@@ -556,8 +556,10 @@ function Bible365Inner() {
                       <p className="text-white/70 text-xs leading-relaxed mb-1">1. <span className="text-white">Pick a book</span> from the Old or New Testament below.</p>
                       <p className="text-white/70 text-xs leading-relaxed mb-1">2. <span className="text-white">Select a chapter</span> to jump to that day's reading.</p>
                       <p className="text-white/70 text-xs leading-relaxed mb-1">3. <span className="text-white">Read or listen</span> — use the audio player to follow along hands-free.</p>
-                      <p className="text-white/70 text-xs leading-relaxed mb-1">4. <span className="text-white">Save your progress</span> — tap the bookmark icon when you finish a day.</p>
-                      <p className="text-white/70 text-xs leading-relaxed">5. <span className="text-white">Come back tomorrow</span> — your place is saved so you never lose track.</p>
+                      <p className="text-white/70 text-xs leading-relaxed mb-1">4. <span className="text-white">Check off each day</span> — tap the circle next to any day to mark it complete.</p>
+                      <p className="text-white/70 text-xs leading-relaxed mb-1">5. <span className="text-white">Highlight a verse</span> — tap ✍️ on any verse to save it with a note to your journal.</p>
+                      <p className="text-white/70 text-xs leading-relaxed mb-1">6. <span className="text-white">Bookmark verses</span> — tap 🔖 to save favorites you can return to anytime.</p>
+                      <p className="text-white/70 text-xs leading-relaxed">7. <span className="text-white">Come back tomorrow</span> — your place is saved so you never lose track.</p>
                     </div>
 
                     {/* 365-Day Reading Plan */}
