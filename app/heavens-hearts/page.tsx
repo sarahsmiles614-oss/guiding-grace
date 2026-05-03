@@ -50,6 +50,7 @@ const backgrounds = [
   { label: "Galaxy", url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/sign/Images%20also/nasa-hubble-space-telescope-Dk_7-4NyTKM-unsplash.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV85MzA0YmFjMS1lYTk0LTQzODItYjE3YS1hNDU4OTgwZDllYTEiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJJbWFnZXMgYWxzby9uYXNhLWh1YmJsZS1zcGFjZS10ZWxlc2NvcGUtRGtfNy00TnlUS00tdW5zcGxhc2guanBnIiwiaWF0IjoxNzc3MDgxMDEwLCJleHAiOjE4NTQ4NDEwMTB9.X6ixbSXR3fxdRw5tIDLRsQfjiCWVLtiPS1kwUAbEHNI" },
   { label: "Lantern", url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images%204/frank-mckenna-OD9EOzfSOh0-unsplash.jpg" },
   { label: "Candle", url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images%204/diego-ph-Fxq2FXE5KWM-unsplash.jpg" },
+  { label: "Dawn", url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images%204/v2osk-JE01L3hB0GQ-unsplash.jpg" },
 ];
 
 export default function HeavensHeartsPage() {
