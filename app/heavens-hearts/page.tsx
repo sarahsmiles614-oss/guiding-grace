@@ -51,6 +51,7 @@ const backgrounds = [
   { label: "Lantern", url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images%204/frank-mckenna-OD9EOzfSOh0-unsplash.jpg" },
   { label: "Candle", url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images%204/diego-ph-Fxq2FXE5KWM-unsplash.jpg" },
   { label: "Dawn", url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images%204/v2osk-JE01L3hB0GQ-unsplash.jpg" },
+  { label: "Glow", url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images%204/diego-ph-uzpIk7_Fbdo-unsplash.jpg" },
 ];
 
 export default function HeavensHeartsPage() {
