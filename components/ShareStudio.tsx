@@ -33,6 +33,7 @@ const BG_OPTIONS = [
   { label: "Journey",   url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images%204/clicker-babu-aKBtbbVP970-unsplash.jpg" },
   { label: "Peaks",     url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images5/giani-mountains-100367_1920.jpg" },
   { label: "Dawn",      url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images%204/v2osk-JE01L3hB0GQ-unsplash.jpg" },
+  { label: "Path",      url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images%204/clicker-babu-aKBtbbVP970-unsplash.jpg" },
 ];
 
 const FONT_OPTIONS = [
