@@ -7,7 +7,7 @@ import PageBackground from "@/components/PageBackground";
 import { supabase } from "@/lib/supabase";
 import { getBiblePlan, PlanOrder, PLAN_INFO } from "@/lib/bible-plan";
 import { fetchChapterVerses } from "@/lib/bible-fetch";
-import { TRANSLATIONS, DEFAULT_TRANSLATION } from "@/lib/translations";
+import { DEFAULT_TRANSLATION } from "@/lib/translations";
 
 interface Verse {
   reference: string;
@@ -138,13 +138,8 @@ function Bible365Inner() {
   // Preferences
   const [fontSize, setFontSize] = useState<FontSize>("base");
   const [highlightColor, setHighlightColor] = useState<HighlightColor>("yellow");
-  const [translation, setTranslation] = useState<string>(() => {
-    if (typeof window !== "undefined") return localStorage.getItem("bible365_translation") ?? DEFAULT_TRANSLATION;
-    return DEFAULT_TRANSLATION;
-  });
+  const translation = DEFAULT_TRANSLATION;
 
-  const apiKey = process.env.NEXT_PUBLIC_BIBLE_API_KEY;
-  const availableTranslations = TRANSLATIONS.filter(t => !t.requiresKey || !!apiKey);
 
   // Bookmarks
   const [bookmarks, setBookmarks] = useState<Set<string>>(new Set());
@@ -668,22 +663,6 @@ function Bible365Inner() {
                       className="text-white/70 hover:text-white disabled:opacity-20 border border-white/20 hover:border-white/40 px-2.5 py-1 rounded-lg transition">A+</button>
                   </div>
                 </div>
-
-                {/* Translation picker */}
-                {availableTranslations.length > 1 && (
-                  <div className="flex items-center gap-2 mb-4 flex-wrap">
-                    <span className="text-white/70 text-xs">Translation:</span>
-                    {availableTranslations.map(t => (
-                      <button
-                        key={t.id}
-                        onClick={() => { setTranslation(t.id); localStorage.setItem("bible365_translation", t.id); }}
-                        className={`text-xs px-2.5 py-1.5 rounded-lg border transition ${translation === t.id ? "border-white/60 text-white bg-white/15 font-semibold" : "border-white/20 text-white/70 hover:text-white"}`}
-                      >
-                        {t.label}
-                      </button>
-                    ))}
-                  </div>
-                )}
 
                 {/* Highlight color picker */}
                 <div className="flex items-center gap-3 mb-5">
