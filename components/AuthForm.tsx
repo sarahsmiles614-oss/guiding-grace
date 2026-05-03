@@ -18,6 +18,7 @@ export default function AuthForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [rememberMe, setRememberMe] = useState(true);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
@@ -57,7 +58,10 @@ export default function AuthForm() {
     } else {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) { setError(error.message); setLoading(false); }
-      else router.push("/dashboard");
+      else {
+        if (!rememberMe) sessionStorage.setItem("no_persist", "1");
+        router.push("/dashboard");
+      }
     }
   }
 
@@ -110,11 +114,23 @@ export default function AuthForm() {
           </div>
           {error && <p className="text-red-300 text-sm mb-4">{error}</p>}
           {success && <p className="text-green-300 text-sm mb-4">{success}</p>}
-          <div className="space-y-4 mb-6">
+          <div className="space-y-4 mb-4">
             {isNewUser && <input type="text" placeholder="Your name" value={name} onChange={e => setName(e.target.value)} className={inputClass} />}
             <input type="email" placeholder="Email address" value={email} onChange={e => setEmail(e.target.value)} className={inputClass} />
             <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} onKeyDown={e => e.key === "Enter" && handleEmailSubmit()} className={inputClass} />
           </div>
+          {!isNewUser && (
+            <div className="flex items-center justify-center gap-2 mb-5">
+              <button
+                type="button"
+                onClick={() => setRememberMe(!rememberMe)}
+                className={`w-4 h-4 rounded border flex items-center justify-center transition ${rememberMe ? "bg-white/80 border-white/80" : "border-white/40 bg-transparent"}`}
+              >
+                {rememberMe && <svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#000" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>}
+              </button>
+              <span className="text-white/60 text-xs">Remember me</span>
+            </div>
+          )}
           <button onClick={handleEmailSubmit} disabled={!email || !password || (isNewUser && !name) || loading} className="w-full text-white font-bold text-sm py-3 transition hover:text-white/70 disabled:opacity-40">
             {loading ? (isNewUser ? "Creating account..." : "Signing in...") : (isNewUser ? "Create Account" : "Sign In")}
           </button>
