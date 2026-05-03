@@ -55,6 +55,7 @@ const backgrounds = [
   { label: "Mist", url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images%204/dewang-gupta-ESEnXckWlLY-unsplash.jpg" },
   { label: "Path", url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images%204/clicker-babu-aKBtbbVP970-unsplash.jpg" },
   { label: "Dusk", url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images5/kranich17-sunset-7504891_1920.jpg" },
+  { label: "Sky", url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images5/kundennote_com-clouds-335969_1920.jpg" },
 ];
 
 export default function HeavensHeartsPage() {
