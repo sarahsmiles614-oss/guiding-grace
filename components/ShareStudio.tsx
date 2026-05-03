@@ -48,6 +48,7 @@ const BG_OPTIONS = [
   { label: "Frost",     url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images5/sorbyphoto-winter-5892335_1920.jpg" },
   { label: "Lake",      url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images5/tommarc-lake-696098_1920.jpg" },
   { label: "Prayer",    url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images3/alexas_fotos-praying-hands-2273827_1920.jpg" },
+  { label: "Cat",       url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images3/bertin23-cat-6602447_1920.jpg" },
 ];
 
 const FONT_OPTIONS = [
