@@ -146,8 +146,6 @@ function Bible365Inner() {
   });
 
 
-  // How it works toggle
-  const [showHowItWorks, setShowHowItWorks] = useState(false);
 
   // Screen wake lock — keeps screen on while reading
   const wakeLockRef = useRef<WakeLockSentinel | null>(null);
@@ -539,12 +537,7 @@ function Bible365Inner() {
                   {pickerStep === "book" ? (
                     <>
                       <div className="flex items-center justify-between pt-4 pb-1">
-                        <button
-                          onClick={() => setShowHowItWorks(v => !v)}
-                          className="text-white/80 hover:text-white text-xs flex items-center gap-1 transition"
-                        >
-                          ℹ️ How it works
-                        </button>
+                        <Link href="/dashboard" className="text-white/80 hover:text-white text-sm transition">← Dashboard</Link>
                         <h1 className="text-2xl font-bold text-white text-center">Bible 365</h1>
                         <div className="flex items-center gap-2">
                           {currentStreak > 0 && (
@@ -556,21 +549,6 @@ function Bible365Inner() {
                         </div>
                       </div>
 
-                      {/* How it works dropdown — shown only when toggled */}
-                      {showHowItWorks && (
-                        <div className="bg-black/70 border border-white/15 rounded-xl mx-0 px-4 py-3 mb-2 space-y-2">
-                          <p className="text-white/90 text-xs leading-relaxed">1. <span className="text-white font-semibold">Choose a reading plan</span> — pick Canonical, Chronological, NT Only, or OT Only from the Reading Plans section below.</p>
-                          <p className="text-white/90 text-xs leading-relaxed">2. <span className="text-white font-semibold">Pick a book</span> — tap a book in the list, then select a chapter to jump to that day's reading.</p>
-                          <p className="text-white/90 text-xs leading-relaxed">3. <span className="text-white font-semibold">Read or listen</span> — use the audio player to follow along hands-free. Adjust speed and font size to your liking.</p>
-                          <p className="text-white/90 text-xs leading-relaxed">4. <span className="text-white font-semibold">Mark as Read</span> — tap the button when done. Your progress and streak are saved automatically to your account.</p>
-                          <p className="text-white/90 text-xs leading-relaxed">5. <span className="text-white font-semibold">Save a verse</span> — tap ✍️ on any verse to add a note and send it straight to your Journal.</p>
-                          <p className="text-white/90 text-xs leading-relaxed">6. <span className="text-white font-semibold">Your Journal</span> — everything you save goes to the Dive Deeper Journal. You can view saved verses, write personal reflections, and share highlights. Tap 📔 Journal to open it.</p>
-                          <p className="text-white/90 text-xs leading-relaxed">7. <span className="text-white font-semibold">No screen timeout</span> — while reading, your screen stays awake so it won't go dark mid-passage.</p>
-                          <Link href="/dive-deeper" className="mt-2 flex items-center gap-1.5 text-white font-semibold text-xs border border-white/30 bg-white/10 rounded-lg px-3 py-2 w-fit transition hover:bg-white/20">
-                            📔 Go to Journal →
-                          </Link>
-                        </div>
-                      )}
                       {/* OT/NT toggle — flat full-width halves */}
                       <div className="flex">
                         <button
