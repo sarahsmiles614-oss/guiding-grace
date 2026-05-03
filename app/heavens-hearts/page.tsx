@@ -400,7 +400,7 @@ export default function HeavensHeartsPage() {
           className="hh-bg-img fixed inset-0 w-full h-full object-cover -z-10"
           style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", objectFit: "cover", zIndex: -1 }}
         />
-        <div className="absolute inset-0 bg-white/30 backdrop-blur-[1px]" />
+        <div className="absolute inset-0 bg-black/20" />
 
         <div className="relative z-10">
           {/* Compact header */}
