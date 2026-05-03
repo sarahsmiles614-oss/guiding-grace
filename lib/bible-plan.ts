@@ -1,6 +1,5 @@
-// ── Canonical order (traditional Bible order) ───────────────────────────────
-const CANONICAL_BOOKS: { name: string; abbr: string; chapters: number }[] = [
-  // Old Testament
+// ── Old Testament books ───────────────────────────────────────────────────────
+const OT_BOOKS: { name: string; abbr: string; chapters: number }[] = [
   { name: "Genesis",          abbr: "genesis",         chapters: 50  },
   { name: "Exodus",           abbr: "exodus",          chapters: 40  },
   { name: "Leviticus",        abbr: "leviticus",       chapters: 27  },
@@ -40,7 +39,10 @@ const CANONICAL_BOOKS: { name: string; abbr: string; chapters: number }[] = [
   { name: "Haggai",           abbr: "haggai",          chapters: 2   },
   { name: "Zechariah",        abbr: "zechariah",       chapters: 14  },
   { name: "Malachi",          abbr: "malachi",         chapters: 4   },
-  // New Testament
+];
+
+// ── New Testament books ───────────────────────────────────────────────────────
+const NT_BOOKS: { name: string; abbr: string; chapters: number }[] = [
   { name: "Matthew",          abbr: "matthew",         chapters: 28  },
   { name: "Mark",             abbr: "mark",            chapters: 16  },
   { name: "Luke",             abbr: "luke",            chapters: 24  },
@@ -70,7 +72,10 @@ const CANONICAL_BOOKS: { name: string; abbr: string; chapters: number }[] = [
   { name: "Revelation",       abbr: "revelation",      chapters: 22  },
 ];
 
-// ── Chronological order (by when events occurred historically) ───────────────
+// ── Canonical = OT + NT ───────────────────────────────────────────────────────
+const CANONICAL_BOOKS = [...OT_BOOKS, ...NT_BOOKS];
+
+// ── Chronological order ───────────────────────────────────────────────────────
 const CHRONOLOGICAL_BOOKS: { name: string; abbr: string; chapters: number }[] = [
   // The Patriarchs
   { name: "Genesis",          abbr: "genesis",         chapters: 50  },
@@ -152,7 +157,33 @@ const CHRONOLOGICAL_BOOKS: { name: string; abbr: string; chapters: number }[] = 
   { name: "Revelation",       abbr: "revelation",      chapters: 22  },
 ];
 
-export type PlanOrder = "canonical" | "chronological";
+// ── Psalms & Proverbs only ────────────────────────────────────────────────────
+const PSALMS_PROVERBS_BOOKS: { name: string; abbr: string; chapters: number }[] = [
+  { name: "Psalms",   abbr: "psalms",   chapters: 150 },
+  { name: "Proverbs", abbr: "proverbs", chapters: 31  },
+];
+
+// ── NT + Psalms & Proverbs ────────────────────────────────────────────────────
+const NT_PSALMS_PROVERBS_BOOKS = [...NT_BOOKS, ...PSALMS_PROVERBS_BOOKS];
+
+export type PlanOrder =
+  | "canonical"
+  | "chronological"
+  | "nt-only"
+  | "ot-only"
+  | "psalms-proverbs"
+  | "nt-psalms-proverbs"
+  | "interleaved";
+
+export const PLAN_INFO: Record<PlanOrder, { label: string; desc: string; emoji: string; days: number }> = {
+  "canonical":          { label: "Canonical",         desc: "Traditional Bible order",        emoji: "📖", days: 365 },
+  "chronological":      { label: "Chronological",     desc: "By when events happened",        emoji: "🕰️", days: 365 },
+  "nt-only":            { label: "New Testament",     desc: "NT only • 90 days",              emoji: "✝️",  days: 90  },
+  "ot-only":            { label: "Old Testament",     desc: "OT only • 365 days",             emoji: "📜",  days: 365 },
+  "psalms-proverbs":    { label: "Psalms & Proverbs", desc: "Daily wisdom • 90 days",         emoji: "🕊️",  days: 90  },
+  "nt-psalms-proverbs": { label: "NT + Wisdom",       desc: "NT with Psalms & Proverbs",      emoji: "🌿",  days: 365 },
+  "interleaved":        { label: "OT + NT Daily",     desc: "Both testaments every day",      emoji: "⚖️",  days: 365 },
+};
 
 export interface BibleChapter {
   bookName: string;
@@ -168,16 +199,13 @@ export interface DayReading {
   ntLabel: string;
 }
 
-const _plans: Record<PlanOrder, DayReading[] | null> = {
-  canonical: null,
-  chronological: null,
-};
+const _plans: Partial<Record<PlanOrder, DayReading[]>> = {};
 
-export function getBiblePlan(order: PlanOrder = "canonical"): DayReading[] {
-  if (_plans[order]) return _plans[order]!;
-
-  const books = order === "chronological" ? CHRONOLOGICAL_BOOKS : CANONICAL_BOOKS;
-
+// ── Build a simple sequential plan ───────────────────────────────────────────
+function buildPlan(
+  books: { name: string; abbr: string; chapters: number }[],
+  totalDays: number
+): DayReading[] {
   const allChapters: BibleChapter[] = [];
   for (const book of books) {
     for (let c = 1; c <= book.chapters; c++) {
@@ -185,21 +213,92 @@ export function getBiblePlan(order: PlanOrder = "canonical"): DayReading[] {
     }
   }
 
-  // 1189 chapters ÷ 365 days = 3 base, 94 days get 4 chapters
   const total = allChapters.length;
-  const base = Math.floor(total / 365);
-  const extras = total % 365;
+  const base = Math.floor(total / totalDays);
+  const extras = total % totalDays;
 
   const plan: DayReading[] = [];
   let idx = 0;
 
-  for (let day = 1; day <= 365; day++) {
+  for (let day = 1; day <= totalDays; day++) {
     const count = day <= extras ? base + 1 : base;
     const dayChapters = allChapters.slice(idx, idx + count);
     idx += count;
-
     const label = buildLabel(dayChapters);
     plan.push({ day, chapters: dayChapters, label, otLabel: label, ntLabel: "" });
+  }
+
+  return plan;
+}
+
+// ── Build an interleaved OT+NT plan (both testaments each day) ────────────────
+function buildInterleavedPlan(): DayReading[] {
+  const otChapters: BibleChapter[] = [];
+  for (const book of OT_BOOKS) {
+    for (let c = 1; c <= book.chapters; c++) {
+      otChapters.push({ bookName: book.name, bookAbbr: book.abbr, chapter: c });
+    }
+  }
+
+  const ntChapters: BibleChapter[] = [];
+  for (const book of NT_BOOKS) {
+    for (let c = 1; c <= book.chapters; c++) {
+      ntChapters.push({ bookName: book.name, bookAbbr: book.abbr, chapter: c });
+    }
+  }
+
+  const DAYS = 365;
+  const plan: DayReading[] = [];
+
+  for (let day = 1; day <= DAYS; day++) {
+    const otStart = Math.floor((day - 1) * otChapters.length / DAYS);
+    const otEnd   = Math.floor(day * otChapters.length / DAYS);
+    const ntStart = Math.floor((day - 1) * ntChapters.length / DAYS);
+    const ntEnd   = Math.floor(day * ntChapters.length / DAYS);
+
+    const otDay = otChapters.slice(otStart, otEnd);
+    const ntDay = ntChapters.slice(ntStart, ntEnd);
+    const dayChapters = [...otDay, ...ntDay];
+
+    const otLbl = buildLabel(otDay);
+    const ntLbl = buildLabel(ntDay);
+    const label = [otLbl, ntLbl].filter(Boolean).join(" · ");
+
+    plan.push({ day, chapters: dayChapters, label, otLabel: otLbl, ntLabel: ntLbl });
+  }
+
+  return plan;
+}
+
+export function getBiblePlan(order: PlanOrder = "canonical"): DayReading[] {
+  if (_plans[order]) return _plans[order]!;
+
+  let plan: DayReading[];
+
+  switch (order) {
+    case "canonical":
+      plan = buildPlan(CANONICAL_BOOKS, 365);
+      break;
+    case "chronological":
+      plan = buildPlan(CHRONOLOGICAL_BOOKS, 365);
+      break;
+    case "nt-only":
+      plan = buildPlan(NT_BOOKS, 90);
+      break;
+    case "ot-only":
+      plan = buildPlan(OT_BOOKS, 365);
+      break;
+    case "psalms-proverbs":
+      plan = buildPlan(PSALMS_PROVERBS_BOOKS, 90);
+      break;
+    case "nt-psalms-proverbs":
+      plan = buildPlan(NT_PSALMS_PROVERBS_BOOKS, 365);
+      break;
+    case "interleaved":
+      plan = buildInterleavedPlan();
+      break;
+    default:
+      plan = buildPlan(CANONICAL_BOOKS, 365);
   }
 
   _plans[order] = plan;
@@ -221,7 +320,7 @@ function buildLabel(chapters: BibleChapter[]): string {
 
   return groups.map(g => {
     const first = g.nums[0];
-    const last = g.nums[g.nums.length - 1];
+    const last  = g.nums[g.nums.length - 1];
     if (g.nums.length === 1) return `${g.book} ${first}`;
     return `${g.book} ${first}–${last}`;
   }).join(", ");

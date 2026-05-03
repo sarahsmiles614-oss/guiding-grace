@@ -5,7 +5,9 @@ import Link from "next/link";
 import SubscriptionGuard from "@/components/SubscriptionGuard";
 import PageBackground from "@/components/PageBackground";
 import { supabase } from "@/lib/supabase";
-import { getBiblePlan, bibleApiUrl, PlanOrder } from "@/lib/bible-plan";
+import { getBiblePlan, PlanOrder, PLAN_INFO } from "@/lib/bible-plan";
+import { fetchChapterVerses } from "@/lib/bible-fetch";
+import { TRANSLATIONS, DEFAULT_TRANSLATION } from "@/lib/translations";
 
 interface Verse {
   reference: string;
@@ -136,6 +138,13 @@ function Bible365Inner() {
   // Preferences
   const [fontSize, setFontSize] = useState<FontSize>("base");
   const [highlightColor, setHighlightColor] = useState<HighlightColor>("yellow");
+  const [translation, setTranslation] = useState<string>(() => {
+    if (typeof window !== "undefined") return localStorage.getItem("bible365_translation") ?? DEFAULT_TRANSLATION;
+    return DEFAULT_TRANSLATION;
+  });
+
+  const apiKey = process.env.NEXT_PUBLIC_BIBLE_API_KEY;
+  const availableTranslations = TRANSLATIONS.filter(t => !t.requiresKey || !!apiKey);
 
   // Bookmarks
   const [bookmarks, setBookmarks] = useState<Set<string>>(new Set());
@@ -240,7 +249,7 @@ function Bible365Inner() {
     [userId]
   );
 
-  // ── Fetch scripture when day/view changes ─────────────────────────────────
+  // ── Fetch scripture when day/view/translation changes ────────────────────
   useEffect(() => {
     if (view !== "reading") return;
     cancelSpeech();
@@ -254,30 +263,28 @@ function Bible365Inner() {
       try {
         const all: Verse[] = [];
         for (const ch of plan[day - 1].chapters) {
-          const res = await fetch(bibleApiUrl(ch, "kjv"));
-          if (!res.ok) throw new Error();
-          const data = await res.json();
-          for (const v of (data.verses as any[])) {
+          const fetched = await fetchChapterVerses(ch, translation);
+          for (const v of fetched) {
             all.push({
-              reference: `${ch.bookName} ${ch.chapter}:${v.verse}`,
-              text: v.text.trim(),
-              bookName: ch.bookName,
-              chapter: ch.chapter,
-              verseNum: v.verse,
-              chapterLabel: `${ch.bookName} ${ch.chapter}`,
+              reference: v.reference,
+              text: v.text,
+              bookName: v.bookName,
+              chapter: v.chapter,
+              verseNum: v.verseNum,
+              chapterLabel: v.chapterLabel,
             });
           }
         }
         setVerses(all);
         verseEls.current = new Array(all.length).fill(null);
-      } catch {
-        setFetchError("Could not load scripture. Check your connection and try again.");
+      } catch (e: any) {
+        setFetchError(e?.message?.includes("API key") ? "This translation requires an API key. Please select KJV or WEB." : "Could not load scripture. Check your connection and try again.");
       } finally {
         setLoading(false);
       }
     }
     fetchDay();
-  }, [day, view]);
+  }, [day, view, translation]);
 
   useEffect(() => {
     if (currentVerse >= 0) verseEls.current[currentVerse]?.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -465,24 +472,24 @@ function Bible365Inner() {
                 {pickerStep === "book" && (
                   <div className="pt-4 pb-2">
                     {/* Plan order toggle */}
-                    <div className="flex gap-2 mb-4">
-                      {([
-                        { id: "canonical",      label: "📖 Canonical",      desc: "Traditional Bible order" },
-                        { id: "chronological",  label: "🕰️ Chronological",  desc: "By when events happened" },
-                      ] as { id: PlanOrder; label: string; desc: string }[]).map(opt => (
-                        <button
-                          key={opt.id}
-                          onClick={() => {
-                            setPlanOrder(opt.id);
-                            localStorage.setItem("bible365_order", opt.id);
-                            setSavedDay(1); setDay(1); setView("toc");
-                          }}
-                          className={`flex-1 py-2.5 px-3 rounded-xl border text-xs font-semibold transition text-left ${planOrder === opt.id ? "bg-white/25 border-white/50 text-white" : "bg-white/5 border-white/15 text-white/50 hover:text-white/80"}`}
-                        >
-                          <div>{opt.label}</div>
-                          <div className={`text-xs font-normal mt-0.5 ${planOrder === opt.id ? "text-white/70" : "text-white/30"}`}>{opt.desc}</div>
-                        </button>
-                      ))}
+                    <div className="grid grid-cols-2 gap-2 mb-4">
+                      {(Object.keys(PLAN_INFO) as PlanOrder[]).map(id => {
+                        const info = PLAN_INFO[id];
+                        return (
+                          <button
+                            key={id}
+                            onClick={() => {
+                              setPlanOrder(id);
+                              localStorage.setItem("bible365_order", id);
+                              setSavedDay(1); setDay(1); setView("toc");
+                            }}
+                            className={`py-2.5 px-3 rounded-xl border text-xs font-semibold transition text-left ${planOrder === id ? "bg-white/25 border-white/50 text-white" : "bg-white/5 border-white/15 text-white/50 hover:text-white/80"}`}
+                          >
+                            <div>{info.emoji} {info.label}</div>
+                            <div className={`text-xs font-normal mt-0.5 ${planOrder === id ? "text-white/70" : "text-white/30"}`}>{info.desc}</div>
+                          </button>
+                        );
+                      })}
                     </div>
 
                     <div className="bg-black/25 rounded-xl px-4 py-3 mb-4 text-left">
@@ -661,6 +668,22 @@ function Bible365Inner() {
                       className="text-white/70 hover:text-white disabled:opacity-20 border border-white/20 hover:border-white/40 px-2.5 py-1 rounded-lg transition">A+</button>
                   </div>
                 </div>
+
+                {/* Translation picker */}
+                {availableTranslations.length > 1 && (
+                  <div className="flex items-center gap-2 mb-4 flex-wrap">
+                    <span className="text-white/70 text-xs">Translation:</span>
+                    {availableTranslations.map(t => (
+                      <button
+                        key={t.id}
+                        onClick={() => { setTranslation(t.id); localStorage.setItem("bible365_translation", t.id); }}
+                        className={`text-xs px-2.5 py-1.5 rounded-lg border transition ${translation === t.id ? "border-white/60 text-white bg-white/15 font-semibold" : "border-white/20 text-white/70 hover:text-white"}`}
+                      >
+                        {t.label}
+                      </button>
+                    ))}
+                  </div>
+                )}
 
                 {/* Highlight color picker */}
                 <div className="flex items-center gap-3 mb-5">
