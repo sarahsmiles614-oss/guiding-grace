@@ -5,7 +5,7 @@ import SubscriptionGuard from "@/components/SubscriptionGuard";
 import PageBackground from "@/components/PageBackground";
 import { supabase } from "@/lib/supabase";
 
-const BG = "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images%204/zoltan-tasi-KHD_FA43aMw-unsplash.jpg";
+const BG = "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images3/pexels-n3kky-5304734.jpg";
 
 const DEFAULT_QUESTIONS = [
   "What does this passage mean to me personally?",
