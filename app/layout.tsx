@@ -82,7 +82,7 @@ export default function RootLayout({
         `}} />
         <link rel="manifest" href="/manifest.json" />
         <link rel="apple-touch-icon" href={LOGO} />
-        <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Cinzel:wght@400;600&family=Cormorant+Garamond:ital,wght@0,400;1,400;1,600&family=Josefin+Sans:wght@300;400&family=Pinyon+Script&family=EB+Garamond:ital,wght@0,400;1,400;1,600&family=Italiana&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Agbalumo&family=Dancing+Script:wght@600&family=Cinzel:wght@400;600&family=Cormorant+Garamond:ital,wght@0,400;1,400;1,600&family=Josefin+Sans:wght@300;400&family=Pinyon+Script&family=EB+Garamond:ital,wght@0,400;1,400;1,600&family=Italiana&display=swap" rel="stylesheet" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="Guiding Grace" />

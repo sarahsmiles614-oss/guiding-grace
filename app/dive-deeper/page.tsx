@@ -199,16 +199,7 @@ export default function DiveDeeperPage() {
   return (
     <SubscriptionGuard>
       <PageBackground url={BG} overlayOpacity={0.35} bgSize="120%" bgPosition="center 75%">
-        <style>{`
-          @import url('https://fonts.googleapis.com/css2?family=Agbalumo&display=swap');
-          .dd-content, .dd-content * {
-            font-family: 'Agbalumo', sans-serif !important;
-            font-size: 1.1em !important;
-            color: #fff !important;
-            text-shadow: 0 2px 8px rgba(0,0,0,0.9) !important;
-          }
-        `}</style>
-        <main className="flex-1 p-6 pb-24 flex flex-col items-center dd-content">
+        <main className="flex-1 p-6 pb-24 flex flex-col items-center">
           <div className="max-w-2xl w-full">
 
             {/* Header */}
