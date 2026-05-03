@@ -31,6 +31,7 @@ const BG_OPTIONS = [
   { label: "Grace",     url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/sign/Images%20also/othmane-ferrah-TD8E27ud_gk-unsplash.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV85MzA0YmFjMS1lYTk0LTQzODItYjE3YS1hNDU4OTgwZDllYTEiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJJbWFnZXMgYWxzby9vdGhtYW5lLWZlcnJhaC1URDhFMjd1ZF9nay11bnNwbGFzaC5qcGciLCJpYXQiOjE3NzczNjA1MDAsImV4cCI6MTg2Mzc2MDUwMH0.-awDDhL4HAWoJtVasNEM_EBjv0rRZ0itTPMl_c5bP3w" },
   { label: "Gather",    url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images%204/davide-ragusa-YjW8Qn85V6Y-unsplash.jpg" },
   { label: "Journey",   url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images%204/clicker-babu-aKBtbbVP970-unsplash.jpg" },
+  { label: "Peaks",     url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images5/giani-mountains-100367_1920.jpg" },
 ];
 
 const FONT_OPTIONS = [
