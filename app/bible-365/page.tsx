@@ -177,33 +177,46 @@ function Bible365Inner() {
     return reading.chapters.find(ch => NT_BOOK_SET.has(ch.bookName))?.bookName ?? null;
   }, [savedDay, plan]);
 
-  // ── Load completed days ───────────────────────────────────────────────────
+  // ── Load completed days from localStorage (fast, initial render) ─────────
   useEffect(() => {
     try {
-      const stored = localStorage.getItem("bible365_completed");
+      const stored = localStorage.getItem(`bible365_completed_${planOrder}`);
       if (stored) setCompletedDays(new Set(JSON.parse(stored)));
+      else setCompletedDays(new Set());
     } catch {}
-  }, []);
+  }, [planOrder]);
 
   function markRead(d: number) {
+    // Optimistic UI — update localStorage immediately
     setCompletedDays(prev => {
       const next = new Set(prev);
       next.add(d);
-      try { localStorage.setItem("bible365_completed", JSON.stringify([...next])); } catch {}
+      try { localStorage.setItem(`bible365_completed_${planOrder}`, JSON.stringify([...next])); } catch {}
       return next;
     });
+    // Persist to Supabase in background
+    if (userId) {
+      supabase.from("bible365_completed_days")
+        .upsert({ user_id: userId, plan_order: planOrder, day: d }, { onConflict: "user_id,plan_order,day" })
+        .then();
+    }
   }
 
   function unmarkRead(d: number) {
     setCompletedDays(prev => {
       const next = new Set(prev);
       next.delete(d);
-      try { localStorage.setItem("bible365_completed", JSON.stringify([...next])); } catch {}
+      try { localStorage.setItem(`bible365_completed_${planOrder}`, JSON.stringify([...next])); } catch {}
       return next;
     });
+    if (userId) {
+      supabase.from("bible365_completed_days")
+        .delete().eq("user_id", userId).eq("plan_order", planOrder).eq("day", d)
+        .then();
+    }
   }
 
-  // ── Load user, saved progress, bookmarks ──────────────────────────────────
+  // ── Load user, saved progress, bookmarks, completed days ─────────────────
   useEffect(() => {
     supabase.auth.getUser().then(async ({ data: { user } }) => {
       if (!user) return;
@@ -211,12 +224,18 @@ function Bible365Inner() {
 
       const { data: prog } = await supabase
         .from("bible365_progress")
-        .select("day, verse_index, font_size, speed, highlight_color")
+        .select("day, verse_index, font_size, speed, highlight_color, plan_order, translation")
         .eq("user_id", user.id)
         .single();
 
       if (prog) {
-        const progDay = Math.min(Math.max(1, prog.day ?? 1), 365);
+        // Restore plan order from Supabase
+        if (prog.plan_order) {
+          setPlanOrder(prog.plan_order as PlanOrder);
+          localStorage.setItem("bible365_order", prog.plan_order);
+        }
+        const maxDay = PLAN_INFO[(prog.plan_order as PlanOrder) ?? "canonical"].days;
+        const progDay = Math.min(Math.max(1, prog.day ?? 1), maxDay);
         setSavedDay(progDay);
         if (!searchParams.get("day")) setDay(progDay);
         setResumeVerse(prog.verse_index ?? 0);
@@ -224,6 +243,21 @@ function Bible365Inner() {
         const s = (prog.speed as Speed) ?? 1;
         setSpeed(s); speedRef.current = s;
         if (prog.highlight_color) setHighlightColor(prog.highlight_color as HighlightColor);
+        if (prog.translation) setTranslation(prog.translation);
+      }
+
+      // Load completed days from Supabase — overrides localStorage with authoritative data
+      const currentPlan = (prog?.plan_order as PlanOrder) ?? planOrder;
+      const { data: completed } = await supabase
+        .from("bible365_completed_days")
+        .select("day")
+        .eq("user_id", user.id)
+        .eq("plan_order", currentPlan);
+
+      if (completed && completed.length > 0) {
+        const days = new Set<number>(completed.map((r: any) => r.day));
+        setCompletedDays(days);
+        try { localStorage.setItem(`bible365_completed_${currentPlan}`, JSON.stringify([...days])); } catch {}
       }
 
       const { data: bks } = await supabase
@@ -240,11 +274,15 @@ function Bible365Inner() {
     async (d: number, vi: number, fs: FontSize, sp: Speed, hc: HighlightColor) => {
       if (!userId) return;
       await supabase.from("bible365_progress").upsert(
-        { user_id: userId, day: d, verse_index: vi, font_size: fs, speed: sp, highlight_color: hc, updated_at: new Date().toISOString() },
+        {
+          user_id: userId, day: d, verse_index: vi, font_size: fs, speed: sp,
+          highlight_color: hc, plan_order: planOrder, translation,
+          updated_at: new Date().toISOString(),
+        },
         { onConflict: "user_id" }
       );
     },
-    [userId]
+    [userId, planOrder, translation]
   );
 
   // ── Fetch scripture when day/view/translation changes ────────────────────
