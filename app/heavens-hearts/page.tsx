@@ -52,6 +52,7 @@ const backgrounds = [
   { label: "Candle", url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images%204/diego-ph-Fxq2FXE5KWM-unsplash.jpg" },
   { label: "Dawn", url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images%204/v2osk-JE01L3hB0GQ-unsplash.jpg" },
   { label: "Glow", url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images%204/diego-ph-uzpIk7_Fbdo-unsplash.jpg" },
+  { label: "Mist", url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images%204/dewang-gupta-ESEnXckWlLY-unsplash.jpg" },
 ];
 
 export default function HeavensHeartsPage() {
