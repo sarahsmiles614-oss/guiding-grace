@@ -44,6 +44,7 @@ const BG_OPTIONS = [
   { label: "Sloth",     url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images5/jkdvmim-brown-throated-sloth-6859493_1920.jpg" },
   { label: "Sea",       url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images5/jodydelldavis-sea-205717_1920.jpg" },
   { label: "Ember",     url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images5/ralph_rybak-sunset-290434_1920.jpg" },
+  { label: "Blaze",     url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images5/sorbyphoto-sunset-850873_1920.jpg" },
 ];
 
 const FONT_OPTIONS = [
