@@ -59,7 +59,7 @@ export default async function Home() {
           <div className="w-full max-w-lg">
 
             {/* Hero */}
-            <div className="text-center mb-8">
+            <div className="text-center mb-6">
               <p className="text-white/50 text-xs uppercase tracking-widest mb-3">Your Daily Faith Companion</p>
               <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4 leading-tight" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 4px 20px rgba(0,0,0,0.8)" }}>
                 365 Days of Grace,<br />Community & Scripture
@@ -67,11 +67,13 @@ export default async function Home() {
               <p className="text-white/80 text-sm mb-6 leading-relaxed" style={{ textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>
                 Not just a reading plan. A daily faith experience with devotions, live community challenges, a prayer wall, and sacred spaces you will not find anywhere else.
               </p>
-              <Link href="/subscribe">
-                <button className="bg-white/20 hover:bg-white/30 border border-white/40 text-white font-bold py-3 px-10 rounded-2xl transition text-sm">
-                  ✨ Start Free Trial — No Card Required
-                </button>
-              </Link>
+            </div>
+
+            {/* Sign in — top of page */}
+            <div className="flex flex-col items-center mb-10">
+              <div className="w-full max-w-xs">
+                <AuthForm />
+              </div>
             </div>
 
             {/* Today's Devotion */}
@@ -114,16 +116,6 @@ export default async function Home() {
               <FeaturePreviews />
             </div>
 
-            {/* Sign in */}
-            <div className="border-t border-white/10 pt-8 mb-8 flex flex-col items-center">
-              <h2 className="text-xl font-bold text-white text-center mb-2" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>
-                Start Walking in Grace
-              </h2>
-              <p className="text-white/50 text-xs text-center mb-6">No credit card required. Cancel anytime.</p>
-              <div className="w-full max-w-xs">
-                <AuthForm />
-              </div>
-            </div>
 
           </div>
         </div>
