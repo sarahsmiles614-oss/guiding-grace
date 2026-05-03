@@ -138,7 +138,10 @@ function Bible365Inner() {
   // Preferences
   const [fontSize, setFontSize] = useState<FontSize>("base");
   const [highlightColor, setHighlightColor] = useState<HighlightColor>("yellow");
-  const translation = DEFAULT_TRANSLATION;
+  const [translation, setTranslation] = useState<string>(() => {
+    if (typeof window !== "undefined") return localStorage.getItem("bible365_translation") ?? DEFAULT_TRANSLATION;
+    return DEFAULT_TRANSLATION;
+  });
 
 
   // Bookmarks
@@ -662,6 +665,20 @@ function Bible365Inner() {
                     <button onClick={() => handleFontSize(fontSize === "sm" ? "base" : "lg")} disabled={fontSize === "lg"}
                       className="text-white/70 hover:text-white disabled:opacity-20 border border-white/20 hover:border-white/40 px-2.5 py-1 rounded-lg transition">A+</button>
                   </div>
+                </div>
+
+                {/* Translation picker */}
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="text-white/70 text-xs">Translation:</span>
+                  {[{ id: "kjv", label: "KJV" }, { id: "web", label: "WEB" }].map(t => (
+                    <button
+                      key={t.id}
+                      onClick={() => { setTranslation(t.id); localStorage.setItem("bible365_translation", t.id); }}
+                      className={`text-xs px-2.5 py-1.5 rounded-lg border transition ${translation === t.id ? "border-white/60 text-white bg-white/15 font-semibold" : "border-white/20 text-white/70 hover:text-white"}`}
+                    >
+                      {t.label}
+                    </button>
+                  ))}
                 </div>
 
                 {/* Highlight color picker */}
