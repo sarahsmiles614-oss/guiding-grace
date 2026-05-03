@@ -197,7 +197,7 @@ export default function DevotionsPage() {
 
   return (
     <SubscriptionGuard>
-      <PageBackground url="https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/edenmoon-rainbow-5145675_1920.jpg" overlayOpacity={0.75}>
+      <PageBackground url="https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/edenmoon-rainbow-5145675_1920.jpg" overlayOpacity={0.35}>
         <main className="flex-1 p-6 flex flex-col items-center">
           <div className="w-full max-w-2xl text-center">
             <div className="flex justify-between items-center mb-6">

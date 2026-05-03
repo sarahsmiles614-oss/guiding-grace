@@ -59,7 +59,7 @@ const rules = [
 export default function RulesPage() {
   return (
     <SubscriptionGuard>
-      <PageBackground url="https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/renegossner-alps-8728621_1920.jpg" overlay="bg-black/60">
+      <PageBackground url="https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/renegossner-alps-8728621_1920.jpg" overlay="bg-black/30">
         <main className="flex-1 p-6 pb-16 flex flex-col items-center">
           <div className="max-w-2xl w-full">
             <div className="flex justify-between items-center mb-8">

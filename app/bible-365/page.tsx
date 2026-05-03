@@ -527,7 +527,7 @@ function Bible365Inner() {
   // ── Render ─────────────────────────────────────────────────────────────────
   return (
     <SubscriptionGuard>
-      <PageBackground url="https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/saud-edum-cgapZpzd7v0-unsplash%20(1).jpg" overlayOpacity={0.65}>
+      <PageBackground url="https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/saud-edum-cgapZpzd7v0-unsplash%20(1).jpg" overlayOpacity={0.35}>
         <main className="flex-1 p-6 pb-24 flex flex-col items-center">
           <div className="max-w-2xl w-full">
 

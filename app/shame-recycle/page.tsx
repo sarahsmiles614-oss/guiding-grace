@@ -269,7 +269,7 @@ export default function ShameRecyclePage() {
                 }}
               >
                 {/* Dark overlay so text stays readable */}
-                <div className="absolute inset-0 bg-black/55" />
+                <div className="absolute inset-0 bg-black/30" />
 
                 <div className="relative z-10 max-w-lg mx-auto px-6 text-center">
                   <p className="text-amber-300 text-xs tracking-widest uppercase mb-8"

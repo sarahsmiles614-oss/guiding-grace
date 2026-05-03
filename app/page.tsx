@@ -43,7 +43,7 @@ export default async function Home() {
 
   return (
     <div className="min-h-screen w-full bg-cover bg-center" style={{ backgroundImage: `url('${BG}')` }}>
-      <div className="min-h-screen w-full bg-black/55 flex flex-col">
+      <div className="min-h-screen w-full bg-black/30 flex flex-col">
 
         {/* Nav */}
         <nav className="w-full flex justify-between items-center px-6 pt-6 pb-2">

@@ -70,7 +70,7 @@ export default function TodayPage() {
 
   return (
     <SubscriptionGuard>
-      <PageBackground url={BG} overlayOpacity={0.6}>
+      <PageBackground url={BG} overlayOpacity={0.35}>
         <main className="flex-1 p-6 pb-24 flex flex-col items-center">
           <div className="max-w-2xl w-full">
 

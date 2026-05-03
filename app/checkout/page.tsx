@@ -232,7 +232,7 @@ export default function CheckoutPage() {
   return (
     <Suspense fallback={
       <div className="min-h-screen flex items-center justify-center bg-cover bg-center" style={{ backgroundImage: `url('${BG}')` }}>
-        <div className="absolute inset-0 bg-black/65" />
+        <div className="absolute inset-0 bg-black/30" />
         <p className="relative text-white/50 animate-pulse text-sm">Loading...</p>
       </div>
     }>

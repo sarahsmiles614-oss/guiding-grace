@@ -57,7 +57,7 @@ export default async function DailyPage() {
       className="min-h-screen bg-cover bg-center"
       style={{ backgroundImage: "url('https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/hoai-thu-pt-nv4FFbP8IuE-unsplash.jpg')" }}
     >
-      <div className="min-h-screen bg-black/55 flex flex-col">
+      <div className="min-h-screen bg-black/30 flex flex-col">
         <nav className="flex justify-between items-center px-6 pt-6 pb-4">
           <Link href="/" className="text-white/60 text-sm hover:text-white transition">Guiding Grace</Link>
           <Link href="/" className="text-white/60 text-xs hover:text-white transition border border-white/20 px-3 py-1.5 rounded-xl">Sign In</Link>

@@ -251,7 +251,7 @@ export default function ScriptureMatchPage() {
 
   return (
     <SubscriptionGuard>
-      <PageBackground url={BG} overlayOpacity={0.65}>
+      <PageBackground url={BG} overlayOpacity={0.35}>
         <main className="flex-1 p-6 pb-24 flex flex-col items-center">
           <div className="max-w-lg w-full">
             {showHelp && (
