@@ -3,23 +3,10 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import Link from "next/link";
+import FeaturePreviews from "@/components/FeaturePreviews";
 
 const BG = "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/hoai-thu-pt-nv4FFbP8IuE-unsplash.jpg";
 
-const features = [
-  { icon: "📖", label: "Daily Devotions", desc: "A fresh Scripture-based devotion every morning" },
-  { icon: "💛", label: "Grace Challenge", desc: "Real-world faith challenges with community heart voting" },
-  { icon: "🎧", label: "Bible in 365 Days", desc: "Read through the entire Bible in one year" },
-  { icon: "📚", label: "Study Guide", desc: "Background, reflection questions, and application" },
-  { icon: "🕊️", label: "His Promises", desc: "Browse and save scripture promises by theme" },
-  { icon: "🙏", label: "Prayer Wall", desc: "Post prayers, pray for others — P.U.S.H. together" },
-  { icon: "🌙", label: "Nightly Reflections", desc: "End your day with gratitude and surrender" },
-  { icon: "💜", label: "Heaven's Hearts", desc: "A living memorial wall for your loved ones" },
-  { icon: "⚔️", label: "Heroes & Villains", desc: "Explore bold Bible figures and the lessons they left" },
-  { icon: "✨", label: "Testimonies", desc: "Share what God has done in your life" },
-  { icon: "🗑️", label: "Shame Recycle Bin", desc: "Write it down. Let it burn. Walk free." },
-  { icon: "🎮", label: "Scripture Match", desc: "Match verses and characters — beat your best time" },
-];
 
 export default function Home() {
   const router = useRouter();
@@ -136,14 +123,8 @@ export default function Home() {
             </div>
           )}
 
-          <div className="grid grid-cols-3 gap-x-6 gap-y-7 mb-12 w-full max-w-sm">
-            {features.map(f => (
-              <div key={f.label} className="flex flex-col items-center text-center gap-1.5">
-                <span className="text-2xl leading-none">{f.icon}</span>
-                <span className="text-white text-xs font-semibold leading-tight">{f.label}</span>
-                <span className="text-white/50 text-xs leading-tight">{f.desc}</span>
-              </div>
-            ))}
+          <div className="w-full max-w-sm mb-12">
+            <FeaturePreviews />
           </div>
 
           <div className="w-full max-w-xs">

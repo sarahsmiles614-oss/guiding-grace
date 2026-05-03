@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import { createClient } from "@supabase/supabase-js";
 import Link from "next/link";
+import FeaturePreviews from "@/components/FeaturePreviews";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -128,117 +129,7 @@ export default async function DailyPage() {
           <div className="w-full border-t border-white/10 pt-10">
             <p className="text-white/50 text-xs uppercase tracking-widest text-center mb-2">Everything inside Guiding Grace</p>
             <p className="text-white/30 text-xs text-center mb-8">Start your free trial to unlock all features</p>
-
-            <div className="space-y-4">
-
-              {/* Dive Deeper */}
-              <Link href="/subscribe">
-                <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-5 hover:bg-white/15 transition cursor-pointer">
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-2">
-                      <span className="text-xl">📔</span>
-                      <p className="text-white/50 text-xs uppercase tracking-widest font-semibold">Dive Deeper — Daily Journal</p>
-                    </div>
-                    <span className="text-white/30 text-xs">Open →</span>
-                  </div>
-                  <p className="text-white/80 text-sm leading-relaxed">A private daily worksheet tied to today's devotion. Write what stood out, answer reflection questions, respond to the challenge, and close with your own prayer — saved just for you.</p>
-                </div>
-              </Link>
-
-              {/* Prayer Wall */}
-              <Link href="/subscribe">
-                <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-5 hover:bg-white/15 transition cursor-pointer">
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-2">
-                      <span className="text-xl">🙏</span>
-                      <p className="text-white/50 text-xs uppercase tracking-widest font-semibold">P.U.S.H. Prayer Wall</p>
-                    </div>
-                    <span className="text-white/30 text-xs">Pray →</span>
-                  </div>
-                  <div className="space-y-2">
-                    {[
-                      { text: "Praying for my daughter's healing", count: 23 },
-                      { text: "Strength to forgive someone who hurt me", count: 17 },
-                      { text: "Guidance as I start a new chapter", count: 31 },
-                    ].map((p, i) => (
-                      <div key={i} className="bg-white/8 border border-white/10 rounded-xl px-4 py-2.5">
-                        <p className="text-white/70 text-xs">{p.text}</p>
-                        <p className="text-white/30 text-xs mt-1">🕊️ {p.count} praying</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </Link>
-
-              {/* Scripture Match */}
-              <Link href="/subscribe">
-                <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-5 hover:bg-white/15 transition cursor-pointer">
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-2">
-                      <span className="text-xl">🎮</span>
-                      <p className="text-white/50 text-xs uppercase tracking-widest font-semibold">Scripture Match</p>
-                    </div>
-                    <span className="text-white/30 text-xs">Play →</span>
-                  </div>
-                  <div className="grid grid-cols-4 gap-2 mb-2">
-                    {["📖", "🕊️", "⚔️", "🌿", "✝️", "🙏", "💛", "🌙"].map((icon, i) => (
-                      <div key={i} className="bg-white/10 border border-white/20 rounded-xl h-11 flex items-center justify-center text-lg">
-                        {icon}
-                      </div>
-                    ))}
-                  </div>
-                  <p className="text-white/50 text-xs">Match today's verses and Bible characters — beat your best time.</p>
-                </div>
-              </Link>
-
-              {/* His Promises */}
-              <Link href="/subscribe">
-                <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-5 hover:bg-white/15 transition cursor-pointer">
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-2">
-                      <span className="text-xl">🕊️</span>
-                      <p className="text-white/50 text-xs uppercase tracking-widest font-semibold">His Promises</p>
-                    </div>
-                    <span className="text-white/30 text-xs">Browse →</span>
-                  </div>
-                  <div className="space-y-2">
-                    {[
-                      { ref: "Jeremiah 29:11", text: "For I know the plans I have for you, plans to prosper you and not to harm you, plans to give you hope and a future.", category: "Hope" },
-                      { ref: "Isaiah 41:10", text: "So do not fear, for I am with you; do not be dismayed, for I am your God. I will strengthen you and help you.", category: "Strength" },
-                    ].map((p) => (
-                      <div key={p.ref} className="bg-white/8 border border-white/10 rounded-xl p-3">
-                        <div className="flex items-center justify-between mb-1">
-                          <span className="text-white/40 text-xs border border-white/15 rounded-lg px-2 py-0.5">{p.category}</span>
-                          <span className="text-white/30 text-xs">{p.ref}</span>
-                        </div>
-                        <p className="text-white/70 text-xs leading-relaxed italic" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>"{p.text}"</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </Link>
-
-              {/* Remaining features grid */}
-              <div className="grid grid-cols-3 gap-3">
-                {[
-                  { icon: "🎧", label: "Bible in 365 Days", desc: "Read through the whole Bible in a year" },
-                  { icon: "💜", label: "Heaven's Hearts", desc: "Honor loved ones you've lost" },
-                  { icon: "⚔️", label: "Heroes & Villains", desc: "Bold heroes and villains of the Bible" },
-                  { icon: "🌙", label: "Nightly Reflections", desc: "End your day with gratitude" },
-                  { icon: "🗑️", label: "Shame Recycle", desc: "Release guilt — let it burn away" },
-                  { icon: "✝️", label: "Study Groups", desc: "Study the Word together" },
-                ].map(f => (
-                  <Link key={f.label} href="/subscribe">
-                    <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-3 text-center hover:bg-white/15 transition cursor-pointer">
-                      <span className="text-2xl block mb-1">{f.icon}</span>
-                      <p className="text-white/70 text-xs font-semibold leading-tight mb-1">{f.label}</p>
-                      <p className="text-white/40 text-xs leading-tight">{f.desc}</p>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-
-            </div>
+            <FeaturePreviews />
 
             <div className="mt-8 text-center">
               <Link href="/subscribe">
