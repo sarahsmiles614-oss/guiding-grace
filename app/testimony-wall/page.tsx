@@ -161,7 +161,7 @@ export default function TestimonyWallPage() {
                 <div key={t.id}>
                   <p className="text-white/40 text-xs mb-1">{t.user_name}</p>
                   {t.testimony_title && <p className="font-semibold text-white mb-1" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.8)" }}>{t.testimony_title}</p>}
-                  <p className="text-white/80 text-sm leading-relaxed mb-2" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>{t.testimony_text}</p>
+                  <p className="text-white text-sm leading-relaxed mb-2" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>{t.testimony_text}</p>
                   <div className="tw-no-print flex items-center gap-4">
                     <button onClick={() => handleHeart(t.id)} className="flex items-center gap-1 text-sm">
                       <span>{userHearts.includes(t.id) ? "💜" : "🤍"}</span>

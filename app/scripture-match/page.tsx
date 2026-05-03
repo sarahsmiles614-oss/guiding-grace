@@ -259,7 +259,7 @@ export default function ScriptureMatchPage() {
                 <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
                 <div className="relative bg-black/80 border border-white/20 rounded-3xl p-7 max-w-sm w-full" onClick={e => e.stopPropagation()}>
                   <h2 className="text-white text-xl font-bold mb-4 text-center" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>How to Play</h2>
-                  <ul className="text-white/80 text-sm leading-relaxed space-y-3 mb-6">
+                  <ul className="text-white text-sm leading-relaxed space-y-3 mb-6">
                     <li>📖 Each card hides half of a scripture pair — a verse, character, or concept.</li>
                     <li>👆 Tap any card to flip it and see what's underneath.</li>
                     <li>🔍 Tap a second card — if they match, they stay face up!</li>
@@ -297,7 +297,7 @@ export default function ScriptureMatchPage() {
             <div className="flex gap-2 mb-6">
               {(["all", "easy", "medium", "hard"] as const).map(d => (
                 <button key={d} onClick={() => handleDifficulty(d)}
-                  className={`flex-1 py-1.5 rounded-lg text-xs font-semibold capitalize transition border ${difficulty === d ? "bg-white/25 border-white/50 text-white" : "bg-white/5 border-white/15 text-white/50 hover:text-white/80"}`}>
+                  className={`flex-1 py-1.5 rounded-lg text-xs font-semibold capitalize transition border ${difficulty === d ? "bg-white/25 border-white/50 text-white" : "bg-white/5 border-white/15 text-white/50 hover:text-white"}`}>
                   {d}
                 </button>
               ))}
@@ -323,7 +323,7 @@ export default function ScriptureMatchPage() {
                         ? selected.includes(card.id)
                           ? "bg-yellow-400/25 border-yellow-300/60 text-white scale-105 shadow-lg"
                           : "bg-white/20 border-white/40 text-white"
-                        : "bg-white/10 border-white/20 text-white/80 hover:bg-white/20 hover:border-white/40 hover:scale-105 cursor-pointer"
+                        : "bg-white/10 border-white/20 text-white hover:bg-white/20 hover:border-white/40 hover:scale-105 cursor-pointer"
                       }`}
                   >
                     {card.matched ? (

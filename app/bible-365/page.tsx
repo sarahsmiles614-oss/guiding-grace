@@ -592,7 +592,7 @@ function Bible365Inner() {
                               localStorage.setItem("bible365_order", id);
                               setSavedDay(1); setDay(1); setView("toc");
                             }}
-                            className={`py-2.5 px-3 rounded-xl border text-xs font-semibold transition text-left ${planOrder === id ? "bg-white/25 border-white/50 text-white" : "bg-white/5 border-white/15 text-white/50 hover:text-white/80"}`}
+                            className={`py-2.5 px-3 rounded-xl border text-xs font-semibold transition text-left ${planOrder === id ? "bg-white/25 border-white/50 text-white" : "bg-white/5 border-white/15 text-white/50 hover:text-white"}`}
                           >
                             <div>{info.emoji} {info.label}</div>
                             <div className={`text-xs font-normal mt-0.5 ${planOrder === id ? "text-white/70" : "text-white/30"}`}>{info.desc}</div>
@@ -652,7 +652,7 @@ function Bible365Inner() {
                                 className="flex-1 min-w-0 text-left"
                               >
                                 <span className={`text-xs mr-2 ${isToday ? "text-white/70" : "text-white/40"}`}>Day {entry.day}</span>
-                                <span className={`text-sm ${isToday ? "text-white font-bold" : isCompleted ? "text-white/40" : "text-white/80"}`}>{entry.label}</span>
+                                <span className={`text-sm ${isToday ? "text-white font-bold" : isCompleted ? "text-white/40" : "text-white"}`}>{entry.label}</span>
                               </button>
                               {isToday && <span className="text-white/70 text-xs font-bold flex-shrink-0">Today →</span>}
                             </div>
@@ -719,7 +719,7 @@ function Bible365Inner() {
               <>
                 {/* Header */}
                 <div className="flex justify-between items-center mb-6">
-                  <button onClick={backToToc} className="text-white text-sm hover:text-white/80 transition">← Books</button>
+                  <button onClick={backToToc} className="text-white text-sm hover:text-white transition">← Books</button>
                   <h1 className="text-lg font-bold text-white" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>
                     Day {day}
                   </h1>
@@ -766,7 +766,7 @@ function Bible365Inner() {
                         onClick={handleSkipBack}
                         disabled={loading || !!fetchError || verses.length === 0}
                         title="Previous verse"
-                        className="text-white/80 hover:text-white disabled:opacity-20 transition text-2xl leading-none"
+                        className="text-white hover:text-white disabled:opacity-20 transition text-2xl leading-none"
                       >⏪</button>
 
                       {/* Play / Pause */}
@@ -784,7 +784,7 @@ function Bible365Inner() {
                         onClick={handleSkipForward}
                         disabled={loading || !!fetchError || verses.length === 0}
                         title="Next verse"
-                        className="text-white/80 hover:text-white disabled:opacity-20 transition text-2xl leading-none"
+                        className="text-white hover:text-white disabled:opacity-20 transition text-2xl leading-none"
                       >⏩</button>
 
                       {/* Stop */}
@@ -936,7 +936,7 @@ function Bible365Inner() {
             <p className="text-white/50 text-xs uppercase tracking-widest mb-3">Save to Journal</p>
             <div className="bg-white/8 border border-white/15 rounded-2xl p-4 mb-4">
               <p className="text-amber-200 text-xs font-semibold uppercase tracking-widest mb-2">{selectedVerse.reference}</p>
-              <p className="text-white/90 text-sm italic leading-relaxed" style={{ fontFamily: "'Lora', Georgia, serif" }}>
+              <p className="text-white text-sm italic leading-relaxed" style={{ fontFamily: "'Lora', Georgia, serif" }}>
                 "{selectedVerse.text}"
               </p>
             </div>

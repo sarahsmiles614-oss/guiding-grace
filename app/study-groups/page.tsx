@@ -81,7 +81,7 @@ export default function StudyGroupsPage() {
           <div className="max-w-2xl w-full">
 
             <div className="flex justify-between items-center mb-8">
-              <Link href="/dashboard" className="text-white/90 hover:text-white text-sm transition">← Back</Link>
+              <Link href="/dashboard" className="text-white hover:text-white text-sm transition">← Back</Link>
               <h1 className="text-xl font-bold text-white" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 8px rgba(0,0,0,0.9)" }}>
                 Study Groups
               </h1>
@@ -129,7 +129,7 @@ export default function StudyGroupsPage() {
                   >
                     {working ? "Creating..." : "Create Group"}
                   </button>
-                  <button onClick={() => setCreating(false)} className="text-white/80 hover:text-white text-sm px-4 transition">Cancel</button>
+                  <button onClick={() => setCreating(false)} className="text-white hover:text-white text-sm px-4 transition">Cancel</button>
                 </div>
               </div>
             )}
@@ -154,7 +154,7 @@ export default function StudyGroupsPage() {
                   >
                     {working ? "Joining..." : "Join Group"}
                   </button>
-                  <button onClick={() => setJoining(false)} className="text-white/80 hover:text-white text-sm px-4 transition">Cancel</button>
+                  <button onClick={() => setJoining(false)} className="text-white hover:text-white text-sm px-4 transition">Cancel</button>
                 </div>
               </div>
             )}
@@ -165,11 +165,11 @@ export default function StudyGroupsPage() {
             ) : groups.length === 0 ? (
               <div className="text-center py-10">
                 <p className="text-white text-sm" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>You haven't joined any groups yet.</p>
-                <p className="text-white/80 text-xs mt-1" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>Create one or ask your group leader for an invite code.</p>
+                <p className="text-white text-xs mt-1" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>Create one or ask your group leader for an invite code.</p>
               </div>
             ) : (
               <div className="space-y-3">
-                <p className="text-white/80 text-xs uppercase tracking-widest mb-4">Your Groups</p>
+                <p className="text-white text-xs uppercase tracking-widest mb-4">Your Groups</p>
                 {groups.map(g => (
                   <Link key={g.id} href={`/study-groups/${g.id}`}>
                     <div className="bg-black/40 hover:bg-black/50 border border-white/30 rounded-2xl px-5 py-4 flex items-center justify-between transition cursor-pointer">

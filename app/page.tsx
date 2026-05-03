@@ -49,8 +49,8 @@ export default async function Home() {
         <nav className="w-full flex justify-between items-center px-6 pt-6 pb-2">
           <p className="text-white font-semibold text-sm" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>Guiding Grace</p>
           <div className="flex gap-4 text-white/50 text-xs">
-            <Link href="/terms" className="hover:text-white/80">Terms</Link>
-            <Link href="/privacy" className="hover:text-white/80">Privacy</Link>
+            <Link href="/terms" className="hover:text-white">Terms</Link>
+            <Link href="/privacy" className="hover:text-white">Privacy</Link>
           </div>
         </nav>
 
@@ -64,7 +64,7 @@ export default async function Home() {
               <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4 leading-tight" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 4px 20px rgba(0,0,0,0.8)" }}>
                 365 Days of Grace,<br />Community & Scripture
               </h1>
-              <p className="text-white/80 text-sm mb-6 leading-relaxed" style={{ textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>
+              <p className="text-white text-sm mb-6 leading-relaxed" style={{ textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>
                 Not just a reading plan. A daily faith experience with devotions, live community challenges, a prayer wall, and sacred spaces you will not find anywhere else.
               </p>
             </div>
@@ -90,7 +90,7 @@ export default async function Home() {
                     "{devotion.verse_text}"
                   </p>
                 </div>
-                <p className="text-white/90 text-sm leading-relaxed" style={{ fontFamily: "'Lora', Georgia, serif", textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
+                <p className="text-white text-sm leading-relaxed" style={{ fontFamily: "'Lora', Georgia, serif", textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
                   {devotion.reflection}
                 </p>
               </div>
@@ -104,7 +104,7 @@ export default async function Home() {
                   <p className="text-yellow-300 text-xs uppercase tracking-widest font-semibold">Today's Grace Challenge</p>
                   <span className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse" />
                 </div>
-                <p className="text-white/90 text-sm leading-relaxed mb-2">{challenge.challenge_text}</p>
+                <p className="text-white text-sm leading-relaxed mb-2">{challenge.challenge_text}</p>
                 <p className="text-white/40 text-xs">Sign in to respond and see who the community honors as Most Loved 💛</p>
               </div>
             )}

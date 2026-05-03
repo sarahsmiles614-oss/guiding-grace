@@ -321,9 +321,9 @@ export default function GraceChallengeContent() {
 
             {/* Header */}
             <div className="flex justify-between items-center mb-5">
-              <Link href="/dashboard" className="text-white/80 text-sm hover:text-white transition" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>← Dashboard</Link>
+              <Link href="/dashboard" className="text-white text-sm hover:text-white transition" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>← Dashboard</Link>
               <h1 className="text-xl font-bold text-white" style={{ textShadow: "0 2px 10px rgba(0,0,0,0.9)" }}>Daily Grace Challenge</h1>
-              <Link href="/grace-challenge/rules" className="text-white/80 text-sm hover:text-white transition" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>Rules</Link>
+              <Link href="/grace-challenge/rules" className="text-white text-sm hover:text-white transition" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>Rules</Link>
             </div>
 
             {/* Nav buttons */}
@@ -331,7 +331,7 @@ export default function GraceChallengeContent() {
               <Link href="/grace-challenge/leaderboard" className="flex-1 flex items-center justify-center gap-2 bg-yellow-400/20 hover:bg-yellow-400/30 border border-yellow-300/40 text-yellow-200 font-semibold text-sm py-3 rounded-2xl transition" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
                 🏆 Leaderboard
               </Link>
-              <Link href="/grace-challenge/favorites" className="flex-1 flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 border border-white/20 text-white/80 hover:text-white font-semibold text-sm py-3 rounded-2xl transition" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
+              <Link href="/grace-challenge/favorites" className="flex-1 flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 border border-white/20 text-white hover:text-white font-semibold text-sm py-3 rounded-2xl transition" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
                 ⭐ Saved Responses
               </Link>
             </div>
@@ -351,7 +351,7 @@ export default function GraceChallengeContent() {
             ) : (
               <>
                 {/* Challenge */}
-                <p className="text-white/90 text-sm uppercase tracking-widest mb-3 text-center" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>Today's Challenge</p>
+                <p className="text-white text-sm uppercase tracking-widest mb-3 text-center" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>Today's Challenge</p>
                 <p className="text-3xl font-bold text-white mb-8 leading-relaxed text-center"
                   style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 16px rgba(0,0,0,0.9)" }}>
                   {challenge.challenge_text}
@@ -362,14 +362,14 @@ export default function GraceChallengeContent() {
                   <div className="mb-8 text-center">
                     <p className="text-yellow-300 text-sm uppercase tracking-widest mb-2" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>🏆 Most Loved Today</p>
                     <p className="text-white font-bold text-xl mb-2" style={{ textShadow: "0 2px 8px rgba(0,0,0,0.9)" }}>{displayName(winner)}</p>
-                    <p className="text-white/90 text-base italic mb-1" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>"{winner.post_text?.slice(0, 120)}{winner.post_text?.length > 120 ? "..." : ""}"</p>
+                    <p className="text-white text-base italic mb-1" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>"{winner.post_text?.slice(0, 120)}{winner.post_text?.length > 120 ? "..." : ""}"</p>
                     <p className="text-yellow-200 text-sm" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>Your community has voted. 💛</p>
                   </div>
                 )}
 
                 {/* Hearts status */}
                 <div className="mb-6">
-                  <p className="text-white/90 text-sm mb-2 text-center" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>Your Hearts</p>
+                  <p className="text-white text-sm mb-2 text-center" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>Your Hearts</p>
                   <div className="flex gap-2 mb-1 justify-center">
                     {Array.from({ length: HEARTS_PER_DAY }).map((_, i) => (
                       <span key={i} className="text-2xl">{i < givenHearts.length ? "💛" : "🤍"}</span>
@@ -378,14 +378,14 @@ export default function GraceChallengeContent() {
                   {usedAllHearts ? (
                     <p className="text-green-300 text-sm text-center" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>✓ Heart given — your votes count!</p>
                   ) : (
-                    <p className="text-white/80 text-sm text-center" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>Give your heart or your received votes won't count. Closes midnight EST.</p>
+                    <p className="text-white text-sm text-center" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>Give your heart or your received votes won't count. Closes midnight EST.</p>
                   )}
                 </div>
 
                 {/* Submission form */}
                 {!userPost ? (
                   <div className="mb-8">
-                    <p className="text-white/90 text-sm uppercase tracking-widest mb-3 text-center" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>Your Response</p>
+                    <p className="text-white text-sm uppercase tracking-widest mb-3 text-center" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>Your Response</p>
                     <textarea
                       value={response} onChange={e => setResponse(e.target.value)}
                       placeholder="Share how it went..."
@@ -412,7 +412,7 @@ export default function GraceChallengeContent() {
                         />
                         <div className="flex gap-3">
                           <button onClick={() => setIsEditing(false)}
-                            className="flex-1 text-white/80 font-semibold py-2 rounded-xl transition hover:text-white">
+                            className="flex-1 text-white font-semibold py-2 rounded-xl transition hover:text-white">
                             Cancel
                           </button>
                           <button onClick={handleEditSubmit} disabled={!editText.trim() || editCompleted === null || editSubmitting}
@@ -424,7 +424,7 @@ export default function GraceChallengeContent() {
                     ) : (
                       <>
                         <div className="flex items-start justify-between mb-2">
-                          <p className="text-white/80 text-sm">Your response</p>
+                          <p className="text-white text-sm">Your response</p>
                           {!isAfterDeadline() && (
                             <button onClick={startEditing} className="text-white/70 hover:text-white text-sm transition">Edit</button>
                           )}
@@ -443,12 +443,12 @@ export default function GraceChallengeContent() {
                     text={`Today's Grace Challenge: "${challenge.challenge_text}"\n\nJoin the community on Guiding Grace:`}
                     url="https://guidinggrace.app"
                     label="🤍 Share This Challenge"
-                    className="text-white/80 hover:text-white text-sm transition"
+                    className="text-white hover:text-white text-sm transition"
                   />
                 </div>
 
                 {/* Community responses */}
-                <p className="text-white/80 text-sm uppercase tracking-widest mb-4 text-center" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>
+                <p className="text-white text-sm uppercase tracking-widest mb-4 text-center" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>
                   Community Responses · Voting closes at midnight EST
                 </p>
 
@@ -456,7 +456,7 @@ export default function GraceChallengeContent() {
                   {posts.filter(post => !blockedIds.has(post.user_id)).map(post => (
                     <div key={post.id} className={`${winner?.id === post.id && revealed ? "border-l-2 border-yellow-400 pl-4" : ""}`}>
                       <div className="flex justify-between items-start mb-1">
-                        <p className="text-white/80 text-sm text-center flex-1" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>{displayName(post)}</p>
+                        <p className="text-white text-sm text-center flex-1" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>{displayName(post)}</p>
                         <div className="flex items-center gap-2">
                           {post.user_id !== userId && (
                             <button
@@ -503,7 +503,7 @@ export default function GraceChallengeContent() {
                     </div>
                   ))}
                   {posts.length === 0 && (
-                    <p className="text-white/80 text-base text-center py-6">Be the first to share a response today.</p>
+                    <p className="text-white text-base text-center py-6">Be the first to share a response today.</p>
                   )}
                 </div>
               </>

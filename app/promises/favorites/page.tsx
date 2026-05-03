@@ -85,7 +85,7 @@ export default function FavoritePromisesPage() {
                     — {selected.reference}
                   </p>
                   {selected.reflection && (
-                    <p className="text-white/80 text-sm leading-relaxed max-w-xl mx-auto mb-5" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.7)" }}>
+                    <p className="text-white text-sm leading-relaxed max-w-xl mx-auto mb-5" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.7)" }}>
                       {selected.reflection}
                     </p>
                   )}

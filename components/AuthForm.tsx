@@ -94,8 +94,8 @@ export default function AuthForm() {
       ) : (
         <>
           <div className="flex justify-center gap-8 mb-7">
-            <button onClick={() => { setIsNewUser(false); reset(); }} className={`text-sm font-semibold pb-1 transition ${!isNewUser ? "text-white border-b-2 border-white" : "text-white/60 hover:text-white/80"}`}>Sign In</button>
-            <button onClick={() => { setIsNewUser(true); reset(); }} className={`text-sm font-semibold pb-1 transition ${isNewUser ? "text-white border-b-2 border-white" : "text-white/60 hover:text-white/80"}`}>Create Account</button>
+            <button onClick={() => { setIsNewUser(false); reset(); }} className={`text-sm font-semibold pb-1 transition ${!isNewUser ? "text-white border-b-2 border-white" : "text-white/60 hover:text-white"}`}>Sign In</button>
+            <button onClick={() => { setIsNewUser(true); reset(); }} className={`text-sm font-semibold pb-1 transition ${isNewUser ? "text-white border-b-2 border-white" : "text-white/60 hover:text-white"}`}>Create Account</button>
           </div>
           <div className="space-y-3 mb-6">
             <button onClick={handleGoogle} disabled={loading} className="w-full flex items-center justify-center gap-3 text-white text-sm font-medium py-3 transition hover:text-white/70 disabled:opacity-50">

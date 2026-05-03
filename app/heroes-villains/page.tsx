@@ -150,7 +150,7 @@ export default function HeroesVillainsPage() {
                 {selected.reflectionQuestion && (
                   <div className="mb-6">
                     <h3 className="text-rose-200 font-bold mb-2 text-sm" style={{ textShadow: "0 1px 3px rgba(0,0,0,0.8)" }}>💭 Reflection</h3>
-                    <p className="text-white/90 text-base leading-relaxed italic" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.6)" }}>
+                    <p className="text-white text-base leading-relaxed italic" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.6)" }}>
                       {selected.reflectionQuestion}
                     </p>
                   </div>

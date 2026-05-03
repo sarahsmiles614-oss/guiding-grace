@@ -164,7 +164,7 @@ export default function PromisesPage() {
                 </p>
 
                 {current.reflection && (
-                  <p className="text-white/90 text-base leading-relaxed max-w-2xl mx-auto mb-5 text-center" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.6)" }}>
+                  <p className="text-white text-base leading-relaxed max-w-2xl mx-auto mb-5 text-center" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.6)" }}>
                     {current.reflection}
                   </p>
                 )}

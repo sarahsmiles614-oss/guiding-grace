@@ -161,13 +161,13 @@ export default function DiveDeeperPage() {
 
             {/* Header */}
             <div className="flex justify-between items-center mb-8">
-              <Link href="/dashboard" className="text-white/80 hover:text-white text-sm transition">← Back</Link>
+              <Link href="/dashboard" className="text-white hover:text-white text-sm transition">← Back</Link>
               <h1 className="text-xl font-bold text-white" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 8px rgba(0,0,0,0.9)" }}>
                 Dive Deeper
               </h1>
               <button
                 onClick={() => setShowPast(!showPast)}
-                className="text-white/80 hover:text-white text-sm transition"
+                className="text-white hover:text-white text-sm transition"
               >
                 {showPast ? "← Today" : "📔 Past"}
               </button>
@@ -176,7 +176,7 @@ export default function DiveDeeperPage() {
             {/* Past Entries */}
             {showPast && (
               <div className="bg-black/50 border border-white/20 rounded-2xl p-5 mb-6">
-                <p className="text-white/80 text-xs uppercase tracking-widest mb-4">Your Journal Entries</p>
+                <p className="text-white text-xs uppercase tracking-widest mb-4">Your Journal Entries</p>
                 {pastEntries.length === 0 ? (
                   <p className="text-white/60 text-sm text-center py-4">No entries yet — start writing today.</p>
                 ) : (
@@ -218,7 +218,7 @@ export default function DiveDeeperPage() {
                     <h2 className="text-white font-bold text-lg mb-3 leading-snug" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>
                       {devotion.title}
                     </h2>
-                    <p className="text-white/90 italic text-sm leading-relaxed mb-2" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
+                    <p className="text-white italic text-sm leading-relaxed mb-2" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
                       &ldquo;{devotion.verse_text}&rdquo;
                     </p>
                     <p className="text-amber-300/80 text-xs font-semibold">— {devotion.verse_reference}</p>
@@ -310,7 +310,7 @@ export default function DiveDeeperPage() {
                     </button>
                     <button
                       onClick={handleShare}
-                      className={`px-5 py-4 rounded-2xl border font-semibold text-sm transition ${copied ? "bg-green-500/25 border-green-400/40 text-green-200" : "bg-white/10 hover:bg-white/20 border-white/30 text-white/80 hover:text-white"}`}
+                      className={`px-5 py-4 rounded-2xl border font-semibold text-sm transition ${copied ? "bg-green-500/25 border-green-400/40 text-green-200" : "bg-white/10 hover:bg-white/20 border-white/30 text-white hover:text-white"}`}
                     >
                       {copied ? "Copied!" : "Share"}
                     </button>
@@ -332,7 +332,7 @@ export default function DiveDeeperPage() {
                               className="text-white/20 hover:text-white/60 text-xs transition opacity-0 group-hover:opacity-100"
                             >✕</button>
                           </div>
-                          <p className="text-white/90 text-sm italic leading-relaxed mb-2" style={{ fontFamily: "'Lora', Georgia, serif" }}>
+                          <p className="text-white text-sm italic leading-relaxed mb-2" style={{ fontFamily: "'Lora', Georgia, serif" }}>
                             "{h.verse_text}"
                           </p>
                           {h.note && (

@@ -148,7 +148,7 @@ export default function AccountContent() {
             <h1 className="text-lg font-bold text-white" style={{ textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>Profile & Settings</h1>
             <button
               onClick={() => signOut().then(() => router.push("/"))}
-              className="text-sm text-white/50 hover:text-white/80 transition"
+              className="text-sm text-white/50 hover:text-white transition"
             >
               Sign out
             </button>
@@ -172,13 +172,13 @@ export default function AccountContent() {
           <div className="flex mb-6 border-b border-white/20">
             <button
               onClick={() => setTab("profile")}
-              className={`flex-1 py-2 rounded-lg text-sm font-medium transition ${tab === "profile" ? "bg-white/20 text-white" : "text-white/50 hover:text-white/80"}`}
+              className={`flex-1 py-2 rounded-lg text-sm font-medium transition ${tab === "profile" ? "bg-white/20 text-white" : "text-white/50 hover:text-white"}`}
             >
               Profile
             </button>
             <button
               onClick={() => setTab("notifications")}
-              className={`flex-1 py-2 rounded-lg text-sm font-medium transition ${tab === "notifications" ? "bg-white/20 text-white" : "text-white/50 hover:text-white/80"}`}
+              className={`flex-1 py-2 rounded-lg text-sm font-medium transition ${tab === "notifications" ? "bg-white/20 text-white" : "text-white/50 hover:text-white"}`}
             >
               Notifications
             </button>

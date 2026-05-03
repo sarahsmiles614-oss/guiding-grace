@@ -208,7 +208,7 @@ export default function PrayerWallPage() {
                       </div>
                     </div>
                   ) : (
-                    <p className="text-white/90 text-sm mb-2" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>{p.prayer_text}</p>
+                    <p className="text-white text-sm mb-2" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>{p.prayer_text}</p>
                   )}
 
                   <div className="pw-no-print flex items-center flex-wrap gap-2 mt-1">

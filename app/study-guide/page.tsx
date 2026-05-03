@@ -179,7 +179,7 @@ export default function StudyGuidePage() {
 
                 <div>
                   <p className="text-white/50 text-xs uppercase tracking-widest mb-3">Background</p>
-                  <p className="text-white/90 text-sm leading-relaxed" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
+                  <p className="text-white text-sm leading-relaxed" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
                     {guide.background}
                   </p>
                 </div>
@@ -187,7 +187,7 @@ export default function StudyGuidePage() {
                 {guide.interpretation && (
                   <div>
                     <p className="text-white/50 text-xs uppercase tracking-widest mb-3">Interpretation</p>
-                    <p className="text-white/90 text-sm leading-relaxed" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
+                    <p className="text-white text-sm leading-relaxed" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
                       {guide.interpretation}
                     </p>
                   </div>
@@ -223,7 +223,7 @@ export default function StudyGuidePage() {
 
                 <div>
                   <p className="text-white/50 text-xs uppercase tracking-widest mb-3">Today's Application</p>
-                  <p className="text-white/90 text-sm leading-relaxed" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
+                  <p className="text-white text-sm leading-relaxed" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
                     {guide.application}
                   </p>
                 </div>
@@ -234,7 +234,7 @@ export default function StudyGuidePage() {
                     {guide.related_verses.map((v, i) => (
                       <div key={i} className="border-l-2 border-white/20 pl-4">
                         <p className="text-amber-200 text-xs font-semibold mb-1">{v.reference}</p>
-                        <p className="text-white/80 text-sm leading-relaxed italic" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
+                        <p className="text-white text-sm leading-relaxed italic" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
                           {v.text}
                         </p>
                       </div>

@@ -61,8 +61,8 @@ export default function DashboardContent() {
           <div className="flex justify-between items-center mb-10">
             <h1 className="text-2xl font-bold text-white" style={{ textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>Guiding Grace</h1>
             <div className="flex items-center gap-6">
-              <Link href="/account" className="text-white hover:text-white/80 text-sm">Account</Link>
-              <button onClick={() => signOut().then(() => router.push("/"))} className="text-sm text-white hover:text-white/80">Sign out</button>
+              <Link href="/account" className="text-white hover:text-white text-sm">Account</Link>
+              <button onClick={() => signOut().then(() => router.push("/"))} className="text-sm text-white hover:text-white">Sign out</button>
             </div>
           </div>
 
@@ -147,7 +147,7 @@ export default function DashboardContent() {
               text="I have been using Guiding Grace for daily devotions and faith challenges — thought you might love it too."
               url="https://guidinggrace.app"
               label="🤍 Share Guiding Grace"
-              className="bg-white/10 hover:bg-white/20 border border-white/20 text-white/80 hover:text-white text-sm font-medium px-6 py-3 rounded-2xl backdrop-blur-sm transition"
+              className="bg-white/10 hover:bg-white/20 border border-white/20 text-white hover:text-white text-sm font-medium px-6 py-3 rounded-2xl backdrop-blur-sm transition"
             />
           </div>
         </div>

@@ -123,7 +123,7 @@ export default function NightlyReflectionsPage() {
 
                     <div className="absolute top-8 left-1/2 -translate-x-1/2 z-50">
                       <p
-                        className="text-white/90 text-lg"
+                        className="text-white text-lg"
                         style={{
                           fontFamily: "'Lora', Georgia, serif",
                           animation: "progressPulse 2s ease-in-out infinite",
@@ -136,7 +136,7 @@ export default function NightlyReflectionsPage() {
 
                     {showFallback && (
                       <div className="absolute top-20 left-1/2 -translate-x-1/2 z-50 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-lg">
-                        <p className="text-white/90 text-xs">Lifting your words to heaven...</p>
+                        <p className="text-white text-xs">Lifting your words to heaven...</p>
                       </div>
                     )}
 

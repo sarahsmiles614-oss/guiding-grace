@@ -264,7 +264,7 @@ export default function LeaderboardPage() {
                       <div className="flex-1 h-px bg-white/10" />
                       <button
                         onClick={() => setShowFullList(v => !v)}
-                        className="text-white/50 text-xs font-medium whitespace-nowrap hover:text-white/80 transition py-2 px-4">
+                        className="text-white/50 text-xs font-medium whitespace-nowrap hover:text-white transition py-2 px-4">
                         {showFullList ? "Hide Leaderboard ▲" : "View Full Leaderboard ▼"}
                       </button>
                       <div className="flex-1 h-px bg-white/10" />

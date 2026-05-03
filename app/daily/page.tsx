@@ -85,7 +85,7 @@ export default async function DailyPage() {
               </div>
 
               <div className="w-full mb-8">
-                <p className="text-white/90 text-base leading-relaxed" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)", fontFamily: "'Lora', Georgia, serif" }}>
+                <p className="text-white text-base leading-relaxed" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)", fontFamily: "'Lora', Georgia, serif" }}>
                   {devotion.reflection}
                 </p>
               </div>
@@ -115,7 +115,7 @@ export default async function DailyPage() {
                     <span className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse" />
                     <p className="text-yellow-300 text-xs uppercase tracking-widest font-semibold">Today's Grace Challenge</p>
                   </div>
-                  <p className="text-white/80 text-sm leading-relaxed">{challenge.challenge_text}</p>
+                  <p className="text-white text-sm leading-relaxed">{challenge.challenge_text}</p>
                   <p className="text-white/40 text-xs mt-3">Sign in to respond and see how the community is living it out.</p>
                 </div>
               )}

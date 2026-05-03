@@ -130,7 +130,7 @@ export default function FavoritesPage() {
                         <button onClick={() => removeFavorite(post.id)} className="text-lg hover:scale-110 transition" title="Remove">🔖</button>
                       </div>
                     </div>
-                    <p className="text-white/80 text-sm leading-relaxed" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>{post.post_text}</p>
+                    <p className="text-white text-sm leading-relaxed" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>{post.post_text}</p>
                   </div>
                 ))}
               </div>

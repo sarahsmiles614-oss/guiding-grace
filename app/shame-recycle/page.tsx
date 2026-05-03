@@ -123,7 +123,7 @@ export default function ShameRecyclePage() {
                       <div className="w-48 h-1 bg-white/20 rounded-full overflow-hidden">
                         <div className="h-full bg-gradient-to-r from-orange-400 to-yellow-300" style={{ animation: "progressBar 4s linear forwards" }} />
                       </div>
-                      <p className="text-white/80 text-sm" style={{ animation: "progressPulse 1.5s ease-in-out infinite" }}>
+                      <p className="text-white text-sm" style={{ animation: "progressPulse 1.5s ease-in-out infinite" }}>
                         Releasing to God...
                       </p>
                     </div>

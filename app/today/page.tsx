@@ -130,7 +130,7 @@ export default function TodayPage() {
                         </div>
                         <span className="text-white/30 text-xs">Join →</span>
                       </div>
-                      <p className="text-white/80 text-sm leading-relaxed">
+                      <p className="text-white text-sm leading-relaxed">
                         {challenge.challenge_text}
                       </p>
                     </div>

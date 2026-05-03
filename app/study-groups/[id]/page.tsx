@@ -184,7 +184,7 @@ export default function GroupPage({ params }: { params: Promise<{ id: string }> 
 
             {/* Header */}
             <div className="flex justify-between items-center mb-2">
-              <Link href="/study-groups" className="text-white/90 hover:text-white text-sm transition">← Groups</Link>
+              <Link href="/study-groups" className="text-white hover:text-white text-sm transition">← Groups</Link>
               <h1 className="text-lg font-bold text-white text-center" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>
                 {group?.name ?? "Loading..."}
               </h1>
@@ -204,7 +204,7 @@ export default function GroupPage({ params }: { params: Promise<{ id: string }> 
             {members.length > 0 && (
               <div className="flex flex-wrap gap-2 justify-center mb-6">
                 {members.map(m => (
-                  <span key={m.user_id} className="text-white/90 text-xs bg-white/10 border border-white/25 rounded-full px-3 py-1">
+                  <span key={m.user_id} className="text-white text-xs bg-white/10 border border-white/25 rounded-full px-3 py-1">
                     {m.user_name}
                   </span>
                 ))}
@@ -217,7 +217,7 @@ export default function GroupPage({ params }: { params: Promise<{ id: string }> 
                 <button
                   key={t}
                   onClick={() => setTab(t)}
-                  className={`flex-1 py-2.5 rounded-xl border text-sm font-semibold capitalize transition ${tab === t ? "bg-white/25 border-white/50 text-white" : "bg-white/10 border-white/25 text-white/80 hover:text-white"}`}
+                  className={`flex-1 py-2.5 rounded-xl border text-sm font-semibold capitalize transition ${tab === t ? "bg-white/25 border-white/50 text-white" : "bg-white/10 border-white/25 text-white hover:text-white"}`}
                 >
                   {t === "discussion" ? "📖 Discussion" : "🎮 Bible Trivia"}
                 </button>
@@ -240,12 +240,12 @@ export default function GroupPage({ params }: { params: Promise<{ id: string }> 
                         className="w-full text-left px-5 py-4 flex items-start justify-between gap-3"
                       >
                         <div className="flex-1">
-                          <p className="text-white/80 text-xs mb-1">Question {i + 1}</p>
+                          <p className="text-white text-xs mb-1">Question {i + 1}</p>
                           <p className="text-white text-sm font-medium leading-relaxed" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>{q}</p>
                         </div>
                         <div className="flex items-center gap-2 flex-shrink-0 mt-0.5">
-                          {qAnswers.length > 0 && <span className="text-white/80 text-xs">{qAnswers.length} response{qAnswers.length !== 1 ? "s" : ""}</span>}
-                          <span className="text-white/80 text-xs">{expandedQ === i ? "▲" : "▼"}</span>
+                          {qAnswers.length > 0 && <span className="text-white text-xs">{qAnswers.length} response{qAnswers.length !== 1 ? "s" : ""}</span>}
+                          <span className="text-white text-xs">{expandedQ === i ? "▲" : "▼"}</span>
                         </div>
                       </button>
 
@@ -256,10 +256,10 @@ export default function GroupPage({ params }: { params: Promise<{ id: string }> 
                             <div className="space-y-3 mb-4">
                               {qAnswers.map(a => (
                                 <div key={a.id} className={`rounded-xl p-3 ${a.user_id === userId ? "bg-white/15 border border-white/20" : "bg-white/5 border border-white/10"}`}>
-                                  <p className="text-white/90 text-xs mb-1 font-semibold">{a.user_name}</p>
-                                  <p className="text-white/90 text-sm leading-relaxed">{a.answer_text}</p>
+                                  <p className="text-white text-xs mb-1 font-semibold">{a.user_name}</p>
+                                  <p className="text-white text-sm leading-relaxed">{a.answer_text}</p>
                                   {a.user_id !== userId && (
-                                    <button onClick={() => likeAnswer(a.id, a.likes || 0)} className="mt-2 text-xs text-white/80 hover:text-white transition">
+                                    <button onClick={() => likeAnswer(a.id, a.likes || 0)} className="mt-2 text-xs text-white hover:text-white transition">
                                       🙏 {a.likes > 0 ? a.likes : ""} Amen
                                     </button>
                                   )}
@@ -303,7 +303,7 @@ export default function GroupPage({ params }: { params: Promise<{ id: string }> 
                   <div className="text-center py-10">
                     <p className="text-5xl mb-4">🎮</p>
                     <p className="text-white font-bold text-lg mb-2" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>Bible Trivia</p>
-                    <p className="text-white/90 text-sm mb-6 leading-relaxed" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>Test your knowledge of today's scripture with your group. Anyone can start a round!</p>
+                    <p className="text-white text-sm mb-6 leading-relaxed" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>Test your knowledge of today's scripture with your group. Anyone can start a round!</p>
                     <button
                       onClick={startGame}
                       disabled={gameLoading}
@@ -318,7 +318,7 @@ export default function GroupPage({ params }: { params: Promise<{ id: string }> 
                 {gamePlaying && gameQuestions.length > 0 && (
                   <div className="space-y-5">
                     <div className="flex items-center justify-between mb-2">
-                      <p className="text-white/90 text-xs uppercase tracking-widest">Round in Progress</p>
+                      <p className="text-white text-xs uppercase tracking-widest">Round in Progress</p>
                       <div className="flex gap-2">
                         <button onClick={startGame} disabled={gameLoading} className="text-white/85 hover:text-white text-xs border border-white/30 px-3 py-1 rounded-lg transition">↺ New Round</button>
                         <button onClick={endGame} className="text-white/85 hover:text-white text-xs border border-white/30 px-3 py-1 rounded-lg transition">End →</button>
@@ -365,12 +365,12 @@ export default function GroupPage({ params }: { params: Promise<{ id: string }> 
                     {/* Live scores */}
                     {Object.keys(scores).length > 0 && (
                       <div className="bg-white/10 border border-white/15 rounded-2xl p-5 mt-4">
-                        <p className="text-white/90 text-xs uppercase tracking-widest mb-3">Scores</p>
+                        <p className="text-white text-xs uppercase tracking-widest mb-3">Scores</p>
                         {sortedScores.map(([uid, s], rank) => (
                           <div key={uid} className="flex items-center justify-between py-1.5 border-b border-white/10 last:border-0">
                             <div className="flex items-center gap-2">
-                              <span className="text-white/80 text-xs w-4">{rank + 1}.</span>
-                              <span className={`text-sm ${uid === userId ? "text-white font-semibold" : "text-white/90"}`}>{s.name}</span>
+                              <span className="text-white text-xs w-4">{rank + 1}.</span>
+                              <span className={`text-sm ${uid === userId ? "text-white font-semibold" : "text-white"}`}>{s.name}</span>
                             </div>
                             <span className="text-amber-200 text-sm font-bold">{s.score} / {gameQuestions.length}</span>
                           </div>
@@ -391,12 +391,12 @@ export default function GroupPage({ params }: { params: Promise<{ id: string }> 
                       )}
                     </div>
                     <div className="bg-white/10 border border-white/15 rounded-2xl p-5 mb-6">
-                      <p className="text-white/90 text-xs uppercase tracking-widest mb-3">Final Scores</p>
+                      <p className="text-white text-xs uppercase tracking-widest mb-3">Final Scores</p>
                       {sortedScores.map(([uid, s], rank) => (
                         <div key={uid} className="flex items-center justify-between py-2 border-b border-white/10 last:border-0">
                           <div className="flex items-center gap-2">
                             <span className="text-lg">{rank === 0 ? "🥇" : rank === 1 ? "🥈" : rank === 2 ? "🥉" : "  "}</span>
-                            <span className={`text-sm ${uid === userId ? "text-white font-bold" : "text-white/90"}`}>{s.name}</span>
+                            <span className={`text-sm ${uid === userId ? "text-white font-bold" : "text-white"}`}>{s.name}</span>
                           </div>
                           <span className="text-amber-200 font-bold">{s.score} / {gameQuestions.length}</span>
                         </div>
