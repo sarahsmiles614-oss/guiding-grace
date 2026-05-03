@@ -200,7 +200,7 @@ export default function ShareStudio({ scripture, reference, onClose }: Props) {
     <div className="fixed inset-0 z-50 flex flex-col overflow-hidden">
       <div className="absolute inset-0 bg-cover bg-center transition-all duration-500"
         style={{ backgroundImage: `url('${selectedBg.url}')` }} />
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-md" />
+      <div className="absolute inset-0 bg-black/30" />
 
       <div className="relative z-10 flex flex-col h-full">
 
@@ -268,7 +268,7 @@ export default function ShareStudio({ scripture, reference, onClose }: Props) {
                 <button key={bg.label} onClick={() => setSelectedBg(bg)}
                   className="flex flex-col items-center gap-1.5 group">
                   <div
-                    className={`w-full rounded-2xl bg-cover bg-center transition duration-150 ${selectedBg.label === bg.label ? "ring-2 ring-white ring-offset-1 ring-offset-transparent scale-105" : "opacity-55 hover:opacity-90 group-hover:scale-102"}`}
+                    className={`w-full rounded-2xl bg-cover bg-center transition duration-150 ${selectedBg.label === bg.label ? "ring-2 ring-white ring-offset-1 ring-offset-transparent scale-105" : "opacity-80 hover:opacity-100 group-hover:scale-102"}`}
                     style={{ backgroundImage: `url('${bg.url}')`, aspectRatio: "1/1" }}
                   />
                   <span className={`text-xs transition ${selectedBg.label === bg.label ? "text-white font-semibold" : "text-white/45"}`}>
