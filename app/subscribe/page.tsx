@@ -95,14 +95,6 @@ export default function SubscribePage() {
     }
   }
 
-  async function handleSignIn() {
-    if (!email || !password) { setAuthError("Enter your email and password."); return; }
-    setBusy(true); setAuthError("");
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) { setAuthError(error.message); setBusy(false); return; }
-    await goCheckout("trial", data.user!.id, data.user!.email!);
-  }
-
   if (loading) return null;
 
   if (checkEmail) {
@@ -199,21 +191,6 @@ export default function SubscribePage() {
                 </button>
               </div>
 
-              <div className="flex items-center gap-3 mb-3">
-                <div className="flex-1 h-px bg-white/10" />
-                <span className="text-white/30 text-xs">already have an account?</span>
-                <div className="flex-1 h-px bg-white/10" />
-              </div>
-              <div className="space-y-2.5">
-                <input type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)}
-                  className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/35 text-sm focus:outline-none focus:border-white/50" />
-                <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)}
-                  onKeyDown={e => e.key === "Enter" && handleSignIn()}
-                  className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/35 text-sm focus:outline-none focus:border-white/50" />
-                <button onClick={handleSignIn} disabled={busy} className="w-full bg-white/10 hover:bg-white/20 border border-white/20 text-white font-medium py-3 rounded-xl transition disabled:opacity-50 text-sm">
-                  {busy ? "Please wait..." : "Sign In"}
-                </button>
-              </div>
             </div>
           )}
         </div>
