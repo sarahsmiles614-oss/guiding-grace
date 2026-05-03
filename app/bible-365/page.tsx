@@ -598,7 +598,7 @@ function Bible365Inner() {
                           <p className="text-white/70 text-xs leading-relaxed">5. <span className="text-white">Highlight a verse</span> — tap ✍️ on any verse to save it with a note to your journal.</p>
                           <p className="text-white/70 text-xs leading-relaxed">6. <span className="text-white">Bookmark verses</span> — tap 🔖 to save favorites you can return to anytime.</p>
                           <p className="text-white/70 text-xs leading-relaxed">7. <span className="text-white">Come back tomorrow</span> — your place is saved so you never lose track.</p>
-                          <p className="text-white/70 text-xs leading-relaxed">8. <span className="text-white">Screen stays on</span> — your screen won't go dark while you're reading.</p>
+                          <p className="text-white/70 text-xs leading-relaxed">8. <span className="text-white">No screen timeout</span> — while you're reading, your screen's auto-lock is disabled so it won't go dark mid-passage. It turns back on when you leave.</p>
                         </div>
                       )}
                     </div>
