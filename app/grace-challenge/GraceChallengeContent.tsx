@@ -204,7 +204,7 @@ export default function GraceChallengeContent() {
   }
 
   async function handleSubmit() {
-    if (!response.trim() || completed === null || !userId || !challenge) return;
+    if (!response.trim() || !userId || !challenge) return;
     if (!isSafe(response)) { setSubmitError(MODERATION_ERROR); return; }
     setSubmitting(true);
     setSubmitError("");
@@ -351,10 +351,13 @@ export default function GraceChallengeContent() {
             ) : (
               <>
                 {/* Challenge */}
-                <p className="text-white text-sm uppercase tracking-widest mb-3 text-center" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>Today's Challenge</p>
-                <p className="text-3xl font-bold text-white mb-8 leading-relaxed text-center"
+                <p className="text-white text-sm uppercase tracking-widest mb-3 text-center" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>Today's Community Challenge</p>
+                <p className="text-3xl font-bold text-white mb-3 leading-relaxed text-center"
                   style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 16px rgba(0,0,0,0.9)" }}>
                   {challenge.challenge_text}
+                </p>
+                <p className="text-white/80 text-sm text-center mb-8" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>
+                  Go do this — then come back and tell the community how it went. 💛
                 </p>
 
                 {/* Most Loved banner */}
@@ -385,10 +388,10 @@ export default function GraceChallengeContent() {
                 {/* Submission form */}
                 {!userPost ? (
                   <div className="mb-8">
-                    <p className="text-white text-sm uppercase tracking-widest mb-3 text-center" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>Your Response</p>
+                    <p className="text-white text-sm uppercase tracking-widest mb-3 text-center" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>Tell the Community</p>
                     <textarea
                       value={response} onChange={e => setResponse(e.target.value)}
-                      placeholder="Share how it went..."
+                      placeholder="Who did you reach out to? What happened? Encourage the community with your story..."
                       className="w-full bg-white/10 border border-white/30 rounded-xl px-4 py-3 text-white placeholder-white/60 text-base resize-none focus:outline-none focus:border-white/60 mb-3"
                       rows={4}
                     />
@@ -397,7 +400,7 @@ export default function GraceChallengeContent() {
                     )}
                     <button onClick={handleSubmit} disabled={!response.trim() || submitting}
                       className="w-full bg-white/25 hover:bg-white/35 text-white font-semibold py-3 rounded-xl transition disabled:opacity-40 text-base">
-                      {submitting ? "Posting..." : "Share My Response 💛"}
+                      {submitting ? "Posting..." : "Share with the Community 💛"}
                     </button>
                   </div>
                 ) : userPost ? (
@@ -430,7 +433,7 @@ export default function GraceChallengeContent() {
                           )}
                         </div>
                         <p className="text-white text-base leading-relaxed text-center" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>{userPost.post_text}</p>
-                        <p className="text-white/70 text-sm mt-3 text-center" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>Your response is live 💛</p>
+                        <p className="text-white/70 text-sm mt-3 text-center" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>Your story is live — inspiring the community 💛</p>
                       </>
                     )}
                   </div>
@@ -449,7 +452,7 @@ export default function GraceChallengeContent() {
 
                 {/* Community responses */}
                 <p className="text-white text-sm uppercase tracking-widest mb-4 text-center" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>
-                  Community Responses · Voting closes at midnight EST
+                  What the Community Did Today · Voting closes at midnight EST
                 </p>
 
                 <div className="space-y-6">

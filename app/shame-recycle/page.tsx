@@ -262,15 +262,14 @@ export default function ShameRecyclePage() {
             ) : (
               /* Scripture Reveal */
               <div className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden"
-                style={{ background: "radial-gradient(ellipse at center, #1a0800 0%, #0d0400 55%, #000000 100%)" }}
+                style={{
+                  backgroundImage: "url('https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images%204/milad-noroozi-QSOwM_tqO6w-unsplash.jpg')",
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                }}
               >
-                {/* Warm amber glow */}
-                <div className="absolute inset-0"
-                  style={{
-                    background: "radial-gradient(ellipse at center, rgba(210,130,30,0.22) 0%, rgba(180,80,10,0.1) 45%, transparent 72%)",
-                    animation: "gentleGlow 4s ease-in-out infinite",
-                  }}
-                />
+                {/* Dark overlay so text stays readable */}
+                <div className="absolute inset-0 bg-black/55" />
 
                 <div className="relative z-10 max-w-lg mx-auto px-6 text-center">
                   <p className="text-amber-300 text-xs tracking-widest uppercase mb-8"

@@ -541,7 +541,7 @@ function Bible365Inner() {
                       <div className="flex items-center justify-between pt-4 pb-1">
                         <button
                           onClick={() => setShowHowItWorks(v => !v)}
-                          className="text-white/50 hover:text-white text-xs flex items-center gap-1 transition"
+                          className="text-white/80 hover:text-white text-xs flex items-center gap-1 transition"
                         >
                           ℹ️ How it works
                         </button>
@@ -552,18 +552,23 @@ function Bible365Inner() {
                               🔥 {currentStreak}
                             </span>
                           )}
-                          <Link href="/dive-deeper" className="text-white/50 hover:text-white text-xs transition">📔 Journal</Link>
+                          <Link href="/dive-deeper" className="text-white/80 hover:text-white text-xs transition">📔 Journal</Link>
                         </div>
                       </div>
 
                       {/* How it works dropdown — shown only when toggled */}
                       {showHowItWorks && (
-                        <div className="bg-black/60 border border-white/10 rounded-xl mx-0 px-4 py-3 mb-2 space-y-1.5">
-                          <p className="text-white/70 text-xs leading-relaxed">1. <span className="text-white">Pick a book</span> below, then select a chapter to jump to that day's reading.</p>
-                          <p className="text-white/70 text-xs leading-relaxed">2. <span className="text-white">Read or listen</span> — use the audio player to follow along hands-free.</p>
-                          <p className="text-white/70 text-xs leading-relaxed">3. <span className="text-white">Check off each day</span> — tap the circle to mark it complete. Your progress is saved automatically.</p>
-                          <p className="text-white/70 text-xs leading-relaxed">4. <span className="text-white">Highlight a verse</span> — tap ✍️ on any verse to save it with a note to your journal.</p>
-                          <p className="text-white/70 text-xs leading-relaxed">5. <span className="text-white">No screen timeout</span> — while you're reading, your screen stays awake so it won't go dark mid-passage.</p>
+                        <div className="bg-black/70 border border-white/15 rounded-xl mx-0 px-4 py-3 mb-2 space-y-2">
+                          <p className="text-white/90 text-xs leading-relaxed">1. <span className="text-white font-semibold">Choose a reading plan</span> — pick Canonical, Chronological, NT Only, or OT Only from the Reading Plans section below.</p>
+                          <p className="text-white/90 text-xs leading-relaxed">2. <span className="text-white font-semibold">Pick a book</span> — tap a book in the list, then select a chapter to jump to that day's reading.</p>
+                          <p className="text-white/90 text-xs leading-relaxed">3. <span className="text-white font-semibold">Read or listen</span> — use the audio player to follow along hands-free. Adjust speed and font size to your liking.</p>
+                          <p className="text-white/90 text-xs leading-relaxed">4. <span className="text-white font-semibold">Mark as Read</span> — tap the button when done. Your progress and streak are saved automatically to your account.</p>
+                          <p className="text-white/90 text-xs leading-relaxed">5. <span className="text-white font-semibold">Save a verse</span> — tap ✍️ on any verse to add a note and send it straight to your Journal.</p>
+                          <p className="text-white/90 text-xs leading-relaxed">6. <span className="text-white font-semibold">Your Journal</span> — everything you save goes to the Dive Deeper Journal. You can view saved verses, write personal reflections, and share highlights. Tap 📔 Journal to open it.</p>
+                          <p className="text-white/90 text-xs leading-relaxed">7. <span className="text-white font-semibold">No screen timeout</span> — while reading, your screen stays awake so it won't go dark mid-passage.</p>
+                          <Link href="/dive-deeper" className="mt-2 flex items-center gap-1.5 text-white font-semibold text-xs border border-white/30 bg-white/10 rounded-lg px-3 py-2 w-fit transition hover:bg-white/20">
+                            📔 Go to Journal →
+                          </Link>
                         </div>
                       )}
                       {/* OT/NT toggle — flat full-width halves */}
@@ -571,7 +576,7 @@ function Bible365Inner() {
                         <button
                           onClick={() => setTocTab("ot")}
                           className={`flex-1 py-2 text-sm rounded-none transition ${
-                            tocTab === "ot" ? "bg-white/30 text-white font-bold" : "bg-white/10 text-white/70 font-semibold"
+                            tocTab === "ot" ? "bg-white/30 text-white font-bold" : "bg-white/10 text-white font-semibold"
                           }`}
                         >
                           Old Testament
@@ -579,7 +584,7 @@ function Bible365Inner() {
                         <button
                           onClick={() => setTocTab("nt")}
                           className={`flex-1 py-2 text-sm rounded-none transition ${
-                            tocTab === "nt" ? "bg-white/30 text-white font-bold" : "bg-white/10 text-white/70 font-semibold"
+                            tocTab === "nt" ? "bg-white/30 text-white font-bold" : "bg-white/10 text-white font-semibold"
                           }`}
                         >
                           New Testament
@@ -597,7 +602,7 @@ function Bible365Inner() {
                         </button>
                       </div>
                       <h2 className="text-2xl font-bold text-white text-center pb-3">{pickerBook}</h2>
-                      <p className="text-white/60 text-sm text-center pb-4">Select a chapter</p>
+                      <p className="text-white/90 text-sm text-center pb-4">Select a chapter</p>
                     </>
                   )}
                 </div>
@@ -608,12 +613,12 @@ function Bible365Inner() {
 
                     {/* Currently On card */}
                     <div className="bg-black/30 border border-white/20 rounded-2xl p-5">
-                      <p className="text-white/50 text-xs uppercase tracking-widest mb-1">Currently On</p>
+                      <p className="text-white/90 text-xs uppercase tracking-widest mb-1">Currently On</p>
                       <p className="text-white font-bold text-2xl mb-1" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
                         Day {savedDay} of {PLAN_INFO[planOrder].days}
                       </p>
                       <p className="text-white/80 text-sm mb-1">{plan[savedDay - 1]?.label}</p>
-                      <p className="text-white/40 text-xs mb-3">{completedCount} day{completedCount !== 1 ? "s" : ""} completed · {Math.round((completedCount / PLAN_INFO[planOrder].days) * 100)}%</p>
+                      <p className="text-white/80 text-xs mb-3">{completedCount} day{completedCount !== 1 ? "s" : ""} completed · {Math.round((completedCount / PLAN_INFO[planOrder].days) * 100)}%</p>
                       {/* Progress bar */}
                       <div className="w-full h-1.5 bg-white/10 rounded-full mb-3">
                         <div className="h-1.5 bg-white/50 rounded-full transition-all" style={{ width: `${Math.round((completedCount / PLAN_INFO[planOrder].days) * 100)}%` }} />
@@ -640,15 +645,15 @@ function Bible365Inner() {
                       {/* Recent completions */}
                       {completedDates.size > 0 && (
                         <div className="border-t border-white/10 pt-3">
-                          <p className="text-white/30 text-xs mb-2">Recent completions</p>
+                          <p className="text-white/80 text-xs mb-2">Recent completions</p>
                           <div className="space-y-1">
                             {[...completedDates.entries()]
                               .sort((a, b) => new Date(b[1]).getTime() - new Date(a[1]).getTime())
                               .slice(0, 3)
                               .map(([d, iso]) => (
                                 <div key={d} className="flex items-center justify-between">
-                                  <span className="text-white/50 text-xs">Day {d} — {plan[d - 1]?.label?.split(",")[0]}</span>
-                                  <span className="text-white/30 text-xs">{formatCompletedDate(iso)}</span>
+                                  <span className="text-white text-sm font-semibold">Day {d} <span className="text-white/70 text-xs font-normal">— {plan[d - 1]?.label?.split(",")[0]}</span></span>
+                                  <span className="text-white/70 text-xs">{formatCompletedDate(iso)}</span>
                                 </div>
                               ))
                             }
@@ -659,7 +664,7 @@ function Bible365Inner() {
 
                     {/* Jump to day dropdown */}
                     <div>
-                      <p className="text-white/60 text-sm font-semibold mb-2">Jump to a Day</p>
+                      <p className="text-white text-sm font-semibold mb-2">Jump to a Day</p>
                       <select
                         value={day}
                         onChange={e => { const d = parseInt(e.target.value); cancelSpeech(); setDay(d); setSavedDay(d); setView("reading"); window.scrollTo({ top: 0 }); }}
@@ -758,12 +763,12 @@ function Bible365Inner() {
                   <h1 className="text-lg font-bold text-white" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>
                     Day {day}
                   </h1>
-                  <Link href="/dive-deeper" className="text-white/70 hover:text-white text-sm transition">📔 Journal</Link>
+                  <Link href="/dive-deeper" className="text-white/90 hover:text-white text-sm transition">📔 Journal</Link>
                 </div>
 
                 {/* Day heading */}
                 <div className="mb-5">
-                  <p className="text-white/70 text-xs uppercase tracking-widest mb-1">Today's Reading</p>
+                  <p className="text-white text-xs uppercase tracking-widest mb-1">Today's Reading</p>
                   <p className="text-amber-200 font-bold text-xl leading-snug" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 8px rgba(0,0,0,0.9)" }}>
                     {todayReading.otLabel}
                   </p>
@@ -782,7 +787,7 @@ function Bible365Inner() {
                     {completedDays.has(day) ? "✓ Marked as Read" : "Mark as Read"}
                   </button>
                   {completedDays.has(day) && completedDates.has(day) && (
-                    <span className="text-white/40 text-xs">
+                    <span className="text-white/80 text-xs">
                       Completed {formatCompletedDate(completedDates.get(day)!)}
                     </span>
                   )}
@@ -839,24 +844,24 @@ function Bible365Inner() {
                     {/* Speed + font row */}
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-1.5">
-                        <span className="text-white/50 text-xs">Speed</span>
+                        <span className="text-white/90 text-xs">Speed</span>
                         {SPEEDS.map(s => (
                           <button key={s} onClick={() => handleSpeed(s)}
-                            className={`text-xs px-2 py-1 rounded-lg border transition ${speed === s ? "border-white/60 text-white bg-white/15 font-semibold" : "border-white/20 text-white/60 hover:text-white"}`}
+                            className={`text-xs px-2 py-1 rounded-lg border transition ${speed === s ? "border-white/60 text-white bg-white/15 font-semibold" : "border-white/20 text-white/80 hover:text-white"}`}
                           >{s}×</button>
                         ))}
                       </div>
                       <div className="flex items-center gap-1">
                         <button onClick={() => handleFontSize(fontSize === "lg" ? "base" : "sm")} disabled={fontSize === "sm"}
-                          className="text-white/60 hover:text-white disabled:opacity-20 border border-white/20 hover:border-white/40 px-2 py-1 rounded-lg transition text-sm">A−</button>
+                          className="text-white/90 hover:text-white disabled:opacity-20 border border-white/30 hover:border-white/50 px-2 py-1 rounded-lg transition text-sm">A−</button>
                         <button onClick={() => handleFontSize(fontSize === "sm" ? "base" : "lg")} disabled={fontSize === "lg"}
-                          className="text-white/60 hover:text-white disabled:opacity-20 border border-white/20 hover:border-white/40 px-2 py-1 rounded-lg transition text-sm">A+</button>
+                          className="text-white/90 hover:text-white disabled:opacity-20 border border-white/30 hover:border-white/50 px-2 py-1 rounded-lg transition text-sm">A+</button>
                       </div>
                     </div>
 
                     {/* Current position label */}
                     {(playing || resumeVerse > 0) && verses.length > 0 && (
-                      <p className="text-white/40 text-xs text-center mt-2">
+                      <p className="text-white/80 text-xs text-center mt-2">
                         {playing && currentVerse >= 0
                           ? `Now reading: ${verses[currentVerse]?.reference}`
                           : resumeVerse > 0
@@ -871,12 +876,12 @@ function Bible365Inner() {
 
                 {/* Translation picker */}
                 <div className="flex items-center gap-2 mb-4">
-                  <span className="text-white/70 text-xs">Translation:</span>
+                  <span className="text-white/90 text-xs">Translation:</span>
                   {[{ id: "kjv", label: "KJV" }, { id: "web", label: "WEB" }].map(t => (
                     <button
                       key={t.id}
                       onClick={() => { setTranslation(t.id); localStorage.setItem("bible365_translation", t.id); }}
-                      className={`text-xs px-2.5 py-1.5 rounded-lg border transition ${translation === t.id ? "border-white/60 text-white bg-white/15 font-semibold" : "border-white/20 text-white/70 hover:text-white"}`}
+                      className={`text-xs px-2.5 py-1.5 rounded-lg border transition ${translation === t.id ? "border-white/60 text-white bg-white/15 font-semibold" : "border-white/20 text-white/90 hover:text-white"}`}
                     >
                       {t.label}
                     </button>
@@ -885,7 +890,7 @@ function Bible365Inner() {
 
                 {/* Highlight color picker */}
                 <div className="flex items-center gap-3 mb-5">
-                  <span className="text-white/70 text-xs">Highlight:</span>
+                  <span className="text-white/90 text-xs">Highlight:</span>
                   {COLOR_SWATCHES.map(c => (
                     <button key={c.id} onClick={() => handleHighlightColor(c.id)} title={c.label}
                       className={`w-5 h-5 rounded-full ${c.swatch} transition-all ${highlightColor === c.id ? "ring-2 ring-white/60 ring-offset-1 ring-offset-transparent scale-110" : "opacity-50 hover:opacity-80"}`}
@@ -913,7 +918,7 @@ function Bible365Inner() {
                 {/* Scripture */}
                 {!loading && !fetchError && chapterGroups.map(group => (
                   <div key={group.label} className="mb-10">
-                    <p className="text-white/70 text-xs uppercase tracking-widest mb-4 pb-2 border-b border-white/10">{group.label}</p>
+                    <p className="text-white text-xs uppercase tracking-widest mb-4 pb-2 border-b border-white/20">{group.label}</p>
                     {verses.slice(group.start, group.end).map((verse, localIdx) => {
                       const globalIdx = group.start + localIdx;
                       const isActive = currentVerse === globalIdx;

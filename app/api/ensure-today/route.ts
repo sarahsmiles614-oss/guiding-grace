@@ -58,7 +58,7 @@ Return ONLY a JSON object with these exact fields, no markdown, no preamble:
   "verse_reference": "Book Chapter:Verse",
   "verse_text": "The full verse text from NIV",
   "reflection": "2-3 sentences of warm, personal spiritual reflection on the verse. Speak directly to the reader.",
-  "challenge": "One specific, practical, real-world act of grace the reader can do today that mirrors the devotion theme. 1-2 sentences. Warm and achievable. IMPORTANT: The challenge must never cost money or require any purchase. It should involve the person themselves (inner work, reflection, a personal habit) or their community (a neighbor, friend, stranger, family member, church) — or both. The goal is to strengthen faith through action, not transaction."
+  "challenge": "One specific, outward-facing community act of grace the reader can do today that mirrors the devotion theme. 1-2 sentences. Warm and achievable. CRITICAL RULES: (1) Must involve reaching out TO or serving ANOTHER PERSON — a neighbor, friend, stranger, family member, or church community. (2) Must never be inner work, journaling, personal reflection, or prayer alone — those belong in a separate journal feature. (3) Must never cost money or require any purchase. Examples: text encouragement to someone by name, sit with someone who is lonely, invite a neighbor to church, pray OUT LOUD with a friend, help someone with a task, check in on someone you've been meaning to call."
 }`,
       }],
     }),
