@@ -471,7 +471,7 @@ export default function HeavensHeartsPage() {
                       className="flex flex-col items-center gap-1.5 group"
                     >
                       <div
-                        className={`w-full rounded-xl bg-cover bg-center transition duration-150 ${bgIndex === i ? "ring-2 ring-rose-500 ring-offset-1 scale-105 shadow-lg" : "opacity-70 hover:opacity-100"}`}
+                        className={`w-full rounded-xl bg-cover bg-center transition duration-150 ${bgIndex === i ? "ring-2 ring-rose-500 ring-offset-1 scale-105 shadow-lg" : "opacity-90 hover:opacity-100"}`}
                         style={{ backgroundImage: `url('${bg.url}')`, aspectRatio: "1/1" }}
                       />
                       <span className={`text-xs font-medium transition ${bgIndex === i ? "text-rose-800 font-semibold" : "text-rose-700"}`}>
