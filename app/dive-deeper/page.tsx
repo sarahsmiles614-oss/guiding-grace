@@ -199,7 +199,21 @@ export default function DiveDeeperPage() {
   return (
     <SubscriptionGuard>
       <PageBackground url={BG} overlayOpacity={0.35} bgSize="120%" bgPosition="center 75%">
-        <main className="flex-1 p-6 pb-24 flex flex-col items-center">
+        <style>{`
+          .dd-content, .dd-content * {
+            color: #000 !important;
+            text-shadow: 0 0 6px rgba(255,255,255,0.9), 0 0 12px rgba(255,255,255,0.7) !important;
+          }
+          .dd-content input, .dd-content textarea {
+            color: #000 !important;
+            caret-color: #000 !important;
+          }
+          .dd-content ::placeholder {
+            color: rgba(0,0,0,0.45) !important;
+            text-shadow: none !important;
+          }
+        `}</style>
+        <main className="flex-1 p-6 pb-24 flex flex-col items-center dd-content">
           <div className="max-w-2xl w-full">
 
             {/* Header */}
