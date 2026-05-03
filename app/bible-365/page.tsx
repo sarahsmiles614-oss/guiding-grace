@@ -144,6 +144,36 @@ function Bible365Inner() {
   });
 
 
+  // How it works toggle
+  const [showHowItWorks, setShowHowItWorks] = useState(false);
+
+  // Screen wake lock — keeps screen on while reading
+  const wakeLockRef = useRef<WakeLockSentinel | null>(null);
+
+  useEffect(() => {
+    if (view !== "reading") {
+      wakeLockRef.current?.release().then(() => { wakeLockRef.current = null; }).catch(() => {});
+      return;
+    }
+    if ("wakeLock" in navigator) {
+      navigator.wakeLock.request("screen").then(lock => { wakeLockRef.current = lock; }).catch(() => {});
+    }
+    return () => {
+      wakeLockRef.current?.release().then(() => { wakeLockRef.current = null; }).catch(() => {});
+    };
+  }, [view]);
+
+  // Re-acquire wake lock when page becomes visible again (e.g. app returns from background)
+  useEffect(() => {
+    function onVisibilityChange() {
+      if (document.visibilityState === "visible" && view === "reading" && "wakeLock" in navigator) {
+        navigator.wakeLock.request("screen").then(lock => { wakeLockRef.current = lock; }).catch(() => {});
+      }
+    }
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    return () => document.removeEventListener("visibilitychange", onVisibilityChange);
+  }, [view]);
+
   // Journal highlight panel
   const [selectedVerse, setSelectedVerse] = useState<Verse | null>(null);
   const [journalNote, setJournalNote] = useState("");
@@ -551,15 +581,25 @@ function Bible365Inner() {
                       })}
                     </div>
 
-                    <div className="bg-black/25 rounded-xl px-4 py-3 mb-4 text-left">
-                      <p className="text-white font-semibold text-sm mb-2">How it works:</p>
-                      <p className="text-white/70 text-xs leading-relaxed mb-1">1. <span className="text-white">Pick a book</span> from the Old or New Testament below.</p>
-                      <p className="text-white/70 text-xs leading-relaxed mb-1">2. <span className="text-white">Select a chapter</span> to jump to that day's reading.</p>
-                      <p className="text-white/70 text-xs leading-relaxed mb-1">3. <span className="text-white">Read or listen</span> — use the audio player to follow along hands-free.</p>
-                      <p className="text-white/70 text-xs leading-relaxed mb-1">4. <span className="text-white">Check off each day</span> — tap the circle next to any day to mark it complete.</p>
-                      <p className="text-white/70 text-xs leading-relaxed mb-1">5. <span className="text-white">Highlight a verse</span> — tap ✍️ on any verse to save it with a note to your journal.</p>
-                      <p className="text-white/70 text-xs leading-relaxed mb-1">6. <span className="text-white">Bookmark verses</span> — tap 🔖 to save favorites you can return to anytime.</p>
-                      <p className="text-white/70 text-xs leading-relaxed">7. <span className="text-white">Come back tomorrow</span> — your place is saved so you never lose track.</p>
+                    <div className="mb-4">
+                      <button
+                        onClick={() => setShowHowItWorks(v => !v)}
+                        className="w-full flex items-center justify-between bg-black/25 rounded-xl px-4 py-3 text-left transition hover:bg-black/35"
+                      >
+                        <span className="text-white font-semibold text-sm">How it works</span>
+                        <span className="text-white/50 text-xs">{showHowItWorks ? "▲ Hide" : "▼ Show"}</span>
+                      </button>
+                      {showHowItWorks && (
+                        <div className="bg-black/20 border border-white/10 rounded-b-xl px-4 py-3 -mt-1 space-y-1.5">
+                          <p className="text-white/70 text-xs leading-relaxed">1. <span className="text-white">Pick a book</span> from the Old or New Testament below.</p>
+                          <p className="text-white/70 text-xs leading-relaxed">2. <span className="text-white">Select a chapter</span> to jump to that day's reading.</p>
+                          <p className="text-white/70 text-xs leading-relaxed">3. <span className="text-white">Read or listen</span> — use the audio player to follow along hands-free.</p>
+                          <p className="text-white/70 text-xs leading-relaxed">4. <span className="text-white">Check off each day</span> — tap the circle next to any day to mark it complete.</p>
+                          <p className="text-white/70 text-xs leading-relaxed">5. <span className="text-white">Highlight a verse</span> — tap ✍️ on any verse to save it with a note to your journal.</p>
+                          <p className="text-white/70 text-xs leading-relaxed">6. <span className="text-white">Bookmark verses</span> — tap 🔖 to save favorites you can return to anytime.</p>
+                          <p className="text-white/70 text-xs leading-relaxed">7. <span className="text-white">Come back tomorrow</span> — your place is saved so you never lose track.</p>
+                        </div>
+                      )}
                     </div>
 
                     {/* 365-Day Reading Plan */}
