@@ -38,6 +38,7 @@ const BG_OPTIONS = [
   { label: "Falls",     url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images5/20twenty-waterfalls-5607946_1920.jpg" },
   { label: "Winter",    url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images5/alainaudet-winter-landscape-2995987_1920.jpg" },
   { label: "Jungle",    url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images5/alan_frijns-jungle-7459821_1920.jpg" },
+  { label: "Sparkle",   url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images5/bessi-new-year-background-736885_1920.jpg" },
 ];
 
 const FONT_OPTIONS = [
