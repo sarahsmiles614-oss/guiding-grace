@@ -5,7 +5,7 @@ import SubscriptionGuard from "@/components/SubscriptionGuard";
 import PageBackground from "@/components/PageBackground";
 import { supabase } from "@/lib/supabase";
 
-const BG = "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/thibault-mokuenko-pY-bhzf_ZDk-unsplash.jpg";
+const BG = "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images5/giani-mountains-100367_1920.jpg";
 
 function getToday() {
   const ny = new Intl.DateTimeFormat("en-US", {
