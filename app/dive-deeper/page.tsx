@@ -198,7 +198,7 @@ export default function DiveDeeperPage() {
 
   return (
     <SubscriptionGuard>
-      <PageBackground url={BG} overlayOpacity={0.72}>
+      <PageBackground url={BG} overlayOpacity={0.72} bgSize="150%" bgPosition="center 60%">
         <main className="flex-1 p-6 pb-24 flex flex-col items-center">
           <div className="max-w-2xl w-full">
 
@@ -212,7 +212,7 @@ export default function DiveDeeperPage() {
             </div>
 
             {/* Tab bar */}
-            <div className="flex rounded-xl overflow-hidden border border-white/15 mb-6">
+            <div className="flex rounded-xl overflow-hidden mb-6">
               {([
                 { id: "journal", label: "Journal" },
                 { id: "scripture", label: "Saved Scripture" },
@@ -246,7 +246,7 @@ export default function DiveDeeperPage() {
                 </div>
 
                 {showPast && (
-                  <div className="bg-black/50 border border-white/20 rounded-2xl p-5 mb-6">
+                  <div className="rounded-2xl p-5 mb-6">
                     <p className="text-white text-xs uppercase tracking-widest mb-4">Your Journal Entries</p>
                     {pastEntries.length === 0 ? (
                       <p className="text-white/60 text-sm text-center py-4">No entries yet — start writing today.</p>
@@ -282,7 +282,7 @@ export default function DiveDeeperPage() {
                     </p>
 
                     {devotion ? (
-                      <div className="bg-black/50 border border-white/20 rounded-2xl p-5 mb-8">
+                      <div className="rounded-2xl p-5 mb-8">
                         <p className="text-amber-300/90 text-xs font-semibold uppercase tracking-widest mb-2">Today's Word</p>
                         <h2 className="text-white font-bold text-lg mb-3 leading-snug" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>
                           {devotion.title}
@@ -293,7 +293,7 @@ export default function DiveDeeperPage() {
                         <p className="text-amber-300/80 text-xs font-semibold">— {devotion.verse_reference}</p>
                       </div>
                     ) : (
-                      <div className="bg-black/40 border border-white/20 rounded-2xl p-5 mb-8 text-center">
+                      <div className="rounded-2xl p-5 mb-8 text-center">
                         <p className="text-white/60 text-sm">No devotion found for this date.</p>
                       </div>
                     )}
@@ -332,11 +332,11 @@ export default function DiveDeeperPage() {
                       <div>
                         <p className="text-white/60 text-xs uppercase tracking-widest mb-1">Today's Challenge</p>
                         {challenge ? (
-                          <div className="bg-amber-500/15 border border-amber-400/30 rounded-xl px-4 py-3 mb-2">
+                          <div className="rounded-xl px-4 py-3 mb-2">
                             <p className="text-amber-100 text-sm leading-relaxed">{challenge.challenge_text}</p>
                           </div>
                         ) : (
-                          <div className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 mb-2">
+                          <div className="rounded-xl px-4 py-3 mb-2">
                             <p className="text-white/40 text-sm italic">No challenge found for this date.</p>
                           </div>
                         )}
@@ -401,7 +401,7 @@ export default function DiveDeeperPage() {
                       const isExpanded = expandedHighlight === h.id;
                       const isCopied = copiedRef === h.id;
                       return (
-                        <div key={h.id} className="bg-black/40 border border-white/15 rounded-2xl overflow-hidden">
+                        <div key={h.id} className="rounded-2xl overflow-hidden">
                           {/* Reference row — always visible */}
                           <div className="flex items-center justify-between px-4 py-3">
                             <button

@@ -76,23 +76,47 @@ export default async function Home() {
               </div>
             </div>
 
-            {/* Today's Devotion */}
+            {/* Today's Devotion — preview card */}
             {devotion && (
-              <div className="mb-8">
-                <p className="text-white/40 text-xs uppercase tracking-widest text-center mb-1">{todayLabel}</p>
-                <p className="text-white/50 text-xs uppercase tracking-widest text-center mb-5">Today's Devotion</p>
-                <h2 className="text-2xl font-bold text-white text-center mb-5 leading-tight" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 4px 16px rgba(0,0,0,0.9)" }}>
-                  {devotion.title}
-                </h2>
-                <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-5 mb-4">
-                  <p className="text-amber-200 text-xs font-semibold uppercase tracking-widest mb-3">{devotion.verse_reference}</p>
-                  <p className="text-white text-sm leading-relaxed italic" style={{ fontFamily: "'Lora', Georgia, serif", textShadow: "0 1px 6px rgba(0,0,0,0.8)" }}>
-                    "{devotion.verse_text}"
-                  </p>
+              <div className="mb-8 rounded-3xl overflow-hidden shadow-2xl" style={{ boxShadow: "0 8px 40px rgba(0,0,0,0.6)" }}>
+                {/* Card bg — same floral image used on the devotions page */}
+                <div className="relative" style={{
+                  backgroundImage: "url('https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/hoai-thu-pt-nv4FFbP8IuE-unsplash.jpg')",
+                  backgroundSize: "cover", backgroundPosition: "center",
+                }}>
+                  <div className="absolute inset-0 bg-black/52" />
+                  <div className="relative z-10 px-5 pt-5 pb-6">
+
+                    {/* Header row */}
+                    <div className="flex items-center justify-center mb-4">
+                      <p className="text-white font-bold text-base tracking-wide" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>Daily Devotions</p>
+                    </div>
+
+                    <p className="text-white/55 text-xs uppercase tracking-widest text-center mb-1">{todayLabel}</p>
+                    <h2 className="text-2xl font-bold text-white text-center mb-4 leading-tight" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 4px 16px rgba(0,0,0,0.9)" }}>
+                      {devotion.title}
+                    </h2>
+
+                    {/* Scripture block */}
+                    <p className="text-white text-sm leading-relaxed italic text-center mb-1" style={{ fontFamily: "'Lora', Georgia, serif", textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>
+                      &ldquo;{devotion.verse_text}&rdquo;
+                    </p>
+                    <p className="text-white/70 text-xs text-center mb-4" style={{ fontFamily: "'Lora', Georgia, serif" }}>— {devotion.verse_reference}</p>
+
+                    {/* Reflection */}
+                    <p className="text-white text-sm leading-relaxed mb-5" style={{ fontFamily: "'Lora', Georgia, serif", textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
+                      {devotion.reflection}
+                    </p>
+
+                    {/* Action buttons (decorative preview) */}
+                    <div className="flex flex-col items-center gap-2">
+                      <div className="bg-pink-500/70 backdrop-blur-sm text-white text-xs font-semibold px-5 py-2 rounded-full">
+                        🤍 Share This Devotion
+                      </div>
+                    </div>
+
+                  </div>
                 </div>
-                <p className="text-white text-sm leading-relaxed" style={{ fontFamily: "'Lora', Georgia, serif", textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
-                  {devotion.reflection}
-                </p>
               </div>
             )}
 

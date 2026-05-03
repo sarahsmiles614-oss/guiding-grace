@@ -100,11 +100,11 @@ export default function AuthForm() {
           <div className="space-y-3 mb-6">
             <button onClick={handleGoogle} disabled={loading} className="w-full flex items-center justify-center gap-3 text-white text-sm font-medium py-3 transition hover:text-white/70 disabled:opacity-50">
               <svg width="18" height="18" viewBox="0 0 48 48" className="flex-shrink-0"><path fill="#fff" d="M47.5 24.5c0-1.6-.1-3.2-.4-4.7H24v9h13.1c-.6 3-2.3 5.5-4.9 7.2v6h7.9c4.6-4.2 7.4-10.5 7.4-17.5z"/><path fill="#fff" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.9-6c-2.1 1.4-4.8 2.3-8 2.3-6.1 0-11.3-4.1-13.2-9.7H2.7v6.2C6.7 42.9 14.8 48 24 48z"/><path fill="#fff" d="M10.8 28.8c-.5-1.4-.7-2.8-.7-4.3s.3-3 .7-4.3v-6.2H2.7C1 17.4 0 20.6 0 24s1 6.6 2.7 9l8.1-4.2z"/><path fill="#fff" d="M24 9.5c3.4 0 6.5 1.2 8.9 3.5l6.7-6.7C35.9 2.4 30.5 0 24 0 14.8 0 6.7 5.1 2.7 12.8l8.1 4.2C12.7 13.6 17.9 9.5 24 9.5z"/></svg>
-              {isNewUser ? "Sign up" : "Sign in"} with Google
+              Continue with Google
             </button>
             <button onClick={handleFacebook} disabled={loading} className="w-full flex items-center justify-center gap-3 text-white text-sm font-medium py-3 transition hover:text-white/70 disabled:opacity-50">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="white" className="flex-shrink-0"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.413c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>
-              {isNewUser ? "Sign up" : "Sign in"} with Facebook
+              Continue with Facebook
             </button>
           </div>
           <div className="flex items-center gap-3 mb-5">
