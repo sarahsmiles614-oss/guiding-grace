@@ -37,6 +37,8 @@ export default function DiveDeeperPage() {
   const [viewingDate, setViewingDate] = useState(getToday());
   const [pastEntries, setPastEntries] = useState<any[]>([]);
   const [showPast, setShowPast] = useState(false);
+  const [highlights, setHighlights] = useState<any[]>([]);
+  const [copied, setCopied] = useState(false);
 
   // Journal fields
   const [stoodOut, setStoodOut] = useState("");
@@ -52,6 +54,7 @@ export default function DiveDeeperPage() {
     setUserId(user.id);
     await loadDay(getToday(), user.id);
     await loadPastEntries(user.id);
+    await loadHighlights(user.id);
   }
 
   async function loadDay(date: string, uid: string) {
@@ -85,6 +88,36 @@ export default function DiveDeeperPage() {
     }
 
     setLoading(false);
+  }
+
+  async function loadHighlights(uid: string) {
+    const { data } = await supabase
+      .from("bible_highlights")
+      .select("id, verse_reference, verse_text, note, created_at")
+      .eq("user_id", uid)
+      .order("created_at", { ascending: false })
+      .limit(20);
+    if (data) setHighlights(data);
+  }
+
+  async function deleteHighlight(id: string) {
+    await supabase.from("bible_highlights").delete().eq("id", id);
+    setHighlights(prev => prev.filter(h => h.id !== id));
+  }
+
+  async function handleShare() {
+    const lines: string[] = [];
+    if (devotion) lines.push(`"${devotion.verse_text}" — ${devotion.verse_reference}\n`);
+    if (stoodOut) lines.push(`What stood out: ${stoodOut}\n`);
+    if (prayer) lines.push(`My Prayer: ${prayer}`);
+    const text = lines.join("\n");
+    if (navigator.share) {
+      await navigator.share({ title: `My Journal — ${formatDate(viewingDate)}`, text });
+    } else {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    }
   }
 
   async function loadPastEntries(uid: string) {
@@ -266,16 +299,51 @@ export default function DiveDeeperPage() {
                     />
                   </div>
 
-                  {/* Save */}
-                  <button
-                    onClick={handleSave}
-                    disabled={saving}
-                    className={`w-full font-semibold py-4 rounded-2xl border transition text-sm ${saved ? "bg-green-500/30 border-green-400/50 text-green-200" : "bg-white/20 hover:bg-white/30 border-white/40 text-white disabled:opacity-40"}`}
-                  >
-                    {saving ? "Saving..." : saved ? "✓ Entry Saved" : "Save Entry"}
-                  </button>
+                  {/* Save + Share */}
+                  <div className="flex gap-3">
+                    <button
+                      onClick={handleSave}
+                      disabled={saving}
+                      className={`flex-1 font-semibold py-4 rounded-2xl border transition text-sm ${saved ? "bg-green-500/30 border-green-400/50 text-green-200" : "bg-white/20 hover:bg-white/30 border-white/40 text-white disabled:opacity-40"}`}
+                    >
+                      {saving ? "Saving..." : saved ? "✓ Saved" : "Save Entry"}
+                    </button>
+                    <button
+                      onClick={handleShare}
+                      className={`px-5 py-4 rounded-2xl border font-semibold text-sm transition ${copied ? "bg-green-500/25 border-green-400/40 text-green-200" : "bg-white/10 hover:bg-white/20 border-white/30 text-white/80 hover:text-white"}`}
+                    >
+                      {copied ? "Copied!" : "Share"}
+                    </button>
+                  </div>
 
                 </div>
+
+                {/* Bible Highlights */}
+                {highlights.length > 0 && (
+                  <div className="mt-10">
+                    <p className="text-white/50 text-xs uppercase tracking-widest mb-4">Verses You've Highlighted</p>
+                    <div className="space-y-3">
+                      {highlights.map(h => (
+                        <div key={h.id} className="bg-black/40 border border-white/15 rounded-2xl p-4 group">
+                          <div className="flex justify-between items-start mb-2">
+                            <p className="text-amber-200/80 text-xs font-semibold uppercase tracking-widest">{h.verse_reference}</p>
+                            <button
+                              onClick={() => deleteHighlight(h.id)}
+                              className="text-white/20 hover:text-white/60 text-xs transition opacity-0 group-hover:opacity-100"
+                            >✕</button>
+                          </div>
+                          <p className="text-white/90 text-sm italic leading-relaxed mb-2" style={{ fontFamily: "'Lora', Georgia, serif" }}>
+                            "{h.verse_text}"
+                          </p>
+                          {h.note && (
+                            <p className="text-white/60 text-xs leading-relaxed border-t border-white/10 pt-2 mt-2">{h.note}</p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
               </>
             )}
 

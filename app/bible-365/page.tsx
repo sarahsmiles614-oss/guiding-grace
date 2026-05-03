@@ -144,6 +144,12 @@ function Bible365Inner() {
   });
 
 
+  // Journal highlight panel
+  const [selectedVerse, setSelectedVerse] = useState<Verse | null>(null);
+  const [journalNote, setJournalNote] = useState("");
+  const [savingHighlight, setSavingHighlight] = useState(false);
+  const [highlightSaved, setHighlightSaved] = useState(false);
+
   // Bookmarks
   const [bookmarks, setBookmarks] = useState<Set<string>>(new Set());
 
@@ -284,6 +290,23 @@ function Bible365Inner() {
     },
     [userId, planOrder, translation]
   );
+
+  // ── Save verse highlight to journal ──────────────────────────────────────
+  async function saveHighlight(verse: Verse) {
+    if (!userId) return;
+    setSavingHighlight(true);
+    await supabase.from("bible_highlights").insert({
+      user_id: userId,
+      verse_reference: verse.reference,
+      verse_text: verse.text,
+      plan_order: planOrder,
+      day,
+      note: journalNote,
+    });
+    setSavingHighlight(false);
+    setHighlightSaved(true);
+    setTimeout(() => { setHighlightSaved(false); setSelectedVerse(null); setJournalNote(""); }, 2000);
+  }
 
   // ── Fetch scripture when day/view/translation changes ────────────────────
   useEffect(() => {
@@ -545,24 +568,31 @@ function Bible365Inner() {
                           const isCompleted = completedDays.has(entry.day);
                           const isToday = entry.day === savedDay;
                           return (
-                            <button
+                            <div
                               key={entry.day}
-                              onClick={() => { cancelSpeech(); setDay(entry.day); setView("reading"); window.scrollTo({ top: 0 }); }}
-                              className={`w-full text-left px-4 py-3 rounded-xl border flex items-center justify-between transition ${
-                                isToday
-                                  ? "bg-white/25 border-white/40 text-white font-bold"
-                                  : isCompleted
-                                  ? "bg-black/15 border-white/10 text-white/40"
-                                  : "bg-black/20 border-white/10 text-white/80 hover:bg-white/15"
+                              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl border transition ${
+                                isToday ? "bg-white/20 border-white/35" : isCompleted ? "bg-black/10 border-white/8" : "bg-black/15 border-white/10 hover:bg-white/10"
                               }`}
                             >
-                              <div className="min-w-0 flex-1">
-                                <span className="text-white/50 text-xs mr-2">Day {entry.day}</span>
-                                <span className="text-sm">{entry.label}</span>
-                              </div>
-                              {isCompleted && !isToday && <span className="text-white/40 text-xs ml-2 flex-shrink-0">✓</span>}
-                              {isToday && <span className="text-white/80 text-xs font-bold ml-2 flex-shrink-0">Today</span>}
-                            </button>
+                              {/* Circle checkbox */}
+                              <button
+                                onClick={() => isCompleted ? unmarkRead(entry.day) : markRead(entry.day)}
+                                className={`w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition ${
+                                  isCompleted ? "bg-green-400 border-green-400" : isToday ? "border-white/70 hover:border-white" : "border-white/30 hover:border-white/60"
+                                }`}
+                              >
+                                {isCompleted && <svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#000" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>}
+                              </button>
+                              {/* Row — taps to open reading */}
+                              <button
+                                onClick={() => { cancelSpeech(); setDay(entry.day); setView("reading"); window.scrollTo({ top: 0 }); }}
+                                className="flex-1 min-w-0 text-left"
+                              >
+                                <span className={`text-xs mr-2 ${isToday ? "text-white/70" : "text-white/40"}`}>Day {entry.day}</span>
+                                <span className={`text-sm ${isToday ? "text-white font-bold" : isCompleted ? "text-white/40" : "text-white/80"}`}>{entry.label}</span>
+                              </button>
+                              {isToday && <span className="text-white/70 text-xs font-bold flex-shrink-0">Today →</span>}
+                            </div>
                           );
                         })}
                       </div>
@@ -769,9 +799,14 @@ function Bible365Inner() {
                             style={{ textShadow: isActive ? "0 1px 6px rgba(0,0,0,0.95)" : "0 1px 4px rgba(0,0,0,0.8)" }}>
                             {verse.text}
                           </p>
-                          <button onClick={() => toggleBookmark(verse)}
-                            className={`flex-shrink-0 mt-0.5 text-sm leading-none transition-all ${isBookmarked ? `${hl.num} opacity-100` : "text-white/20 opacity-0 group-hover:opacity-100 hover:text-white/60"}`}
-                            title={isBookmarked ? "Remove bookmark" : "Bookmark this verse"}>🔖</button>
+                          <div className="flex flex-col gap-1.5 flex-shrink-0">
+                            <button onClick={() => toggleBookmark(verse)}
+                              className={`text-sm leading-none transition-all ${isBookmarked ? `${hl.num} opacity-100` : "text-white/20 opacity-0 group-hover:opacity-100 hover:text-white/60"}`}
+                              title={isBookmarked ? "Remove bookmark" : "Bookmark"}>🔖</button>
+                            <button onClick={() => { setSelectedVerse(verse); setJournalNote(""); }}
+                              className="text-sm leading-none text-white/20 opacity-0 group-hover:opacity-100 hover:text-white/60 transition-all"
+                              title="Send to Journal">✍️</button>
+                          </div>
                         </div>
                       );
                     })}
@@ -797,6 +832,53 @@ function Bible365Inner() {
           </div>
         </main>
       </PageBackground>
+
+      {/* ── Journal highlight panel (bottom sheet) ── */}
+      {selectedVerse && (
+        <div className="fixed inset-0 z-50 flex items-end" onClick={() => setSelectedVerse(null)}>
+          <div
+            className="w-full bg-black/95 border-t border-white/15 rounded-t-3xl p-6 pb-10 max-w-2xl mx-auto"
+            onClick={e => e.stopPropagation()}
+          >
+            <div className="w-10 h-1 bg-white/25 rounded-full mx-auto mb-5" />
+            <p className="text-white/50 text-xs uppercase tracking-widest mb-3">Save to Journal</p>
+            <div className="bg-white/8 border border-white/15 rounded-2xl p-4 mb-4">
+              <p className="text-amber-200 text-xs font-semibold uppercase tracking-widest mb-2">{selectedVerse.reference}</p>
+              <p className="text-white/90 text-sm italic leading-relaxed" style={{ fontFamily: "'Lora', Georgia, serif" }}>
+                "{selectedVerse.text}"
+              </p>
+            </div>
+            <textarea
+              value={journalNote}
+              onChange={e => setJournalNote(e.target.value)}
+              placeholder="What does this mean to you? (optional)"
+              rows={3}
+              className="w-full bg-white/8 border border-white/15 rounded-xl px-4 py-3 text-white placeholder-white/30 text-sm resize-none focus:outline-none focus:border-white/40 leading-relaxed mb-4"
+              autoFocus
+            />
+            <div className="flex gap-3">
+              <button
+                onClick={() => setSelectedVerse(null)}
+                className="flex-1 py-3 rounded-2xl border border-white/20 text-white/60 hover:text-white text-sm transition"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => saveHighlight(selectedVerse)}
+                disabled={savingHighlight}
+                className={`flex-1 py-3 rounded-2xl border font-semibold text-sm transition ${
+                  highlightSaved
+                    ? "bg-green-500/25 border-green-400/40 text-green-200"
+                    : "bg-white/15 hover:bg-white/25 border-white/30 text-white disabled:opacity-40"
+                }`}
+              >
+                {savingHighlight ? "Saving..." : highlightSaved ? "✓ Saved!" : "Save to Journal"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </SubscriptionGuard>
   );
 }
