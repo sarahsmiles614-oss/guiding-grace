@@ -46,6 +46,7 @@ const BG_OPTIONS = [
   { label: "Ember",     url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images5/ralph_rybak-sunset-290434_1920.jpg" },
   { label: "Blaze",     url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images5/sorbyphoto-sunset-850873_1920.jpg" },
   { label: "Frost",     url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images5/sorbyphoto-winter-5892335_1920.jpg" },
+  { label: "Lake",      url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images5/tommarc-lake-696098_1920.jpg" },
 ];
 
 const FONT_OPTIONS = [
