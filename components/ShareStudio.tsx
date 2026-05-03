@@ -41,6 +41,7 @@ const BG_OPTIONS = [
   { label: "Sparkle",   url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images5/bessi-new-year-background-736885_1920.jpg" },
   { label: "Dusk",      url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images5/cleverpix-sunset-1373171_1920.jpg" },
   { label: "Tree",      url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images5/geralt-tree-94198_1920.jpg" },
+  { label: "Sloth",     url: "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images5/jkdvmim-brown-throated-sloth-6859493_1920.jpg" },
 ];
 
 const FONT_OPTIONS = [
