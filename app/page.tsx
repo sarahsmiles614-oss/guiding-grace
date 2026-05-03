@@ -115,12 +115,14 @@ export default async function Home() {
             </div>
 
             {/* Sign in */}
-            <div className="border-t border-white/10 pt-8 mb-8">
+            <div className="border-t border-white/10 pt-8 mb-8 flex flex-col items-center">
               <h2 className="text-xl font-bold text-white text-center mb-2" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>
                 Start Walking in Grace
               </h2>
               <p className="text-white/50 text-xs text-center mb-6">No credit card required. Cancel anytime.</p>
-              <AuthForm />
+              <div className="w-full max-w-xs">
+                <AuthForm />
+              </div>
             </div>
 
           </div>

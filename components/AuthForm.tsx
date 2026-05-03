@@ -73,7 +73,7 @@ export default function AuthForm() {
   }
 
   return (
-    <div className="w-full max-w-xs mx-auto">
+    <div className="w-full">
       {forgotMode ? (
         <div className="space-y-5">
           <p className="text-white font-semibold text-center">Reset Password</p>
