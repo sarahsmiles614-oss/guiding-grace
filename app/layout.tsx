@@ -5,6 +5,7 @@ import { AuthProvider } from "@/lib/AuthContext";
 import ServiceWorkerRegistration from "@/components/ServiceWorkerRegistration";
 import InstallPrompt from "@/components/InstallPrompt";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import Script from "next/script";
 
 const lora = Lora({
   subsets: ["latin"],
@@ -72,8 +73,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-S7Z1146JP3" />
-        <script dangerouslySetInnerHTML={{ __html: `
+        <Script src="https://www.googletagmanager.com/gtag/js?id=G-S7Z1146JP3" strategy="afterInteractive" />
+        <Script id="google-analytics" strategy="afterInteractive" dangerouslySetInnerHTML={{ __html: `
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
