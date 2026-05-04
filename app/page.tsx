@@ -60,10 +60,12 @@ export default async function Home() {
 
             {/* Hero */}
             <div className="text-center mb-6">
-              <p className="text-white/50 text-xs uppercase tracking-widest mb-3">Your Daily Faith Companion</p>
-              <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4 leading-tight" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 4px 20px rgba(0,0,0,0.8)" }}>
-                365 Days of Grace,<br />Community & Scripture
+              <h1 className="text-5xl sm:text-6xl font-bold text-white mb-2 leading-tight" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 4px 20px rgba(0,0,0,0.8)" }}>
+                Guiding Grace
               </h1>
+              <p className="text-white text-xl sm:text-2xl font-semibold mb-4" style={{ textShadow: "0 2px 10px rgba(0,0,0,0.8)" }}>
+                365 Days of Grace, Community & Scripture
+              </p>
               <p className="text-white text-sm mb-6 leading-relaxed" style={{ textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>
                 Not just a reading plan. A daily faith experience with devotions, live community challenges, a prayer wall, and sacred spaces you will not find anywhere else.
               </p>
