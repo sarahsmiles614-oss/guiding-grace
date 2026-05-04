@@ -135,8 +135,6 @@ export default async function Home() {
 
             {/* Feature Previews */}
             <div className="mb-10">
-              <p className="text-white/50 text-xs uppercase tracking-widest text-center mb-2">Everything inside Guiding Grace</p>
-              <p className="text-white/30 text-xs text-center mb-6">Start your free trial to unlock all features</p>
               <FeaturePreviews />
             </div>
 
