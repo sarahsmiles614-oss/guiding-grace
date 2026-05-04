@@ -168,7 +168,7 @@ export default function HeroesVillainsPage() {
                       placeholder="Search characters by name..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full pl-10 pr-4 py-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-amber-500/50"
+                      className="w-full pl-10 pr-4 py-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl text-white placeholder-white/80 focus:outline-none focus:ring-2 focus:ring-amber-500/50"
                     />
                   </div>
                 </div>

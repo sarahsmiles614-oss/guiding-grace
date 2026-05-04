@@ -167,12 +167,12 @@ export default function SubscribePage() {
 
               <div className="space-y-2.5 mb-4">
                 <input type="text" placeholder="Your name" value={name} onChange={e => setName(e.target.value)}
-                  className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/35 text-sm focus:outline-none focus:border-white/50" />
+                  className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/80 text-sm focus:outline-none focus:border-white/50" />
                 <input type="email" placeholder="Email address" value={email} onChange={e => setEmail(e.target.value)}
-                  className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/35 text-sm focus:outline-none focus:border-white/50" />
+                  className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/80 text-sm focus:outline-none focus:border-white/50" />
                 <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)}
                   onKeyDown={e => e.key === "Enter" && handleTrial()}
-                  className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/35 text-sm focus:outline-none focus:border-white/50" />
+                  className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/80 text-sm focus:outline-none focus:border-white/50" />
               </div>
 
               {authError && <p className="text-red-300 text-sm mb-3">{authError}</p>}

@@ -275,7 +275,7 @@ export default function GroupPage({ params }: { params: Promise<{ id: string }> 
                                 value={myAnswers[i] ?? ""}
                                 onChange={e => setMyAnswers(prev => ({ ...prev, [i]: e.target.value }))}
                                 placeholder="Share your reflection..."
-                                className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/40 text-sm resize-none focus:outline-none focus:border-white/40 mb-2"
+                                className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/80 text-sm resize-none focus:outline-none focus:border-white/40 mb-2"
                                 rows={3}
                               />
                               <button

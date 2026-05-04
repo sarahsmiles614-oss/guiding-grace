@@ -56,7 +56,7 @@ export default function ResetPasswordPage() {
                   placeholder="New password"
                   value={password}
                   onChange={e => setPassword(e.target.value)}
-                  className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/40 text-sm focus:outline-none focus:border-white/50"
+                  className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/80 text-sm focus:outline-none focus:border-white/50"
                 />
                 <input
                   type="password"
@@ -64,7 +64,7 @@ export default function ResetPasswordPage() {
                   value={confirm}
                   onChange={e => setConfirm(e.target.value)}
                   onKeyDown={e => e.key === "Enter" && handleReset()}
-                  className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/40 text-sm focus:outline-none focus:border-white/50"
+                  className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/80 text-sm focus:outline-none focus:border-white/50"
                 />
                 <button
                   onClick={handleReset}

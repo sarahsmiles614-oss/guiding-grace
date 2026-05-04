@@ -194,7 +194,7 @@ export default function AccountContent() {
                     type="text"
                     value={displayName}
                     onChange={e => setDisplayName(e.target.value)}
-                    className="flex-1 bg-transparent border border-white/30 rounded-xl px-4 py-2 text-white text-sm placeholder-white/40 focus:outline-none focus:border-white/60"
+                    className="flex-1 bg-transparent border border-white/30 rounded-xl px-4 py-2 text-white text-sm placeholder-white/80 focus:outline-none focus:border-white/60"
                     placeholder="Your name"
                   />
                   <button

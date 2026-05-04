@@ -169,7 +169,7 @@ export default function PrayerWallPage() {
                 value={request}
                 onChange={(e) => setRequest(e.target.value)}
                 placeholder="Share your prayer request..."
-                className="w-full bg-transparent border border-white/30 rounded-xl px-4 py-3 text-white placeholder-white/40 text-sm resize-none focus:outline-none focus:border-white/60 mb-3"
+                className="w-full bg-transparent border border-white/30 rounded-xl px-4 py-3 text-white placeholder-white/80 text-sm resize-none focus:outline-none focus:border-white/60 mb-3"
                 rows={3}
               />
               <div className="flex justify-end">

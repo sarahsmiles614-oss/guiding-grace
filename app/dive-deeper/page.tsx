@@ -307,7 +307,7 @@ export default function DiveDeeperPage() {
                           onChange={e => setStoodOut(e.target.value)}
                           placeholder="Write freely..."
                           rows={4}
-                          className="w-full bg-transparent border border-white/30 rounded-xl px-4 py-3 text-white placeholder-white/35 text-sm resize-none focus:outline-none focus:border-white/50 leading-relaxed"
+                          className="w-full bg-transparent border border-white/30 rounded-xl px-4 py-3 text-white placeholder-white/80 text-sm resize-none focus:outline-none focus:border-white/50 leading-relaxed"
                         />
                       </div>
 
@@ -324,7 +324,7 @@ export default function DiveDeeperPage() {
                             }}
                             placeholder="Your thoughts..."
                             rows={3}
-                            className="w-full bg-transparent border border-white/30 rounded-xl px-4 py-3 text-white placeholder-white/35 text-sm resize-none focus:outline-none focus:border-white/50 leading-relaxed"
+                            className="w-full bg-transparent border border-white/30 rounded-xl px-4 py-3 text-white placeholder-white/80 text-sm resize-none focus:outline-none focus:border-white/50 leading-relaxed"
                           />
                         </div>
                       ))}
@@ -346,7 +346,7 @@ export default function DiveDeeperPage() {
                           onChange={e => setChallengeResponse(e.target.value)}
                           placeholder="Be honest. Even small steps count."
                           rows={3}
-                          className="w-full bg-transparent border border-white/30 rounded-xl px-4 py-3 text-white placeholder-white/35 text-sm resize-none focus:outline-none focus:border-white/50 leading-relaxed"
+                          className="w-full bg-transparent border border-white/30 rounded-xl px-4 py-3 text-white placeholder-white/80 text-sm resize-none focus:outline-none focus:border-white/50 leading-relaxed"
                         />
                       </div>
 
@@ -358,7 +358,7 @@ export default function DiveDeeperPage() {
                           onChange={e => setPrayer(e.target.value)}
                           placeholder="Dear Lord..."
                           rows={5}
-                          className="w-full bg-transparent border border-white/30 rounded-xl px-4 py-3 text-white placeholder-white/35 text-sm resize-none focus:outline-none focus:border-white/50 leading-relaxed"
+                          className="w-full bg-transparent border border-white/30 rounded-xl px-4 py-3 text-white placeholder-white/80 text-sm resize-none focus:outline-none focus:border-white/50 leading-relaxed"
                         />
                       </div>
 
@@ -476,7 +476,7 @@ export default function DiveDeeperPage() {
                   onChange={e => setReflections(e.target.value)}
                   placeholder="Write whatever is on your heart..."
                   rows={16}
-                  className="w-full bg-transparent border border-white/30 rounded-xl px-4 py-3 text-white placeholder-white/35 text-sm resize-none focus:outline-none focus:border-white/50 leading-relaxed mb-4"
+                  className="w-full bg-transparent border border-white/30 rounded-xl px-4 py-3 text-white placeholder-white/80 text-sm resize-none focus:outline-none focus:border-white/50 leading-relaxed mb-4"
                 />
                 <button
                   onClick={handleSaveReflections}

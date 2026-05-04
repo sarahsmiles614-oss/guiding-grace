@@ -212,7 +212,7 @@ export default function StudyGuidePage() {
                           <div className="py-3 px-2">
                             <textarea
                               placeholder="Write your reflection here..."
-                              className="w-full bg-white/10 border border-white/20 rounded-xl text-white text-sm p-3 placeholder-white/40 focus:outline-none focus:border-white/40 resize-none leading-relaxed"
+                              className="w-full bg-white/10 border border-white/20 rounded-xl text-white text-sm p-3 placeholder-white/80 focus:outline-none focus:border-white/40 resize-none leading-relaxed"
                               rows={4}
                             />
                           </div>
