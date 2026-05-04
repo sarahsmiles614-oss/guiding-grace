@@ -3,6 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import Link from "next/link";
 import AuthForm from "@/components/AuthForm";
 import FeaturePreviews from "@/components/FeaturePreviews";
+import ScreenshotGallery from "@/components/ScreenshotGallery";
 
 const BG = "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images%204/heejing-kim-TqaFGqxiCQo-unsplash.jpg";
 
@@ -132,6 +133,12 @@ export default async function Home() {
                 <p className="text-white/40 text-xs">Sign in to respond and see who the community honors as Most Loved 💛</p>
               </div>
             )}
+
+            {/* Screenshot Gallery */}
+            <div className="mb-4">
+              <p className="text-white/40 text-xs uppercase tracking-widest text-center mb-3">Explore the App</p>
+              <ScreenshotGallery />
+            </div>
 
             {/* Feature Previews */}
             <div className="mb-10">
