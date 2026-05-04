@@ -131,9 +131,14 @@ export default function AuthForm() {
               <span className="text-white/60 text-xs">Remember me</span>
             </div>
           )}
-          <button onClick={handleEmailSubmit} disabled={!email || !password || (isNewUser && !name) || loading} className="w-full text-white font-bold text-sm py-3 transition hover:text-white/70 disabled:opacity-40">
-            {loading ? (isNewUser ? "Creating account..." : "Signing in...") : (isNewUser ? "Create Account" : "Sign In")}
-          </button>
+          {isNewUser && (
+            <button onClick={handleEmailSubmit} disabled={!email || !password || !name || loading} className="w-full text-white font-bold text-sm py-3 transition hover:text-white/70 disabled:opacity-40">
+              {loading ? "Creating account..." : "Create Account"}
+            </button>
+          )}
+          {!isNewUser && loading && (
+            <p className="text-white/60 text-xs text-center py-2">Signing in...</p>
+          )}
           {!isNewUser && (
             <button onClick={() => { setForgotMode(true); reset(); }} className="w-full text-white/60 hover:text-white text-xs py-2 transition">
               Forgot your password?
