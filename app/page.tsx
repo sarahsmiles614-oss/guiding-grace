@@ -4,7 +4,7 @@ import Link from "next/link";
 import AuthForm from "@/components/AuthForm";
 import FeaturePreviews from "@/components/FeaturePreviews";
 
-const BG = "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images3/pexels-umarandrabi-20573268.jpg";
+const BG = "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images%204/heejing-kim-TqaFGqxiCQo-unsplash.jpg";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
