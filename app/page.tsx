@@ -2,7 +2,6 @@ import { Metadata } from "next";
 import { createClient } from "@supabase/supabase-js";
 import Link from "next/link";
 import AuthForm from "@/components/AuthForm";
-import FeaturePreviews from "@/components/FeaturePreviews";
 import ScreenshotGallery from "@/components/ScreenshotGallery";
 import NavMenu from "@/components/NavMenu";
 
@@ -139,10 +138,6 @@ export default async function Home() {
               <ScreenshotGallery />
             </div>
 
-            {/* Feature Previews */}
-            <div className="mb-10">
-              <FeaturePreviews />
-            </div>
 
 
           </div>
