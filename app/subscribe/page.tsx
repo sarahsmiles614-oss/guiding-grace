@@ -154,39 +154,20 @@ export default function SubscribePage() {
           ) : (
             /* Not logged in — sign-up form + trial button all in one */
             <div>
-              <button onClick={() => handleGoogle("trial")} className="w-full flex items-center justify-center gap-3 bg-white/15 hover:bg-white/25 border border-white/30 text-white font-medium py-3 rounded-xl transition mb-4">
+              <button onClick={() => handleGoogle("trial")} disabled={busy} className="w-full flex items-center justify-center gap-3 bg-white/15 hover:bg-white/25 border border-white/30 text-white font-medium py-3 rounded-xl transition mb-3">
                 <svg width="16" height="16" viewBox="0 0 48 48"><path fill="#fff" d="M47.5 24.5c0-1.6-.1-3.2-.4-4.7H24v9h13.1c-.6 3-2.3 5.5-4.9 7.2v6h7.9c4.6-4.2 7.4-10.5 7.4-17.5z"/><path fill="#fff" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.9-6c-2.1 1.4-4.8 2.3-8 2.3-6.1 0-11.3-4.1-13.2-9.7H2.7v6.2C6.7 42.9 14.8 48 24 48z"/><path fill="#fff" d="M10.8 28.8c-.5-1.4-.7-2.8-.7-4.3s.3-3 .7-4.3v-6.2H2.7C1 17.4 0 20.6 0 24s1 6.6 2.7 9l8.1-4.2z"/><path fill="#fff" d="M24 9.5c3.4 0 6.5 1.2 8.9 3.5l6.7-6.7C35.9 2.4 30.5 0 24 0 14.8 0 6.7 5.1 2.7 12.8l8.1 4.2C12.7 13.6 17.9 9.5 24 9.5z"/></svg>
                 Continue with Google → Free Trial
               </button>
 
-              <div className="flex items-center gap-3 mb-4">
-                <div className="flex-1 h-px bg-white/15" />
-                <span className="text-white/35 text-xs">or sign up with email</span>
-                <div className="flex-1 h-px bg-white/15" />
-              </div>
-
-              <div className="space-y-2.5 mb-4">
-                <input type="text" placeholder="Your name" value={name} onChange={e => setName(e.target.value)}
-                  className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/80 text-sm focus:outline-none focus:border-white/50" />
-                <input type="email" placeholder="Email address" value={email} onChange={e => setEmail(e.target.value)}
-                  className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/80 text-sm focus:outline-none focus:border-white/50" />
-                <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)}
-                  onKeyDown={e => e.key === "Enter" && handleTrial()}
-                  className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/80 text-sm focus:outline-none focus:border-white/50" />
-              </div>
-
               {authError && <p className="text-red-300 text-sm mb-3">{authError}</p>}
 
-              <button onClick={handleTrial} disabled={busy} className="w-full bg-white/20 hover:bg-white/30 border border-white/40 text-white font-semibold py-4 rounded-xl transition text-base mb-2 disabled:opacity-50">
-                {busy ? "Please wait..." : "✨ Start Free 3-Day Trial"}
-              </button>
               <p className="text-white/35 text-xs mb-5">No credit card required · Cancel anytime</p>
 
               <div className="grid grid-cols-2 gap-3 mb-5">
-                <button onClick={() => handlePaid("monthly")} disabled={busy} className="bg-white/10 hover:bg-white/20 border border-white/30 text-white font-medium py-3 rounded-xl transition disabled:opacity-50">
+                <button onClick={() => handleGoogle("monthly")} disabled={busy} className="bg-white/10 hover:bg-white/20 border border-white/30 text-white font-medium py-3 rounded-xl transition disabled:opacity-50">
                   <p className="text-lg font-bold">$2.99</p><p className="text-xs text-white/60">per month</p>
                 </button>
-                <button onClick={() => handlePaid("yearly")} disabled={busy} className="bg-white/10 hover:bg-white/20 border border-white/30 text-white font-medium py-3 rounded-xl transition disabled:opacity-50">
+                <button onClick={() => handleGoogle("yearly")} disabled={busy} className="bg-white/10 hover:bg-white/20 border border-white/30 text-white font-medium py-3 rounded-xl transition disabled:opacity-50">
                   <p className="text-lg font-bold">$29.99</p><p className="text-xs text-white/60">per year · save 16%</p>
                 </button>
               </div>
