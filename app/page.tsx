@@ -135,15 +135,6 @@ export default async function Home() {
 
             {/* Feature Previews */}
             <div className="mb-10">
-              <div className="grid grid-cols-2 gap-x-4 gap-y-1.5 mb-6">
-                {[
-                  "📖 Daily Devotions","📿 Bible in 365 Days","📔 Dive Deeper Journal","💛 Grace Challenge",
-                  "💜 Heaven's Hearts","🕊️ His Promises","🔥 Shame Recycle Bin","🙏 P.U.S.H. Prayer Wall",
-                  "🌙 Nightly Reflections","⚔️ Heroes & Villains","🎮 Scripture Match","📣 Truth Testimonies",
-                ].map(f => (
-                  <p key={f} className="text-white text-xs">{f}</p>
-                ))}
-              </div>
               <FeaturePreviews />
             </div>
 

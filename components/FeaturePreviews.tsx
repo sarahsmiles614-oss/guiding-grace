@@ -153,22 +153,15 @@ export default function FeaturePreviews() {
 
             {/* Simulated page UI */}
             <div className="relative h-full flex flex-col p-3">
-              {/* Nav bar */}
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-white/40 text-[9px]">← Back</span>
-                <p className="text-white text-[10px] font-bold text-center" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>{page.header}</p>
-                <span className="w-8" />
+              {/* Feature name at top */}
+              <div className="text-center mb-2">
+                <span className="text-lg">{page.icon}</span>
+                <p className="text-white text-[11px] font-bold leading-tight" style={{ textShadow: "0 1px 6px rgba(0,0,0,1)" }}>{page.label}</p>
               </div>
 
               {/* Page content */}
               <div className="flex-1 overflow-hidden">
                 {page.content}
-              </div>
-
-              {/* Bottom label */}
-              <div className="mt-2 flex items-center gap-1">
-                <span className="text-base">{page.icon}</span>
-                <span className="text-white/60 text-[9px]">{page.label}</span>
               </div>
             </div>
           </div>
