@@ -57,6 +57,8 @@ export default function GraceChallengeContent() {
   const [editText, setEditText] = useState("");
   const [editCompleted, setEditCompleted] = useState<boolean | null>(true);
   const [editSubmitting, setEditSubmitting] = useState(false);
+  const [connectedIds, setConnectedIds] = useState<Set<string>>(new Set());
+  const [pendingConnects, setPendingConnects] = useState<Set<string>>(new Set());
 
   const loadChallenge = useCallback(async () => {
     const today = getToday();
@@ -92,6 +94,19 @@ export default function GraceChallengeContent() {
         if (user.email === "sarahsmiles614@gmail.com") setIsAdmin(true);
         supabase.from("blocked_users").select("blocked_id").eq("blocker_id", user.id).then(({ data }) => {
           if (data) setBlockedIds(new Set(data.map((r: any) => r.blocked_id)));
+        });
+        supabase.from("user_connections").select("requester_id, recipient_id, status").or(`requester_id.eq.${user.id},recipient_id.eq.${user.id}`).then(({ data }) => {
+          if (data) {
+            const connected = new Set<string>();
+            const pending = new Set<string>();
+            data.forEach((c: any) => {
+              const otherId = c.requester_id === user.id ? c.recipient_id : c.requester_id;
+              if (c.status === "accepted") connected.add(otherId);
+              else pending.add(otherId);
+            });
+            setConnectedIds(connected);
+            setPendingConnects(pending);
+          }
         });
       }
     });
@@ -260,6 +275,12 @@ export default function GraceChallengeContent() {
     if (!userId || !confirm("Block this user? Their posts will no longer appear for you.")) return;
     await supabase.from("blocked_users").insert({ blocker_id: userId, blocked_id: blockedUserId });
     setBlockedIds(prev => new Set([...prev, blockedUserId]));
+  }
+
+  async function handleConnect(otherUserId: string) {
+    if (!userId) return;
+    await supabase.from("user_connections").insert({ requester_id: userId, recipient_id: otherUserId, requester_name: userName });
+    setPendingConnects(prev => new Set([...prev, otherUserId]));
   }
 
   async function handleReport(contentId: string, contentText: string, reportedUserId: string) {
@@ -468,6 +489,16 @@ export default function GraceChallengeContent() {
                               title="Save to favorites"
                             >
                               {favorites.includes(post.id) ? "⭐" : "☆"}
+                            </button>
+                          )}
+                          {post.user_id !== userId && !connectedIds.has(post.user_id) && (
+                            <button
+                              onClick={() => handleConnect(post.user_id)}
+                              disabled={pendingConnects.has(post.user_id)}
+                              className="text-xs text-white/50 hover:text-white transition disabled:opacity-40"
+                              title="Connect"
+                            >
+                              {connectedIds.has(post.user_id) ? "✓" : pendingConnects.has(post.user_id) ? "Requested" : "+ Connect"}
                             </button>
                           )}
                           {post.user_id !== userId && (
