@@ -448,14 +448,22 @@ export default function DiveDeeperPage() {
                               {h.note && (
                                 <p className="text-white/90 text-xs leading-relaxed border-t border-white/10 pt-2 mt-2">{h.note}</p>
                               )}
-                              {h.day && (
+                              <div className="flex flex-wrap gap-2 mt-3">
+                                {h.day && (
+                                  <Link
+                                    href={`/bible-365?day=${h.day}`}
+                                    className="inline-flex items-center gap-1 text-white/90 hover:text-white text-xs border border-white/15 hover:border-white/30 rounded-lg px-3 py-1.5 transition"
+                                  >
+                                    📖 Find in Bible — Day {h.day}
+                                  </Link>
+                                )}
                                 <Link
-                                  href={`/bible-365?day=${h.day}`}
-                                  className="inline-flex items-center gap-1 mt-3 text-white/90 hover:text-white text-xs border border-white/15 hover:border-white/30 rounded-lg px-3 py-1.5 transition"
+                                  href={`/promises?scripture=${encodeURIComponent(h.verse_text)}&reference=${encodeURIComponent(h.verse_reference)}`}
+                                  className="inline-flex items-center gap-1 text-amber-200 hover:text-amber-100 text-xs border border-amber-200/30 hover:border-amber-200/50 rounded-lg px-3 py-1.5 transition"
                                 >
-                                  📖 Find in Bible — Day {h.day}
+                                  ✨ Customize &amp; Share
                                 </Link>
-                              )}
+                              </div>
                             </div>
                           )}
                         </div>

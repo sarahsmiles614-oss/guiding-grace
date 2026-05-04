@@ -1,5 +1,6 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import SubscriptionGuard from "@/components/SubscriptionGuard";
 import { supabase } from "@/lib/supabase";
@@ -15,7 +16,8 @@ type Scripture = {
   reflection: string;
 };
 
-export default function PromisesPage() {
+function PromisesContent() {
+  const searchParams = useSearchParams();
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [pool, setPool] = useState<Scripture[]>([]);
   const [current, setCurrent] = useState<Scripture | null>(null);
@@ -36,6 +38,17 @@ export default function PromisesPage() {
       seenRefs.current = [pick.reference];
     });
   }, []);
+
+  // If arriving from Dive Deeper with a specific scripture, load it and open studio
+  useEffect(() => {
+    if (pool.length === 0) return;
+    const scripture = searchParams.get("scripture");
+    const reference = searchParams.get("reference");
+    if (scripture && reference) {
+      setCurrent({ id: "custom", category: "My Scripture", scripture, reference, reflection: "" });
+      setShowStudio(true);
+    }
+  }, [pool]);
 
   // Load user + favorites
   useEffect(() => {
@@ -199,5 +212,13 @@ export default function PromisesPage() {
         </PageBackground>
       </SubscriptionGuard>
     </>
+  );
+}
+
+export default function PromisesPage() {
+  return (
+    <Suspense>
+      <PromisesContent />
+    </Suspense>
   );
 }

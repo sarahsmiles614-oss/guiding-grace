@@ -6,6 +6,7 @@ import { signOut } from "@/lib/auth";
 import Link from "next/link";
 import PageBackground from "@/components/PageBackground";
 import ShareButton from "@/components/ShareButton";
+import NavMenu from "@/components/NavMenu";
 
 const ADMIN_EMAILS = ["sarahsmiles614@gmail.com"];
 
@@ -59,6 +60,7 @@ export default function DashboardContent() {
       <main className="flex-1 p-6 md:p-12 flex flex-col items-center">
         <div className="max-w-5xl w-full">
           <div className="flex justify-between items-center mb-10">
+            <NavMenu />
             <h1 className="text-2xl font-bold text-white" style={{ textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>Guiding Grace</h1>
             <div className="flex items-center gap-6">
               <Link href="/account" className="text-white hover:text-white text-sm">Account</Link>
