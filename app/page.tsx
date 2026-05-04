@@ -4,6 +4,7 @@ import Link from "next/link";
 import AuthForm from "@/components/AuthForm";
 import FeaturePreviews from "@/components/FeaturePreviews";
 import ScreenshotGallery from "@/components/ScreenshotGallery";
+import NavMenu from "@/components/NavMenu";
 
 const BG = "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images%204/heejing-kim-TqaFGqxiCQo-unsplash.jpg";
 
@@ -47,12 +48,10 @@ export default async function Home() {
       <div className="min-h-screen w-full bg-black/30 flex flex-col">
 
         {/* Nav */}
-        <nav className="w-full flex justify-between items-center px-6 pt-6 pb-2">
+        <nav className="w-full flex justify-between items-center px-4 pt-6 pb-2">
+          <NavMenu />
           <p className="text-white font-semibold text-sm" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>Guiding Grace</p>
-          <div className="flex gap-4 text-white/50 text-xs">
-            <Link href="/terms" className="hover:text-white">Terms</Link>
-            <Link href="/privacy" className="hover:text-white">Privacy</Link>
-          </div>
+          <div className="w-9" />
         </nav>
 
         {/* All content centered */}
