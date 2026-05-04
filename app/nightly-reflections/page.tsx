@@ -61,7 +61,7 @@ export default function NightlyReflectionsPage() {
         <div className="relative z-10 flex flex-col h-full">
           <header className="py-2 px-4 flex-shrink-0">
             <div className="flex items-center justify-between">
-              <Link href="/dashboard" className="text-white text-sm hover:text-blue-200">← Dashboard</Link>
+              <Link href="/dashboard" className="text-white text-sm hover:text-blue-200">← Home</Link>
             </div>
           </header>
 

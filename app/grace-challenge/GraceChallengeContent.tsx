@@ -321,7 +321,7 @@ export default function GraceChallengeContent() {
 
             {/* Header */}
             <div className="flex justify-between items-center mb-5">
-              <Link href="/dashboard" className="text-white text-sm hover:text-white transition" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>← Dashboard</Link>
+              <Link href="/dashboard" className="text-white text-sm hover:text-white transition" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>← Home</Link>
               <h1 className="text-xl font-bold text-white" style={{ textShadow: "0 2px 10px rgba(0,0,0,0.9)" }}>Daily Grace Challenge</h1>
               <Link href="/grace-challenge/rules" className="text-white text-sm hover:text-white transition" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>Rules</Link>
             </div>

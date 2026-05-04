@@ -62,7 +62,7 @@ export default function HeroesVillainsPage() {
         <main className="flex-1 p-6 flex flex-col items-center">
           <div className="max-w-6xl w-full">
             <div className="flex justify-between items-center mb-6">
-              <Link href="/dashboard" className="text-white text-sm hover:text-amber-200">← Dashboard</Link>
+              <Link href="/dashboard" className="text-white text-sm hover:text-amber-200">← Home</Link>
               <h1
                 className="text-3xl font-bold text-white"
                 style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 10px rgba(0,0,0,0.7)" }}

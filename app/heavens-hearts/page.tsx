@@ -406,7 +406,7 @@ export default function HeavensHeartsPage() {
           {/* Compact header */}
           <header className="hh-no-print py-3 px-4">
             <div className="max-w-5xl mx-auto flex items-center justify-between gap-3">
-              <Link href="/dashboard" className="text-rose-800 text-sm hover:text-rose-600 shrink-0">← Dashboard</Link>
+              <Link href="/dashboard" className="text-rose-800 text-sm hover:text-rose-600 shrink-0">← Home</Link>
               <h1
                 className="text-xl font-bold text-rose-900 shrink-0"
                 style={{ fontFamily: fontFamily("Playfair Display"), textShadow: "0 1px 4px rgba(255,255,255,0.8)" }}

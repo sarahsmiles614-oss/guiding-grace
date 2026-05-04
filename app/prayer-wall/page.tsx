@@ -134,7 +134,7 @@ export default function PrayerWallPage() {
         <main className="flex-1 flex flex-col p-6 overflow-hidden" style={{ height: "100dvh" }}>
           <div className="max-w-2xl mx-auto w-full flex flex-col flex-1 overflow-hidden">
             <div className="flex justify-between items-center mb-6">
-              <Link href="/dashboard" className="pw-no-print text-white/70 text-sm">← Dashboard</Link>
+              <Link href="/dashboard" className="pw-no-print text-white/70 text-sm">← Home</Link>
               <h1 className="text-lg font-bold text-white" style={{ textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>P.U.S.H. Prayer Wall</h1>
               {/* Action toolbar */}
               <div className="pw-no-print flex items-center gap-2">

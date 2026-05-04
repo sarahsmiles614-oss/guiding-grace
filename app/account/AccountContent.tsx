@@ -144,7 +144,7 @@ export default function AccountContent() {
 
           {/* Header */}
           <div className="flex justify-between items-center mb-8">
-            <Link href="/dashboard" className="text-white/70 text-sm">← Dashboard</Link>
+            <Link href="/dashboard" className="text-white/70 text-sm">← Home</Link>
             <h1 className="text-lg font-bold text-white" style={{ textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>Profile & Settings</h1>
             <button
               onClick={() => signOut().then(() => router.push("/"))}

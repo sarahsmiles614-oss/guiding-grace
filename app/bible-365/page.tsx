@@ -539,7 +539,7 @@ function Bible365Inner() {
                   {pickerStep === "book" ? (
                     <>
                       <div className="flex items-center justify-between pt-4 pb-1">
-                        <Link href="/dashboard" className="text-white/80 hover:text-white text-sm transition">← Dashboard</Link>
+                        <Link href="/dashboard" className="text-white/80 hover:text-white text-sm transition">← Home</Link>
                         <h1 className="text-2xl font-bold text-white text-center">Bible 365</h1>
                         <div className="flex items-center gap-2">
                           {currentStreak > 0 && (

@@ -201,7 +201,7 @@ export default function DevotionsPage() {
         <main className="flex-1 p-6 flex flex-col items-center">
           <div className="w-full max-w-2xl text-center">
             <div className="flex justify-between items-center mb-6">
-              <Link href="/dashboard" className="text-white/70 text-sm">← Dashboard</Link>
+              <Link href="/dashboard" className="text-white/70 text-sm">← Home</Link>
               <h1 className="text-lg font-bold text-white" style={{ textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>Daily Devotions</h1>
               <div className="w-16" />
             </div>
