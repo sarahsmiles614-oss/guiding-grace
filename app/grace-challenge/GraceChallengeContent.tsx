@@ -391,7 +391,7 @@ export default function GraceChallengeContent() {
                     <p className="text-white text-sm uppercase tracking-widest mb-3 text-center" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>Tell the Community</p>
                     <textarea
                       value={response} onChange={e => setResponse(e.target.value)}
-                      placeholder="Who did you reach out to? What happened? Encourage the community with your story..."
+                      placeholder="How did it go? What did you do, say, or feel? Encourage the community with your story..."
                       className="w-full bg-white/10 border border-white/30 rounded-xl px-4 py-3 text-white placeholder-white/60 text-base resize-none focus:outline-none focus:border-white/60 mb-3"
                       rows={4}
                     />
