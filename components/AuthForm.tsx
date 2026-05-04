@@ -147,10 +147,10 @@ export default function AuthForm() {
           <div className="mt-8">
             <Link href="/subscribe">
               <button className="w-full text-white font-semibold text-sm py-3 transition hover:text-white/70">
-                ✨ Start Free Trial — No Card Required
+                ✨ Start Free Trial — Cancel Anytime
               </button>
             </Link>
-            <p className="text-white/60 text-xs mt-1 text-center">No credit card required. Cancel anytime.</p>
+            <p className="text-white/60 text-xs mt-1 text-center">No card required.</p>
           </div>
         </>
       )}
