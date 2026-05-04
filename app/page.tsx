@@ -128,7 +128,7 @@ export default async function Home() {
                   <p className="text-yellow-300 text-xs uppercase tracking-widest font-semibold">Today's Grace Challenge</p>
                   <span className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse" />
                 </div>
-                <p className="text-white text-sm leading-relaxed mb-2">{challenge.challenge_text}</p>
+                <p className="text-white text-xs leading-relaxed mb-2">{challenge.challenge_text}</p>
                 <p className="text-white/40 text-xs">Sign in to respond and see who the community honors as Most Loved 💛</p>
               </div>
             )}
