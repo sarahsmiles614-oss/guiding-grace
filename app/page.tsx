@@ -21,12 +21,20 @@ function getToday() {
 }
 
 export const metadata: Metadata = {
-  title: "Guiding Grace — Daily Christian Devotions, Prayer Wall & Faith Community",
-  description: "A daily faith companion with Scripture devotions, grace challenges, a prayer wall, Bible reading plan, and sacred spaces for your faith journey. Start your free trial.",
+  title: "Guiding Grace — Bible in 365 Days, Daily Devotions & Christian Faith Community",
+  description: "Read the Bible in 365 days with canonical, chronological & more reading plans — each with a connected journal. Plus daily devotions, grace challenges, prayer wall & faith community. Free trial.",
   alternates: { canonical: "https://guidinggrace.app" },
+  keywords: [
+    "Bible in 365 days", "read the Bible in a year", "canonical Bible reading plan",
+    "chronological Bible reading plan", "Bible reading plan with journal",
+    "daily Christian devotions", "grace challenge", "prayer wall app",
+    "Christian faith community", "Bible study journal", "scripture promises",
+    "nightly reflections", "Christian app", "daily devotional app",
+    "Bible 365", "faith companion app", "Guiding Grace",
+  ],
   openGraph: {
-    title: "Guiding Grace — Daily Devotions & Faith Community",
-    description: "Daily devotions, grace challenges, prayer wall, Bible in 365 days, and more. Your daily faith companion.",
+    title: "Guiding Grace — Bible in 365 Days, Daily Devotions & Faith Community",
+    description: "Read the Bible in a year with canonical, chronological & more plans — each with a connected journal. Daily devotions, grace challenges, prayer wall & more. Free trial.",
     url: "https://guidinggrace.app",
     siteName: "Guiding Grace",
     type: "website",
@@ -64,7 +72,7 @@ export default async function Home() {
                 365 Days of Grace,<br />Community & Scripture
               </h1>
               <p className="text-white text-sm mb-6 leading-relaxed" style={{ textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>
-                Not just a reading plan. A daily faith experience with devotions, live community challenges, a prayer wall, and sacred spaces you will not find anywhere else.
+                Read the Bible in 365 days — canonical, chronological, and more — each plan with a connected journal. Plus daily devotions, live grace challenges, a prayer wall, and sacred spaces you will not find anywhere else.
               </p>
             </div>
 

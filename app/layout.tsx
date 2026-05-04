@@ -29,8 +29,8 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://guidinggrace.app",
   },
-  title: "Guiding Grace — Christian Devotional App | Daily Bible Devotions, Study Guide & Prayer",
-  description: "A Christian devotional app with daily Bible devotions, Bible in a year reading plan, study guide, scripture match game, grace challenges, prayer wall, and nightly reflections. Your daily faith companion. Free 3-day trial.",
+  title: "Guiding Grace — Bible in 365 Days | Daily Devotions, Journal & Christian Faith Community",
+  description: "Read the Bible in 365 days with canonical, chronological & more reading plans — each with a connected journal. Daily devotions, grace challenges, prayer wall, scripture promises & faith community. Free 3-day trial.",
   manifest: "/manifest.json",
   metadataBase: new URL("https://guidinggrace.app"),
   keywords: [
