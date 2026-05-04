@@ -4,7 +4,9 @@
   box-sizing: border-box;
   padding: 0;
   margin: 0;
-  font-family: 'Agbalumo', sans-serif !important;
+  font-family: 'Libre Baskerville', Georgia, serif !important;
+  font-weight: 700 !important;
+  font-style: italic !important;
 }
 
 html {
@@ -17,13 +19,13 @@ html, body {
 }
 
 body {
-  font-family: 'Agbalumo', sans-serif !important;
+  font-family: 'Libre Baskerville', Georgia, serif !important;
   font-size: 1rem;
   line-height: 1.7;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Agbalumo', sans-serif !important;
+  font-family: 'Libre Baskerville', Georgia, serif !important;
   line-height: 1.25;
 }
 
