@@ -130,7 +130,24 @@ export default function SubscribePage() {
           <p className="text-white mb-8 text-sm" style={{textShadow:"0 1px 6px rgba(0,0,0,0.9)"}}>Your daily faith companion</p>
 
           <div className="grid grid-cols-2 gap-1.5 mb-8 text-left">
-            {["Daily Devotions","His Promises","Shame Recycle Bin","Heaven's Hearts","Nightly Reflections","Heroes & Villains","P.U.S.H. Prayer Wall","Truth Testimonies","Daily Grace Challenge"].map(f => (
+            {[
+              "Daily Devotions",
+              "Bible in 365 Days",
+              "Canonical Reading Plan",
+              "Chronological Reading Plan",
+              "Bible Study Journal",
+              "Dive Deeper Journal",
+              "His Promises",
+              "Daily Grace Challenge",
+              "P.U.S.H. Prayer Wall",
+              "Heaven's Hearts",
+              "Nightly Reflections",
+              "Heroes & Villains",
+              "Shame Recycle Bin",
+              "Scripture Match Game",
+              "Study Groups",
+              "Grace Connections",
+            ].map(f => (
               <p key={f} className="text-white text-xs flex items-center gap-1.5" style={{textShadow:"0 1px 6px rgba(0,0,0,0.9)"}}><span className="text-green-400 text-xs">✓</span>{f}</p>
             ))}
           </div>
