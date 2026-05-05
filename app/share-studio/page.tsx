@@ -5,11 +5,10 @@ import Link from "next/link";
 import SubscriptionGuard from "@/components/SubscriptionGuard";
 import PageBackground from "@/components/PageBackground";
 
-const BG = "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/gersweb-god-2012104.jpg";
-
 const BASE = "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/";
 
 const BG_OPTIONS = [
+  { label: "Celestial",  url: BASE + "charlvera-ai-generated-8560269_1920.jpg" },
   { label: "Cross",     url: BASE + "jeffjacobs1990-cross-3643027_1920.jpg" },
   { label: "Mountain",  url: BASE + "julius_silver-lago-di-limides-3025780_1920.jpg" },
   { label: "Desert",    url: BASE + "saud-edum-cgapZpzd7v0-unsplash%20(1).jpg" },
