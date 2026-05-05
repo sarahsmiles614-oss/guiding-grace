@@ -57,7 +57,7 @@ export default async function Home() {
         {/* Nav */}
         <nav className="w-full flex justify-between items-center px-4 pt-6 pb-2">
           <NavMenu />
-          <p className="text-white font-semibold text-sm" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>Guiding Grace</p>
+          <p className="text-white font-semibold text-base" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>Guiding Grace</p>
           <div className="w-9" />
         </nav>
 
@@ -67,11 +67,11 @@ export default async function Home() {
 
             {/* Hero */}
             <div className="text-center mb-6">
-              <p className="text-white/50 text-xs uppercase tracking-widest mb-3">Your Daily Faith Companion</p>
+              <p className="text-white/50 text-sm uppercase tracking-widest mb-3">Your Daily Faith Companion</p>
               <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4 leading-tight" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 4px 20px rgba(0,0,0,0.8)" }}>
                 365 Days of Grace,<br />Community & Scripture
               </h1>
-              <p className="text-white text-sm mb-6 leading-relaxed" style={{ textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>
+              <p className="text-white text-base mb-6 leading-relaxed" style={{ textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>
                 Read the Bible in 365 days — canonical, chronological, and more — each plan with a connected journal. Plus daily devotions, live grace challenges, a prayer wall, and sacred spaces you will not find anywhere else.
               </p>
             </div>
@@ -86,7 +86,6 @@ export default async function Home() {
             {/* Today's Devotion — preview card */}
             {devotion && (
               <div className="mb-8 rounded-3xl overflow-hidden shadow-2xl" style={{ boxShadow: "0 8px 40px rgba(0,0,0,0.6)" }}>
-                {/* Card bg — same floral image used on the devotions page */}
                 <div className="relative" style={{
                   backgroundImage: "url('https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/hoai-thu-pt-nv4FFbP8IuE-unsplash.jpg')",
                   backgroundSize: "cover", backgroundPosition: "center",
@@ -94,30 +93,26 @@ export default async function Home() {
                   <div className="absolute inset-0 bg-black/52" />
                   <div className="relative z-10 px-5 pt-5 pb-6">
 
-                    {/* Header row */}
                     <div className="flex items-center justify-center mb-4">
-                      <p className="text-white font-bold text-base tracking-wide" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>Daily Devotions</p>
+                      <p className="text-white font-bold text-lg tracking-wide" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>Daily Devotions</p>
                     </div>
 
-                    <p className="text-white/55 text-xs uppercase tracking-widest text-center mb-1">{todayLabel}</p>
+                    <p className="text-white/55 text-sm uppercase tracking-widest text-center mb-1">{todayLabel}</p>
                     <h2 className="text-2xl font-bold text-white text-center mb-4 leading-tight" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 4px 16px rgba(0,0,0,0.9)" }}>
                       {devotion.title}
                     </h2>
 
-                    {/* Scripture block */}
-                    <p className="text-white text-sm leading-relaxed italic text-center mb-1" style={{ fontFamily: "'Lora', Georgia, serif", textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>
+                    <p className="text-white text-base leading-relaxed italic text-center mb-1" style={{ fontFamily: "'Lora', Georgia, serif", textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>
                       &ldquo;{devotion.verse_text}&rdquo;
                     </p>
-                    <p className="text-white/70 text-xs text-center mb-4" style={{ fontFamily: "'Lora', Georgia, serif" }}>— {devotion.verse_reference}</p>
+                    <p className="text-white/70 text-sm text-center mb-4" style={{ fontFamily: "'Lora', Georgia, serif" }}>— {devotion.verse_reference}</p>
 
-                    {/* Reflection */}
-                    <p className="text-white text-sm leading-relaxed mb-5" style={{ fontFamily: "'Lora', Georgia, serif", textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
+                    <p className="text-white text-base leading-relaxed mb-5" style={{ fontFamily: "'Lora', Georgia, serif", textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
                       {devotion.reflection}
                     </p>
 
-                    {/* Action buttons (decorative preview) */}
                     <div className="flex flex-col items-center gap-2">
-                      <div className="bg-pink-500/70 backdrop-blur-sm text-white text-xs font-semibold px-5 py-2 rounded-full">
+                      <div className="bg-pink-500/70 backdrop-blur-sm text-white text-sm font-semibold px-5 py-2 rounded-full">
                         🤍 Share This Devotion
                       </div>
                     </div>
@@ -132,27 +127,25 @@ export default async function Home() {
               <div className="bg-white/10 backdrop-blur-sm border border-yellow-300/30 rounded-2xl p-5 mb-8">
                 <div className="flex items-center gap-2 mb-3">
                   <span className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse" />
-                  <p className="text-yellow-300 text-xs uppercase tracking-widest font-semibold">Today's Grace Challenge</p>
+                  <p className="text-yellow-300 text-sm uppercase tracking-widest font-semibold">Today's Grace Challenge</p>
                   <span className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse" />
                 </div>
-                <p className="text-white text-xs leading-relaxed mb-2">{challenge.challenge_text}</p>
-                <p className="text-white/40 text-xs">Sign in to respond and see who the community honors as Most Loved 💛</p>
+                <p className="text-white text-base leading-relaxed mb-2">{challenge.challenge_text}</p>
+                <p className="text-white/40 text-sm">Sign in to respond and see who the community honors as Most Loved 💛</p>
               </div>
             )}
 
             {/* Screenshot Gallery */}
             <div className="mb-4">
-              <p className="text-white/40 text-xs uppercase tracking-widest text-center mb-3">Explore the App</p>
+              <p className="text-white/40 text-sm uppercase tracking-widest text-center mb-3">Explore the App</p>
               <ScreenshotGallery />
             </div>
-
-
 
           </div>
         </div>
 
         <footer className="w-full text-center py-6 px-6">
-          <p className="text-white/30 text-xs">
+          <p className="text-white/30 text-sm">
             © {new Date().getFullYear()} Guiding Grace ·
             <Link href="/privacy" className="hover:text-white/50 ml-1">Privacy</Link> ·
             <Link href="/terms" className="hover:text-white/50 ml-1">Terms</Link>
