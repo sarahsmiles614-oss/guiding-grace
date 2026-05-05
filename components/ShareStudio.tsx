@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const BASE = "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/";
 
@@ -106,6 +106,11 @@ export default function ShareStudio({ scripture, reference, onClose }: Props) {
   const [selectedFont, setSelectedFont] = useState(FONT_OPTIONS[0]);
   const [generating, setGenerating] = useState(false);
   const [error, setError] = useState("");
+  const [fontsReady, setFontsReady] = useState(false);
+
+  useEffect(() => {
+    document.fonts.ready.then(() => setFontsReady(true));
+  }, []);
 
   async function generateCanvas(): Promise<HTMLCanvasElement> {
     const resp = await fetch(selectedBg.url);
@@ -300,7 +305,7 @@ export default function ShareStudio({ scripture, reference, onClose }: Props) {
               </p>
               <p className="text-white/40 text-xs">Tap to change</p>
             </div>
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-3 gap-3" key={fontsReady ? "ready" : "loading"}>
               {FONT_OPTIONS.map((font) => (
                 <button key={font.value} onClick={() => setSelectedFont(font)}
                   className={`py-4 px-3 rounded-2xl border text-center transition ${selectedFont.value === font.value ? "border-white bg-white/20" : "border-white/15 bg-white/5 hover:bg-white/10"}`}>

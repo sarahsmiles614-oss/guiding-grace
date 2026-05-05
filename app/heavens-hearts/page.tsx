@@ -74,8 +74,13 @@ export default function HeavensHeartsPage() {
   const [bgIndex, setBgIndex] = useState(0);
   const [saving, setSaving] = useState(false);
   const [tab, setTab] = useState<"wall" | "backgrounds" | "howto">("wall");
+  const [fontsReady, setFontsReady] = useState(false);
   const canvasRef = useRef<HTMLDivElement>(null);
   const latestRef = useRef<{ x: number; y: number; size: number; rotation: number } | null>(null);
+
+  useEffect(() => {
+    document.fonts.ready.then(() => setFontsReady(true));
+  }, []);
 
 
   useEffect(() => {
@@ -595,7 +600,7 @@ export default function HeavensHeartsPage() {
                 {/* Font Selection */}
                 <div className="mb-6">
                   <label className="block text-rose-800 font-medium mb-2 text-sm">Choose a Font Style</label>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2" key={fontsReady ? "ready" : "loading"}>
                     {fontStyles.map((font) => (
                       <button
                         key={font.name}

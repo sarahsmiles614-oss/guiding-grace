@@ -97,12 +97,17 @@ function ShareStudioContent() {
   const [selectedFont, setSelectedFont] = useState(FONT_OPTIONS[0]);
   const [generating, setGenerating] = useState(false);
   const [error, setError] = useState("");
+  const [fontsReady, setFontsReady] = useState(false);
 
   useEffect(() => {
     const s = searchParams.get("scripture") || searchParams.get("text") || "";
     const r = searchParams.get("reference") || searchParams.get("caption") || "";
     if (s) setText(s);
     if (r) setCaption(r);
+  }, []);
+
+  useEffect(() => {
+    document.fonts.ready.then(() => setFontsReady(true));
   }, []);
 
   async function generateCanvas(): Promise<HTMLCanvasElement> {
@@ -304,7 +309,7 @@ function ShareStudioContent() {
             {/* Font picker */}
             <div className="mb-6">
               <p className="text-white text-sm font-semibold mb-3" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>✍️ Font Style</p>
-              <div className="grid grid-cols-3 gap-2.5">
+              <div className="grid grid-cols-3 gap-2.5" key={fontsReady ? "ready" : "loading"}>
                 {FONT_OPTIONS.map((font) => (
                   <button key={font.value} onClick={() => setSelectedFont(font)}
                     className={`py-4 px-3 rounded-2xl border text-center transition ${selectedFont.value === font.value ? "border-white bg-white/20" : "border-white/15 bg-white/5 hover:bg-white/10"}`}>
