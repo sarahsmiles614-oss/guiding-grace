@@ -79,7 +79,9 @@ export default function HeavensHeartsPage() {
   const latestRef = useRef<{ x: number; y: number; size: number; rotation: number } | null>(null);
 
   useEffect(() => {
-    document.fonts.ready.then(() => setFontsReady(true));
+    Promise.allSettled(
+      fontStyles.map(f => document.fonts.load(`16px '${f.value}'`))
+    ).then(() => setFontsReady(true));
   }, []);
 
 

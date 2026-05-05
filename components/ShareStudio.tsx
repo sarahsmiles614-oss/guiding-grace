@@ -111,7 +111,15 @@ export default function ShareStudio({ scripture, reference, onClose }: Props) {
   const [fontsReady, setFontsReady] = useState(false);
 
   useEffect(() => {
-    document.fonts.ready.then(() => setFontsReady(true));
+    Promise.allSettled(
+      FONT_OPTIONS.flatMap(f => {
+        const name = f.family.split(",")[0].replace(/'/g, "").trim();
+        return [
+          document.fonts.load(`16px '${name}'`),
+          document.fonts.load(`italic 16px '${name}'`),
+        ];
+      })
+    ).then(() => setFontsReady(true));
   }, []);
 
   async function generateCanvas(): Promise<HTMLCanvasElement> {

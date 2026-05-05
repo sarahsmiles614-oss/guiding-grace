@@ -111,7 +111,15 @@ function ShareStudioContent() {
   }, []);
 
   useEffect(() => {
-    document.fonts.ready.then(() => setFontsReady(true));
+    Promise.allSettled(
+      FONT_OPTIONS.flatMap(f => {
+        const name = f.family.split(",")[0].replace(/'/g, "").trim();
+        return [
+          document.fonts.load(`16px '${name}'`),
+          document.fonts.load(`italic 16px '${name}'`),
+        ];
+      })
+    ).then(() => setFontsReady(true));
   }, []);
 
   useEffect(() => {
@@ -303,6 +311,7 @@ function ShareStudioContent() {
               style={{
                 width: "min(200px, 55vw)",
                 aspectRatio: "9/16",
+                backgroundColor: "#0f0722",
                 backgroundImage: `url('${selectedBg.url}')`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
@@ -331,7 +340,7 @@ function ShareStudioContent() {
                 {BG_OPTIONS.map((bg) => (
                   <button key={bg.label} onClick={() => setSelectedBg(bg)} className="flex flex-col items-center gap-1 group">
                     <div
-                      className={`w-full rounded-xl bg-cover bg-center transition duration-150 ${selectedBg.label === bg.label ? "ring-2 ring-white ring-offset-1 ring-offset-transparent scale-105" : "opacity-75 hover:opacity-100"}`}
+                      className={`w-full rounded-xl bg-cover bg-center transition duration-150 ${selectedBg.label === bg.label ? "ring-2 ring-white ring-offset-1 ring-offset-transparent scale-105" : "hover:scale-105"}`}
                       style={{ backgroundImage: `url('${bg.url}')`, aspectRatio: "1/1" }}
                     />
                     <span className={`text-[10px] transition ${selectedBg.label === bg.label ? "text-white font-semibold" : "text-white/75"}`}>{bg.label}</span>
