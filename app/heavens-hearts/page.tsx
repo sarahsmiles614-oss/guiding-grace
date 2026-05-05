@@ -77,15 +77,6 @@ export default function HeavensHeartsPage() {
   const canvasRef = useRef<HTMLDivElement>(null);
   const latestRef = useRef<{ x: number; y: number; size: number; rotation: number } | null>(null);
 
-  // Load Google Fonts
-  useEffect(() => {
-    const fonts = ["Cinzel", "Great+Vibes", "Cormorant+Garamond", "Satisfy", "IM+Fell+English", "Dancing+Script", "Quicksand", "Pinyon+Script", "Petit+Formal+Script", "Italiana", "Yeseva+One"];
-    const link = document.createElement("link");
-    link.rel = "stylesheet";
-    link.href = `https://fonts.googleapis.com/css2?${fonts.map((f) => `family=${f}`).join("&")}&display=swap`;
-    document.head.appendChild(link);
-    return () => { document.head.removeChild(link); };
-  }, []);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
