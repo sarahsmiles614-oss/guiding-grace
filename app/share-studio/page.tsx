@@ -111,15 +111,7 @@ function ShareStudioContent() {
   }, []);
 
   useEffect(() => {
-    Promise.allSettled(
-      FONT_OPTIONS.flatMap(f => {
-        const name = f.family.split(",")[0].replace(/'/g, "").trim();
-        return [
-          document.fonts.load(`16px '${name}'`),
-          document.fonts.load(`italic 16px '${name}'`),
-        ];
-      })
-    ).then(() => setFontsReady(true));
+    document.fonts.ready.then(() => setFontsReady(true));
   }, []);
 
   useEffect(() => {
@@ -228,6 +220,12 @@ function ShareStudioContent() {
 
   return (
     <SubscriptionGuard>
+      {/* Force-load all fonts so document.fonts.ready waits for them */}
+      <div aria-hidden="true" style={{ position: "absolute", visibility: "hidden", width: 0, height: 0, overflow: "hidden" }}>
+        {FONT_OPTIONS.map(f => (
+          <span key={f.value} style={{ fontFamily: f.family }}>Aa</span>
+        ))}
+      </div>
       <PageBackground url={selectedBg.url} overlayOpacity={0.35}>
         <main className="flex-1 flex flex-col">
 

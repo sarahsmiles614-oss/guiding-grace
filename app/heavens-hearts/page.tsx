@@ -80,9 +80,7 @@ export default function HeavensHeartsPage() {
   const latestRef = useRef<{ x: number; y: number; size: number; rotation: number } | null>(null);
 
   useEffect(() => {
-    Promise.allSettled(
-      fontStyles.map(f => document.fonts.load(`16px '${f.value}'`))
-    ).then(() => setFontsReady(true));
+    document.fonts.ready.then(() => setFontsReady(true));
   }, []);
 
 
@@ -377,6 +375,11 @@ export default function HeavensHeartsPage() {
 
   return (
     <SubscriptionGuard>
+      <div aria-hidden="true" style={{ position: "absolute", visibility: "hidden", width: 0, height: 0, overflow: "hidden" }}>
+        {fontStyles.map(f => (
+          <span key={f.value} style={{ fontFamily: `'${f.value}', serif` }}>Aa</span>
+        ))}
+      </div>
       <style dangerouslySetInnerHTML={{ __html: `
         @media print {
           * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }

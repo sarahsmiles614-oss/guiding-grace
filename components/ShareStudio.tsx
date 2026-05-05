@@ -111,15 +111,7 @@ export default function ShareStudio({ scripture, reference, onClose }: Props) {
   const [fontsReady, setFontsReady] = useState(false);
 
   useEffect(() => {
-    Promise.allSettled(
-      FONT_OPTIONS.flatMap(f => {
-        const name = f.family.split(",")[0].replace(/'/g, "").trim();
-        return [
-          document.fonts.load(`16px '${name}'`),
-          document.fonts.load(`italic 16px '${name}'`),
-        ];
-      })
-    ).then(() => setFontsReady(true));
+    document.fonts.ready.then(() => setFontsReady(true));
   }, []);
 
   async function generateCanvas(): Promise<HTMLCanvasElement> {
@@ -226,6 +218,11 @@ export default function ShareStudio({ scripture, reference, onClose }: Props) {
 
   return (
     <div className="fixed inset-0 z-50 flex flex-col overflow-hidden">
+      <div aria-hidden="true" style={{ position: "absolute", visibility: "hidden", width: 0, height: 0, overflow: "hidden" }}>
+        {FONT_OPTIONS.map(f => (
+          <span key={f.value} style={{ fontFamily: f.family }}>Aa</span>
+        ))}
+      </div>
       <div className="absolute inset-0 bg-cover bg-center transition-all duration-500"
         style={{ backgroundImage: `url('${selectedBg.url}')` }} />
       <div className="absolute inset-0 bg-black/30" />
