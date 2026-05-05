@@ -17,6 +17,7 @@ html, body {
 
 body {
   font-family: 'Libre Baskerville', Georgia, serif;
+  font-weight: 700;
   font-size: 1rem;
   line-height: 1.7;
 }
