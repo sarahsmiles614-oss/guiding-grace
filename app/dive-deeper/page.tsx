@@ -1,5 +1,6 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import SubscriptionGuard from "@/components/SubscriptionGuard";
 import PageBackground from "@/components/PageBackground";
@@ -28,9 +29,16 @@ function formatDate(dateStr: string) {
   return d.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" });
 }
 
-export default function DiveDeeperPage() {
+function DiveDeeperContent() {
+  const searchParams = useSearchParams();
   const [userId, setUserId] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<Tab>("journal");
+  const [activeTab, setActiveTab] = useState<Tab>(() => {
+    if (typeof window !== "undefined") {
+      const tab = new URLSearchParams(window.location.search).get("tab");
+      if (tab === "scripture" || tab === "reflections") return tab;
+    }
+    return "journal";
+  });
   const [devotion, setDevotion] = useState<any>(null);
   const [questions, setQuestions] = useState<string[]>(DEFAULT_QUESTIONS);
   const [challenge, setChallenge] = useState<any>(null);
@@ -500,5 +508,13 @@ export default function DiveDeeperPage() {
         </main>
       </PageBackground>
     </SubscriptionGuard>
+  );
+}
+
+export default function DiveDeeperPage() {
+  return (
+    <Suspense>
+      <DiveDeeperContent />
+    </Suspense>
   );
 }

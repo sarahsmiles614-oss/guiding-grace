@@ -217,20 +217,21 @@ function ShareStudioContent() {
           <div className="flex-1 overflow-y-auto px-6 pb-24">
 
             {/* Quick source links */}
-            <div className="grid grid-cols-2 gap-3 mb-6">
-              <Link href="/promises" className="flex items-center gap-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-2xl px-4 py-3 transition">
+            <div className="grid grid-cols-3 gap-2 mb-6">
+              <Link href="/promises" className="flex flex-col items-center gap-1.5 bg-white/10 hover:bg-white/20 border border-white/20 rounded-2xl px-3 py-3 transition text-center">
                 <span className="text-xl">🕊️</span>
-                <div>
-                  <p className="text-white text-xs font-semibold leading-tight">His Promises</p>
-                  <p className="text-white/80 text-[10px]">Pick a scripture</p>
-                </div>
+                <p className="text-white text-[11px] font-semibold leading-tight">His Promises</p>
+                <p className="text-white/80 text-[10px]">Pick a scripture</p>
               </Link>
-              <Link href="/heavens-hearts" className="flex items-center gap-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-2xl px-4 py-3 transition">
+              <Link href="/dive-deeper?tab=scripture" className="flex flex-col items-center gap-1.5 bg-white/10 hover:bg-white/20 border border-white/20 rounded-2xl px-3 py-3 transition text-center">
+                <span className="text-xl">📔</span>
+                <p className="text-white text-[11px] font-semibold leading-tight">Dive Deeper</p>
+                <p className="text-white/80 text-[10px]">Saved scriptures</p>
+              </Link>
+              <Link href="/heavens-hearts" className="flex flex-col items-center gap-1.5 bg-white/10 hover:bg-white/20 border border-white/20 rounded-2xl px-3 py-3 transition text-center">
                 <span className="text-xl">💜</span>
-                <div>
-                  <p className="text-white text-xs font-semibold leading-tight">Heaven's Hearts</p>
-                  <p className="text-white/80 text-[10px]">Honor a loved one</p>
-                </div>
+                <p className="text-white text-[11px] font-semibold leading-tight">Heaven's Hearts</p>
+                <p className="text-white/80 text-[10px]">Honor a loved one</p>
               </Link>
             </div>
 
