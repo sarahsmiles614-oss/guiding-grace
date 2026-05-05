@@ -275,20 +275,19 @@ function ShareStudioContent() {
                 backgroundPosition: "center",
                 position: "relative",
               }}>
-              <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, rgba(0,0,0,0.22) 0%, rgba(0,0,0,0.52) 40%, rgba(0,0,0,0.65) 100%)" }} />
               <div className="absolute inset-0 flex flex-col items-center justify-center px-4 text-center">
                 <p className="text-white leading-relaxed mb-2"
-                  style={{ fontFamily: selectedFont.family, fontStyle: selectedFont.italic ? "italic" : "normal", fontSize: "clamp(10px, 3vw, 14px)", textShadow: "0 2px 12px rgba(0,0,0,0.95)" }}>
+                  style={{ fontFamily: selectedFont.family, fontStyle: selectedFont.italic ? "italic" : "normal", fontSize: "clamp(10px, 3vw, 14px)", textShadow: "0 1px 8px rgba(0,0,0,1), 0 2px 20px rgba(0,0,0,1)" }}>
                   &ldquo;{text || "Your text appears here..."}&rdquo;
                 </p>
                 {caption && (
-                  <p className="text-amber-200 font-semibold" style={{ fontSize: "clamp(9px, 2.2vw, 12px)", textShadow: "0 1px 8px rgba(0,0,0,0.9)" }}>
+                  <p className="text-amber-200 font-semibold" style={{ fontSize: "clamp(9px, 2.2vw, 12px)", textShadow: "0 1px 8px rgba(0,0,0,1), 0 2px 16px rgba(0,0,0,1)" }}>
                     &mdash; {caption}
                   </p>
                 )}
               </div>
               <div className="absolute bottom-2 w-full text-center">
-                <p className="text-white/80 font-semibold" style={{ fontSize: "clamp(7px, 1.6vw, 9px)" }}>Guiding Grace</p>
+                <p className="text-white font-semibold" style={{ fontSize: "clamp(7px, 1.6vw, 9px)", textShadow: "0 1px 6px rgba(0,0,0,1)" }}>Guiding Grace</p>
               </div>
             </div>
 
