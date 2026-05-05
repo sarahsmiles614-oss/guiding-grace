@@ -6,7 +6,6 @@ import SubscriptionGuard from "@/components/SubscriptionGuard";
 import { supabase } from "@/lib/supabase";
 import { promises as staticPromises, categories } from "@/lib/promises";
 import PageBackground from "@/components/PageBackground";
-import ShareStudio from "@/components/ShareStudio";
 
 type Scripture = {
   id: string;
@@ -23,7 +22,6 @@ function PromisesContent() {
   const [current, setCurrent] = useState<Scripture | null>(null);
   const [favorites, setFavorites] = useState<string[]>([]);
   const [userId, setUserId] = useState<string | null>(null);
-  const [showStudio, setShowStudio] = useState(false);
   const seenRefs = useRef<string[]>([]);
 
   // Load all scriptures from Supabase, fall back to static list if it fails
@@ -46,7 +44,6 @@ function PromisesContent() {
     const reference = searchParams.get("reference");
     if (scripture && reference) {
       setCurrent({ id: "custom", category: "My Scripture", scripture, reference, reflection: "" });
-      setShowStudio(true);
     }
   }, [pool]);
 
@@ -116,13 +113,6 @@ function PromisesContent() {
 
   return (
     <>
-      {showStudio && (
-        <ShareStudio
-          scripture={current.scripture}
-          reference={current.reference}
-          onClose={() => setShowStudio(false)}
-        />
-      )}
       <SubscriptionGuard>
         <PageBackground url="https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/gersweb-god-2012104.jpg">
           <main className="flex-1 p-6 flex flex-col items-center">
@@ -191,10 +181,13 @@ function PromisesContent() {
                   </button>
                 </div>
 
-                <button onClick={() => setShowStudio(true)} className="flex items-center justify-center gap-2 mt-5 mx-auto w-fit hover:opacity-80 transition">
+                <Link
+                  href={`/share-studio?scripture=${encodeURIComponent(current.scripture)}&reference=${encodeURIComponent(current.reference)}`}
+                  className="flex items-center justify-center gap-2 mt-5 mx-auto w-fit hover:opacity-80 transition"
+                >
                   <span className="text-xl leading-none">🎨</span>
                   <span className="text-white font-semibold text-sm" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.8)" }}>Customize &amp; Share</span>
-                </button>
+                </Link>
               </div>
 
               {/* Link to favorites page */}

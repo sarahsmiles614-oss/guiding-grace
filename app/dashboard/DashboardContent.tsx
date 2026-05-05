@@ -53,6 +53,7 @@ export default function DashboardContent() {
     { label: "P.U.S.H. Prayer Wall", href: "/prayer-wall", icon: "🙏", desc: "Pray Until Something Happens — post and pray together" },
     { label: "Scripture Match", href: "/scripture-match", icon: "🎮", desc: "Match verses and characters — beat your best time" },
     { label: "Study Groups", href: "/study-groups", icon: "✝️", desc: "Study the Word together — group discussion, Q&A, and Bible trivia" },
+    { label: "Share Studio", href: "/share-studio", icon: "🎨", desc: "Create beautiful scripture and memorial cards to share with friends and family" },
   ];
 
   return (

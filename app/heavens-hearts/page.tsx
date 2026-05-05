@@ -406,7 +406,10 @@ export default function HeavensHeartsPage() {
           {/* Compact header */}
           <header className="hh-no-print py-3 px-4">
             <div className="max-w-5xl mx-auto flex items-center justify-between gap-3">
-              <Link href="/dashboard" className="text-rose-800 text-sm hover:text-rose-600 shrink-0">← Home</Link>
+              <div className="flex items-center gap-3 shrink-0">
+                <Link href="/dashboard" className="text-rose-800 text-sm hover:text-rose-600">← Home</Link>
+                <Link href="/share-studio" className="text-rose-700 text-xs hover:text-rose-500 border border-rose-300/60 px-2.5 py-1 rounded-lg hover:bg-white/20 transition">🎨 Create a Card</Link>
+              </div>
               <h1
                 className="text-xl font-bold text-rose-900 shrink-0"
                 style={{ fontFamily: fontFamily("Playfair Display"), textShadow: "0 1px 4px rgba(255,255,255,0.8)" }}

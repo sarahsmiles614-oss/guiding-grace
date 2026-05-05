@@ -15,6 +15,7 @@ const features = [
   { label: "Shame Recycle Bin",    href: "/shame-recycle" },
   { label: "Scripture Match",      href: "/scripture-match" },
   { label: "Study Groups",         href: "/study-groups" },
+  { label: "Share Studio",         href: "/share-studio" },
 ];
 
 export default function NavMenu() {
