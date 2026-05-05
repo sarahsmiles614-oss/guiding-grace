@@ -74,6 +74,8 @@ const FONT_OPTIONS = [
   { label: "Philosopher", value: "philosopher", family: "'Philosopher', Georgia, serif",            italic: true  },
   { label: "Goudy",       value: "goudy",       family: "'Sorts Mill Goudy', Georgia, serif",       italic: true  },
   { label: "Baskerville", value: "baskerville", family: "'Libre Baskerville', Georgia, serif",      italic: true  },
+  { label: "Cinzel Dec",  value: "cinzeldec",   family: "'Cinzel Decorative', Georgia, serif",      italic: false },
+  { label: "Pacifico",    value: "pacifico",    family: "'Pacifico', cursive",                      italic: false },
 ];
 
 function wrapText(ctx: CanvasRenderingContext2D, text: string, maxWidth: number): string[] {
