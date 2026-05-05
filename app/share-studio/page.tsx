@@ -277,11 +277,11 @@ function ShareStudioContent() {
               }}>
               <div className="absolute inset-0 flex flex-col items-center justify-center px-4 text-center">
                 <p className="text-white leading-relaxed mb-2"
-                  style={{ fontFamily: selectedFont.family, fontStyle: selectedFont.italic ? "italic" : "normal", fontSize: "clamp(10px, 3vw, 14px)", textShadow: "0 1px 8px rgba(0,0,0,1), 0 2px 20px rgba(0,0,0,1)" }}>
+                  style={{ fontFamily: selectedFont.family, fontStyle: selectedFont.italic ? "italic" : "normal", fontSize: "clamp(13px, 4vw, 18px)", textShadow: "0 1px 8px rgba(0,0,0,1), 0 2px 20px rgba(0,0,0,1)", color: "#ffffff" }}>
                   &ldquo;{text || "Your text appears here..."}&rdquo;
                 </p>
                 {caption && (
-                  <p className="text-amber-200 font-semibold" style={{ fontSize: "clamp(9px, 2.2vw, 12px)", textShadow: "0 1px 8px rgba(0,0,0,1), 0 2px 16px rgba(0,0,0,1)" }}>
+                  <p className="font-semibold" style={{ fontSize: "clamp(11px, 3vw, 15px)", textShadow: "0 1px 8px rgba(0,0,0,1), 0 2px 16px rgba(0,0,0,1)", color: "#FDE68A" }}>
                     &mdash; {caption}
                   </p>
                 )}
