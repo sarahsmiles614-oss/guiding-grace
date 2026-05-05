@@ -4,6 +4,7 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import SubscriptionGuard from "@/components/SubscriptionGuard";
 import PageBackground from "@/components/PageBackground";
+import { supabase } from "@/lib/supabase";
 
 const BASE = "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/";
 
@@ -100,6 +101,7 @@ function ShareStudioContent() {
   const [generating, setGenerating] = useState(false);
   const [error, setError] = useState("");
   const [fontsReady, setFontsReady] = useState(false);
+  const [favorites, setFavorites] = useState<{ scripture: string; reference: string; category: string }[]>([]);
 
   useEffect(() => {
     const s = searchParams.get("scripture") || searchParams.get("text") || "";
@@ -110,6 +112,18 @@ function ShareStudioContent() {
 
   useEffect(() => {
     document.fonts.ready.then(() => setFontsReady(true));
+  }, []);
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (!user) return;
+      supabase
+        .from("ai_favorite_promises")
+        .select("scripture, reference, category")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false })
+        .then(({ data }) => { if (data) setFavorites(data); });
+    });
   }, []);
 
   async function generateCanvas(): Promise<HTMLCanvasElement> {
@@ -241,6 +255,25 @@ function ShareStudioContent() {
                 <p className="text-white/80 text-[10px]">Honor a loved one</p>
               </Link>
             </div>
+
+            {/* Favorites */}
+            {favorites.length > 0 && (
+              <div className="mb-5">
+                <p className="text-white text-xs uppercase tracking-widest mb-2">💜 My Favorites</p>
+                <div className="flex flex-col gap-2">
+                  {favorites.map((fav, i) => (
+                    <button
+                      key={i}
+                      onClick={() => { setText(fav.scripture); setCaption(fav.reference); }}
+                      className="text-left bg-white/10 hover:bg-white/20 border border-white/20 rounded-2xl px-4 py-3 transition"
+                    >
+                      <p className="text-white text-xs font-semibold leading-snug line-clamp-2">"{fav.scripture}"</p>
+                      <p className="text-amber-200 text-[10px] mt-1">— {fav.reference}</p>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Text inputs */}
             <div className="mb-5 space-y-3">
