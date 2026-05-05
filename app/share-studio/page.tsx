@@ -204,12 +204,12 @@ function ShareStudioContent() {
 
           {/* Header */}
           <div className="flex justify-between items-center px-6 pt-8 pb-4 flex-shrink-0">
-            <Link href="/dashboard" className="text-white/70 hover:text-white text-sm transition">← Back</Link>
+            <Link href="/dashboard" className="text-white hover:text-white text-sm transition">← Back</Link>
             <div className="text-center">
               <p className="text-white font-bold text-base" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 1px 8px rgba(0,0,0,0.8)" }}>
                 Share Studio
               </p>
-              <p className="text-white/40 text-xs">Customize &amp; share your card</p>
+              <p className="text-white/70 text-xs">Customize &amp; share your card</p>
             </div>
             <div className="w-12" />
           </div>
@@ -222,14 +222,14 @@ function ShareStudioContent() {
                 <span className="text-xl">🕊️</span>
                 <div>
                   <p className="text-white text-xs font-semibold leading-tight">His Promises</p>
-                  <p className="text-white/50 text-[10px]">Pick a scripture</p>
+                  <p className="text-white/80 text-[10px]">Pick a scripture</p>
                 </div>
               </Link>
               <Link href="/heavens-hearts" className="flex items-center gap-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-2xl px-4 py-3 transition">
                 <span className="text-xl">💜</span>
                 <div>
                   <p className="text-white text-xs font-semibold leading-tight">Heaven's Hearts</p>
-                  <p className="text-white/50 text-[10px]">Honor a loved one</p>
+                  <p className="text-white/80 text-[10px]">Honor a loved one</p>
                 </div>
               </Link>
             </div>
@@ -237,22 +237,22 @@ function ShareStudioContent() {
             {/* Text inputs */}
             <div className="mb-5 space-y-3">
               <div>
-                <p className="text-white/60 text-xs uppercase tracking-widest mb-1.5">Your Text</p>
+                <p className="text-white text-xs uppercase tracking-widest mb-1.5">Your Text</p>
                 <textarea
                   value={text}
                   onChange={e => setText(e.target.value)}
                   placeholder="Type a scripture, quote, or message..."
                   rows={4}
-                  className="w-full bg-white/10 border border-white/25 rounded-2xl px-4 py-3 text-white placeholder-white/40 text-sm resize-none focus:outline-none focus:border-white/50 leading-relaxed"
+                  className="w-full bg-white/10 border border-white/25 rounded-2xl px-4 py-3 text-white placeholder-white/60 text-sm resize-none focus:outline-none focus:border-white/50 leading-relaxed"
                 />
               </div>
               <div>
-                <p className="text-white/60 text-xs uppercase tracking-widest mb-1.5">Reference / Caption</p>
+                <p className="text-white text-xs uppercase tracking-widest mb-1.5">Reference / Caption</p>
                 <input
                   value={caption}
                   onChange={e => setCaption(e.target.value)}
                   placeholder="e.g. John 3:16 or In loving memory of..."
-                  className="w-full bg-white/10 border border-white/25 rounded-2xl px-4 py-3 text-white placeholder-white/40 text-sm focus:outline-none focus:border-white/50"
+                  className="w-full bg-white/10 border border-white/25 rounded-2xl px-4 py-3 text-white placeholder-white/60 text-sm focus:outline-none focus:border-white/50"
                 />
               </div>
             </div>
@@ -280,7 +280,7 @@ function ShareStudioContent() {
                 )}
               </div>
               <div className="absolute bottom-2 w-full text-center">
-                <p className="text-white/50 font-semibold" style={{ fontSize: "clamp(7px, 1.6vw, 9px)" }}>Guiding Grace</p>
+                <p className="text-white/80 font-semibold" style={{ fontSize: "clamp(7px, 1.6vw, 9px)" }}>Guiding Grace</p>
               </div>
             </div>
 
@@ -294,7 +294,7 @@ function ShareStudioContent() {
                       className={`w-full rounded-xl bg-cover bg-center transition duration-150 ${selectedBg.label === bg.label ? "ring-2 ring-white ring-offset-1 ring-offset-transparent scale-105" : "opacity-75 hover:opacity-100"}`}
                       style={{ backgroundImage: `url('${bg.url}')`, aspectRatio: "1/1" }}
                     />
-                    <span className={`text-[10px] transition ${selectedBg.label === bg.label ? "text-white font-semibold" : "text-white/40"}`}>{bg.label}</span>
+                    <span className={`text-[10px] transition ${selectedBg.label === bg.label ? "text-white font-semibold" : "text-white/75"}`}>{bg.label}</span>
                   </button>
                 ))}
               </div>
@@ -308,7 +308,7 @@ function ShareStudioContent() {
                   <button key={font.value} onClick={() => setSelectedFont(font)}
                     className={`py-4 px-3 rounded-2xl border text-center transition ${selectedFont.value === font.value ? "border-white bg-white/20" : "border-white/15 bg-white/5 hover:bg-white/10"}`}>
                     <p className="text-white text-xl mb-1 leading-none" style={{ fontFamily: font.family, fontStyle: font.italic ? "italic" : "normal" }}>Aa</p>
-                    <p className={`text-xs transition ${selectedFont.value === font.value ? "text-white font-semibold" : "text-white/50"}`}>{font.label}</p>
+                    <p className={`text-xs transition ${selectedFont.value === font.value ? "text-white font-semibold" : "text-white/80"}`}>{font.label}</p>
                   </button>
                 ))}
               </div>
