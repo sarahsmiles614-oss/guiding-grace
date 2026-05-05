@@ -31,6 +31,7 @@ const fontStyles = [
   { name: "Delicate Script", value: "Petit Formal Script" },
   { name: "Stately Italic", value: "Italiana" },
   { name: "Royal Display", value: "Yeseva One" },
+  { name: "Fine Script", value: "Tangerine" },
 ];
 
 function fontFamily(fontValue: string) {
