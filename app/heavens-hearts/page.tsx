@@ -609,9 +609,10 @@ export default function HeavensHeartsPage() {
                       <button
                         key={font.name}
                         onClick={() => setSelectedFont(font)}
-                        className={`p-3 rounded-lg border-2 transition ${selectedFont.name === font.name ? "border-rose-600 bg-rose-50" : "border-rose-200 bg-white hover:border-rose-300"}`}
+                        className={`p-3 rounded-lg border-2 transition text-center ${selectedFont.name === font.name ? "border-rose-600 bg-rose-50" : "border-rose-200 bg-white hover:border-rose-300"}`}
                       >
-                        <span className="text-base text-rose-900" style={{ fontFamily: fontFamily(font.value) }}>{font.name}</span>
+                        <p className="text-2xl text-rose-900 mb-1 leading-tight" style={{ fontFamily: fontFamily(font.value) }}>Aa</p>
+                        <p className="text-[10px] text-rose-600">{font.name}</p>
                       </button>
                     ))}
                   </div>
