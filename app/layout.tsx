@@ -5,6 +5,7 @@ import { AuthProvider } from "@/lib/AuthContext";
 import ServiceWorkerRegistration from "@/components/ServiceWorkerRegistration";
 import InstallPrompt from "@/components/InstallPrompt";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/next";
 import Script from "next/script";
 
 const lora = Lora({
@@ -134,6 +135,7 @@ export default function RootLayout({
         <InstallPrompt />
         <AuthProvider>{children}</AuthProvider>
         <SpeedInsights />
+        <Analytics />
       </body>
     </html>
   );
