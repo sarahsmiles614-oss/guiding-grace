@@ -578,13 +578,20 @@ export default function HeavensHeartsPage() {
 
                 <div className="mb-5">
                   <label className="block text-rose-800 font-medium mb-2 text-sm">Their name</label>
-                  <input
-                    type="text"
-                    value={newName}
-                    onChange={(e) => setNewName(e.target.value)}
-                    placeholder="e.g., Grandma Rose"
-                    className="w-full px-4 py-3 rounded-lg border-2 border-rose-200 focus:border-rose-400 outline-none text-rose-900"
-                  />
+                  <div className="flex flex-col sm:flex-row items-stretch gap-3">
+                    <input
+                      type="text"
+                      value={newName}
+                      onChange={(e) => setNewName(e.target.value)}
+                      placeholder="e.g., Grandma Rose"
+                      className="flex-1 px-4 py-3 rounded-lg border-2 border-rose-200 focus:border-rose-400 outline-none text-rose-900"
+                    />
+                    <div className="flex-1 flex items-center justify-center px-5 py-3 rounded-lg bg-gradient-to-br from-rose-50 to-pink-100 border-2 border-rose-200 min-h-[52px] overflow-hidden">
+                      <p className="text-2xl drop-shadow whitespace-nowrap" style={{ fontFamily: fontFamily(selectedFont.value), color: newName ? selectedColor : "#e2a0b4" }}>
+                        {newName || "preview"}
+                      </p>
+                    </div>
+                  </div>
                 </div>
 
                 {/* Color Picker */}
@@ -620,17 +627,7 @@ export default function HeavensHeartsPage() {
                   </div>
                 </div>
 
-                {/* Preview */}
-                <div className="mb-5 p-5 rounded-xl bg-gradient-to-br from-rose-50 to-pink-50 border border-rose-200">
-                  <p className="text-xs text-rose-600 uppercase tracking-wide mb-2 font-semibold">Preview</p>
-                  <div className="inline-block px-5 py-3 rounded-lg shadow" style={{ backgroundColor: selectedColor }}>
-                    <p className="text-2xl text-white drop-shadow" style={{ fontFamily: fontFamily(selectedFont.value) }}>
-                      {newName || "Your Loved One's Name"}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex gap-3">
+<div className="flex gap-3">
                   <button
                     onClick={handleAdd}
                     disabled={!newName.trim()}
