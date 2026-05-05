@@ -4,13 +4,10 @@
   box-sizing: border-box;
   padding: 0;
   margin: 0;
-  font-family: 'Libre Baskerville', Georgia, serif !important;
-  font-weight: 700 !important;
-  font-style: italic !important;
 }
 
 html {
-  font-size: 22px;
+  font-size: 16px;
 }
 
 html, body {
@@ -19,13 +16,13 @@ html, body {
 }
 
 body {
-  font-family: 'Libre Baskerville', Georgia, serif !important;
+  font-family: 'Libre Baskerville', Georgia, serif;
   font-size: 1rem;
   line-height: 1.7;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Libre Baskerville', Georgia, serif !important;
+  font-family: 'Libre Baskerville', Georgia, serif;
   line-height: 1.25;
 }
 
