@@ -53,15 +53,28 @@ const BG_OPTIONS = [
 ];
 
 const FONT_OPTIONS = [
-  { label: "Classic",  value: "classic",  family: "'Playfair Display', Georgia, serif",     italic: true  },
-  { label: "Modern",   value: "modern",   family: "'Josefin Sans', system-ui, sans-serif",  italic: false },
-  { label: "Grace",    value: "grace",    family: "'Dancing Script', cursive",               italic: false },
-  { label: "Regal",    value: "regal",    family: "'Cinzel', Georgia, serif",                italic: false },
-  { label: "Elegant",  value: "elegant",  family: "'Cormorant Garamond', Georgia, serif",    italic: true  },
-  { label: "Lora",     value: "lora",     family: "'Lora', Georgia, serif",                  italic: true  },
-  { label: "Pinyon",   value: "pinyon",   family: "'Pinyon Script', cursive",                italic: false },
-  { label: "Garamond", value: "garamond", family: "'EB Garamond', Georgia, serif",           italic: true  },
-  { label: "Italiana", value: "italiana", family: "'Italiana', Georgia, serif",              italic: false },
+  { label: "Classic",     value: "classic",     family: "'Playfair Display', Georgia, serif",      italic: true  },
+  { label: "Lora",        value: "lora",        family: "'Lora', Georgia, serif",                   italic: true  },
+  { label: "Grace",       value: "grace",       family: "'Dancing Script', cursive",                italic: false },
+  { label: "Regal",       value: "regal",       family: "'Cinzel', Georgia, serif",                 italic: false },
+  { label: "Elegant",     value: "elegant",     family: "'Cormorant Garamond', Georgia, serif",     italic: true  },
+  { label: "Pinyon",      value: "pinyon",      family: "'Pinyon Script', cursive",                 italic: false },
+  { label: "Garamond",    value: "garamond",    family: "'EB Garamond', Georgia, serif",            italic: true  },
+  { label: "Italiana",    value: "italiana",    family: "'Italiana', Georgia, serif",               italic: false },
+  { label: "Great Vibes", value: "greatvibes",  family: "'Great Vibes', cursive",                   italic: false },
+  { label: "Tangerine",   value: "tangerine",   family: "'Tangerine', cursive",                     italic: false },
+  { label: "Sacramento",  value: "sacramento",  family: "'Sacramento', cursive",                    italic: false },
+  { label: "Crimson",     value: "crimson",     family: "'Crimson Text', Georgia, serif",           italic: true  },
+  { label: "Merriweather",value: "merriweather",family: "'Merriweather', Georgia, serif",           italic: true  },
+  { label: "Raleway",     value: "raleway",     family: "'Raleway', system-ui, sans-serif",         italic: false },
+  { label: "Yeseva",      value: "yeseva",      family: "'Yeseva One', Georgia, serif",             italic: false },
+  { label: "Spectral",    value: "spectral",    family: "'Spectral', Georgia, serif",               italic: true  },
+  { label: "Fondamento",  value: "fondamento",  family: "'Fondamento', cursive",                    italic: false },
+  { label: "Modern",      value: "modern",      family: "'Josefin Sans', system-ui, sans-serif",   italic: false },
+  { label: "Lato",        value: "lato",        family: "'Lato', system-ui, sans-serif",            italic: false },
+  { label: "Philosopher", value: "philosopher", family: "'Philosopher', Georgia, serif",            italic: true  },
+  { label: "Goudy",       value: "goudy",       family: "'Sorts Mill Goudy', Georgia, serif",       italic: true  },
+  { label: "Baskerville", value: "baskerville", family: "'Libre Baskerville', Georgia, serif",      italic: true  },
 ];
 
 function wrapText(ctx: CanvasRenderingContext2D, text: string, maxWidth: number): string[] {
