@@ -1,16 +1,33 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
+import { createClient } from "@supabase/supabase-js";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2026-03-25.dahlia" as any,
 });
+
+const supabaseAdmin = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
 
 export async function POST(req: NextRequest) {
   try {
     const { userId, email, mode } = await req.json();
     const customer = await stripe.customers.create({ email, metadata: { userId } });
 
-    const isTrial = mode === "trial" || !mode;
+    // Block trial if user already has any subscription record (active, cancelled, or expired)
+    let requestedTrial = mode === "trial" || !mode;
+    if (requestedTrial) {
+      const { data: existing } = await supabaseAdmin
+        .from("subscriptions")
+        .select("id")
+        .eq("user_id", userId)
+        .maybeSingle();
+      if (existing) requestedTrial = false;
+    }
+
+    const isTrial = requestedTrial;
     const isYearly = mode === "yearly";
 
     const successUrl = "https://guidinggrace.app/success";
