@@ -38,16 +38,22 @@ export default function SubscribePage() {
 
   async function goCheckout(mode: Mode, uid: string, userEmail: string) {
     setBusy(true);
-    const res = await fetch("/api/create-checkout-session", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userId: uid, email: userEmail, mode }),
-    });
-    const data = await res.json();
-    if (data.url) {
-      window.location.href = data.url;
-    } else {
-      setAuthError("Something went wrong. Please try again.");
+    setAuthError("");
+    try {
+      const res = await fetch("/api/create-checkout-session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: uid, email: userEmail, mode }),
+      });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        setAuthError(data.error || "Something went wrong. Please try again.");
+        setBusy(false);
+      }
+    } catch {
+      setAuthError("Network error. Please check your connection and try again.");
       setBusy(false);
     }
   }
@@ -95,7 +101,13 @@ export default function SubscribePage() {
     }
   }
 
-  if (loading) return null;
+  if (loading) return (
+    <PageBackground url={BG}>
+      <main className="flex-1 flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+      </main>
+    </PageBackground>
+  );
 
   if (checkEmail) {
     return (
