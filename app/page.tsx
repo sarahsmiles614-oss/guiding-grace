@@ -67,11 +67,11 @@ export default async function Home() {
 
             {/* Hero */}
             <div className="text-center mb-6">
-              <p className="text-white/50 text-sm uppercase tracking-widest mb-3">Your Daily Faith Companion</p>
-              <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4 leading-tight" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 4px 20px rgba(0,0,0,0.8)" }}>
+              <p className="text-white/50 text-base uppercase tracking-widest mb-3">Your Daily Faith Companion</p>
+              <h1 className="text-5xl sm:text-6xl font-bold text-white mb-4 leading-tight" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 4px 20px rgba(0,0,0,0.8)" }}>
                 365 Days of Grace,<br />Community & Scripture
               </h1>
-              <p className="text-white text-base mb-6 leading-relaxed" style={{ textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>
+              <p className="text-white text-lg mb-6 leading-relaxed" style={{ textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>
                 Read the Bible in 365 days — canonical, chronological, and more — each plan with a connected journal. Plus daily devotions, live grace challenges, a prayer wall, and sacred spaces you will not find anywhere else.
               </p>
             </div>
@@ -97,15 +97,15 @@ export default async function Home() {
                       <p className="text-white font-bold text-lg tracking-wide" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>Daily Devotions</p>
                     </div>
 
-                    <p className="text-white/55 text-sm uppercase tracking-widest text-center mb-1">{todayLabel}</p>
+                    <p className="text-white/55 text-base uppercase tracking-widest text-center mb-1">{todayLabel}</p>
                     <h2 className="text-2xl font-bold text-white text-center mb-4 leading-tight" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 4px 16px rgba(0,0,0,0.9)" }}>
                       {devotion.title}
                     </h2>
 
-                    <p className="text-white text-base leading-relaxed italic text-center mb-1" style={{ fontFamily: "'Lora', Georgia, serif", textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>
+                    <p className="text-white text-lg leading-relaxed italic text-center mb-1" style={{ fontFamily: "'Lora', Georgia, serif", textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>
                       &ldquo;{devotion.verse_text}&rdquo;
                     </p>
-                    <p className="text-white/70 text-sm text-center mb-4" style={{ fontFamily: "'Lora', Georgia, serif" }}>— {devotion.verse_reference}</p>
+                    <p className="text-white/70 text-base text-center mb-4" style={{ fontFamily: "'Lora', Georgia, serif" }}>— {devotion.verse_reference}</p>
 
                     <p className="text-white text-base leading-relaxed mb-5" style={{ fontFamily: "'Lora', Georgia, serif", textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
                       {devotion.reflection}
@@ -127,17 +127,17 @@ export default async function Home() {
               <div className="bg-white/10 backdrop-blur-sm border border-yellow-300/30 rounded-2xl p-5 mb-8">
                 <div className="flex items-center gap-2 mb-3">
                   <span className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse" />
-                  <p className="text-yellow-300 text-sm uppercase tracking-widest font-semibold">Today's Grace Challenge</p>
+                  <p className="text-yellow-300 text-base uppercase tracking-widest font-semibold">Today's Grace Challenge</p>
                   <span className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse" />
                 </div>
-                <p className="text-white text-base leading-relaxed mb-2">{challenge.challenge_text}</p>
-                <p className="text-white/40 text-sm">Sign in to respond and see who the community honors as Most Loved 💛</p>
+                <p className="text-white text-lg leading-relaxed mb-2">{challenge.challenge_text}</p>
+                <p className="text-white/40 text-base">Sign in to respond and see who the community honors as Most Loved 💛</p>
               </div>
             )}
 
             {/* Screenshot Gallery */}
             <div className="mb-4">
-              <p className="text-white/40 text-sm uppercase tracking-widest text-center mb-3">Explore the App</p>
+              <p className="text-white/40 text-base uppercase tracking-widest text-center mb-3">Explore the App</p>
               <ScreenshotGallery />
             </div>
 

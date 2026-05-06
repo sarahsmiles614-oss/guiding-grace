@@ -73,12 +73,12 @@ export default function NavMenu() {
       </button>
 
       {open && (
-        <div className="absolute left-0 top-10 w-56 bg-black/80 backdrop-blur-md border border-white/20 rounded-2xl overflow-hidden shadow-2xl z-50">
+        <div className="absolute left-0 top-10 w-64 bg-black/80 backdrop-blur-md border border-white/20 rounded-2xl overflow-hidden shadow-2xl z-50">
           <div className="px-3 pt-3 pb-1">
-            <p className="text-white/40 text-[10px] uppercase tracking-widest px-2 mb-1">Features</p>
+            <p className="text-white/40 text-xs uppercase tracking-widest px-2 mb-1">Features</p>
             {features.map(f => (
               <Link key={f.href} href={f.href} onClick={() => setOpen(false)}>
-                <div className="text-white text-xs py-2 px-2 rounded-lg hover:bg-white/10 transition">
+                <div className="text-white text-base py-2.5 px-2 rounded-lg hover:bg-white/10 transition">
                   {f.label}
                 </div>
               </Link>
@@ -86,30 +86,30 @@ export default function NavMenu() {
           </div>
 
           <div className="border-t border-white/10 px-3 pt-2 pb-3">
-            <p className="text-white/40 text-[10px] uppercase tracking-widest px-2 mb-1">Support</p>
+            <p className="text-white/40 text-xs uppercase tracking-widest px-2 mb-1">Support</p>
             <Link href="/faq" onClick={() => setOpen(false)}>
-              <div className="text-white text-xs py-2 px-2 rounded-lg hover:bg-white/10 transition">FAQ</div>
+              <div className="text-white text-base py-2.5 px-2 rounded-lg hover:bg-white/10 transition">FAQ</div>
             </Link>
             <Link href="/contact" onClick={() => setOpen(false)}>
-              <div className="text-white text-xs py-2 px-2 rounded-lg hover:bg-white/10 transition">Help & Contact</div>
+              <div className="text-white text-base py-2.5 px-2 rounded-lg hover:bg-white/10 transition">Help & Contact</div>
             </Link>
             <Link href="/privacy" onClick={() => setOpen(false)}>
-              <div className="text-white text-xs py-2 px-2 rounded-lg hover:bg-white/10 transition">Privacy Policy</div>
+              <div className="text-white text-base py-2.5 px-2 rounded-lg hover:bg-white/10 transition">Privacy Policy</div>
             </Link>
             <Link href="/terms" onClick={() => setOpen(false)}>
-              <div className="text-white text-xs py-2 px-2 rounded-lg hover:bg-white/10 transition">Terms & Conditions</div>
+              <div className="text-white text-base py-2.5 px-2 rounded-lg hover:bg-white/10 transition">Terms & Conditions</div>
             </Link>
 
             {!isStandalone && (androidPrompt || isIos) && (
               <>
                 <button
                   onClick={handleInstall}
-                  className="w-full text-left text-white text-xs py-2 px-2 rounded-lg hover:bg-white/10 transition"
+                  className="w-full text-left text-white text-base py-2.5 px-2 rounded-lg hover:bg-white/10 transition"
                 >
                   📲 Add to Home Screen
                 </button>
                 {showIosInstructions && (
-                  <div className="mx-2 mt-1 mb-2 bg-white/10 rounded-xl px-3 py-2 text-white/70 text-[10px] leading-relaxed">
+                  <div className="mx-2 mt-1 mb-2 bg-white/10 rounded-xl px-3 py-2 text-white/70 text-sm leading-relaxed">
                     Tap <span className="font-bold">⎙ Share</span> then <span className="font-bold">"Add to Home Screen"</span>
                   </div>
                 )}
