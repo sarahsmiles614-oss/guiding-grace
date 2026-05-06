@@ -10,7 +10,7 @@ const features = [
   { label: "Bible 365",            href: "/bible-365" },
   { label: "P.U.S.H. Prayer Wall", href: "/prayer-wall" },
   { label: "Heaven's Hearts",      href: "/heavens-hearts" },
-  { label: "Nightly Reflections",  href: "/nightly-reflection" },
+  { label: "Nightly Reflections",  href: "/nightly-reflections" },
   { label: "Heroes & Villains",    href: "/heroes-villains" },
   { label: "Shame Recycle Bin",    href: "/shame-recycle" },
   { label: "Scripture Match",      href: "/scripture-match" },
