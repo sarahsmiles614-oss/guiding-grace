@@ -321,7 +321,9 @@ export default function ScriptureMatchPage() {
                     disabled={won}
                     className={`relative h-24 rounded-2xl border text-xs font-medium leading-tight p-2 transition-all duration-300 text-center flex items-center justify-center
                       ${card.matched
-                        ? `${PAIR_COLORS[card.pairIndex % PAIR_COLORS.length]} scale-95`
+                        ? won
+                          ? `${PAIR_COLORS[card.pairIndex % PAIR_COLORS.length]} scale-95`
+                          : "bg-green-500/30 border-green-400/50 text-green-200 scale-95"
                         : card.flipped
                         ? selected.includes(card.id)
                           ? "bg-yellow-400/25 border-yellow-300/60 text-white scale-105 shadow-lg"
