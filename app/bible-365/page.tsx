@@ -18,14 +18,19 @@ interface Verse {
   chapterLabel: string;
 }
 
-type FontSize = "sm" | "base" | "lg";
+type FontSize = "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl";
 type Speed = 0.75 | 1 | 1.25;
 type HighlightColor = "yellow" | "blue" | "pink";
 
+const FONT_SIZES: FontSize[] = ["xs", "sm", "base", "lg", "xl", "2xl", "3xl"];
 const FONT_CLASSES: Record<FontSize, string> = {
-  sm: "text-sm",
+  xs:   "text-xs",
+  sm:   "text-sm",
   base: "text-base",
-  lg: "text-xl",
+  lg:   "text-xl",
+  xl:   "text-2xl",
+  "2xl": "text-3xl",
+  "3xl": "text-4xl",
 };
 
 const HIGHLIGHT: Record<HighlightColor, { bg: string; border: string; num: string; resume: string; resumeText: string }> = {
@@ -1013,9 +1018,9 @@ function Bible365Inner() {
                       ))}
                     </div>
                     <div className="flex items-center gap-2">
-                      <button onClick={() => handleFontSize(fontSize === "lg" ? "base" : "sm")} disabled={fontSize === "sm"}
+                      <button onClick={() => { const i = FONT_SIZES.indexOf(fontSize); if (i > 0) handleFontSize(FONT_SIZES[i - 1]); }} disabled={fontSize === FONT_SIZES[0]}
                         className="text-white/60 hover:text-white disabled:opacity-20 border border-white/20 px-2 py-0.5 rounded transition text-xs">A−</button>
-                      <button onClick={() => handleFontSize(fontSize === "sm" ? "base" : "lg")} disabled={fontSize === "lg"}
+                      <button onClick={() => { const i = FONT_SIZES.indexOf(fontSize); if (i < FONT_SIZES.length - 1) handleFontSize(FONT_SIZES[i + 1]); }} disabled={fontSize === FONT_SIZES[FONT_SIZES.length - 1]}
                         className="text-white/60 hover:text-white disabled:opacity-20 border border-white/20 px-2 py-0.5 rounded transition text-xs">A+</button>
                       <button onClick={() => setPlayerExpanded(false)} className="text-white/40 hover:text-white text-xs border border-white/20 px-2 py-0.5 rounded transition ml-1">Less</button>
                       <button onClick={() => setPlayerHidden(true)} className="text-white/40 hover:text-white text-xl leading-none transition">✕</button>
