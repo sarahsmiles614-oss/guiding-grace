@@ -627,11 +627,14 @@ function Bible365Inner() {
                       <p className="text-white font-bold text-2xl mb-1" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
                         Day {savedDay} of {PLAN_INFO[planOrder].days}
                       </p>
-                      <p className="text-white/80 text-sm mb-1">{plan[savedDay - 1]?.label}</p>
-                      <p className="text-white/80 text-xs mb-3">{completedCount} day{completedCount !== 1 ? "s" : ""} completed · {Math.round((completedCount / PLAN_INFO[planOrder].days) * 100)}%</p>
+                      <p className="text-white/80 text-sm mb-3">{plan[savedDay - 1]?.label}</p>
                       {/* Progress bar */}
-                      <div className="w-full h-1.5 bg-white/10 rounded-full mb-3">
-                        <div className="h-1.5 bg-white/50 rounded-full transition-all" style={{ width: `${Math.round((completedCount / PLAN_INFO[planOrder].days) * 100)}%` }} />
+                      <div className="w-full h-3 bg-white/10 rounded-full mb-2">
+                        <div className="h-3 rounded-full transition-all" style={{ width: `${Math.round((completedCount / PLAN_INFO[planOrder].days) * 100)}%`, background: "linear-gradient(90deg, #f59e0b, #10b981)" }} />
+                      </div>
+                      <div className="flex items-center justify-between mb-3">
+                        <p className="text-white/60 text-xs">{completedCount} of {PLAN_INFO[planOrder].days} days read</p>
+                        <p className="text-white font-bold text-lg">{Math.round((completedCount / PLAN_INFO[planOrder].days) * 100)}%</p>
                       </div>
                       <div className="flex items-center gap-2 mb-3">
                         <button
@@ -811,10 +814,21 @@ function Bible365Inner() {
                 {/* Browse Bible button */}
                 <button
                   onClick={() => { setShowBrowserSheet(true); setPickerStep("book"); }}
-                  className="w-full flex items-center justify-center gap-2 bg-white/10 hover:bg-white/18 border border-white/25 text-white text-sm font-medium py-2.5 rounded-xl transition mb-5"
+                  className="w-full flex items-center justify-center gap-2 bg-white/10 hover:bg-white/18 border border-white/25 text-white text-sm font-medium py-2.5 rounded-xl transition mb-3"
                 >
                   📖 Browse Bible — jump to any book or chapter
                 </button>
+
+                {/* Reading progress bar */}
+                <div className="mb-5">
+                  <div className="w-full h-2 bg-white/10 rounded-full mb-1">
+                    <div className="h-2 rounded-full transition-all" style={{ width: `${progress}%`, background: "linear-gradient(90deg, #f59e0b, #10b981)" }} />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <p className="text-white/40 text-xs">{completedCount} of 365 days read</p>
+                    <p className="text-white/80 text-xs font-bold">{progress}% complete</p>
+                  </div>
+                </div>
 
                 {/* Day heading */}
                 <div className="mb-5">
@@ -1064,10 +1078,21 @@ function Bible365Inner() {
                 <button onClick={() => { setShowBrowserSheet(false); setPickerStep("book"); }} className="text-white/40 hover:text-white text-2xl leading-none transition">✕</button>
               </div>
               {pickerStep === "book" && (
-                <div className="flex -mx-6">
-                  <button onClick={() => setTocTab("ot")} className={`flex-1 py-2.5 text-sm font-semibold transition ${tocTab === "ot" ? "bg-white/25 text-white" : "bg-white/8 text-white/60 hover:text-white"}`}>Old Testament</button>
-                  <button onClick={() => setTocTab("nt")} className={`flex-1 py-2.5 text-sm font-semibold transition ${tocTab === "nt" ? "bg-white/25 text-white" : "bg-white/8 text-white/60 hover:text-white"}`}>New Testament</button>
-                </div>
+                <>
+                  <div className="mb-3">
+                    <div className="w-full h-2 bg-white/10 rounded-full mb-1">
+                      <div className="h-2 rounded-full transition-all" style={{ width: `${progress}%`, background: "linear-gradient(90deg, #f59e0b, #10b981)" }} />
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <p className="text-white/40 text-xs">{completedCount} of 365 days read</p>
+                      <p className="text-white/80 text-sm font-bold">{progress}% complete</p>
+                    </div>
+                  </div>
+                  <div className="flex -mx-6">
+                    <button onClick={() => setTocTab("ot")} className={`flex-1 py-2.5 text-sm font-semibold transition ${tocTab === "ot" ? "bg-white/25 text-white" : "bg-white/8 text-white/60 hover:text-white"}`}>Old Testament</button>
+                    <button onClick={() => setTocTab("nt")} className={`flex-1 py-2.5 text-sm font-semibold transition ${tocTab === "nt" ? "bg-white/25 text-white" : "bg-white/8 text-white/60 hover:text-white"}`}>New Testament</button>
+                  </div>
+                </>
               )}
               {pickerStep === "chapter" && (
                 <p className="text-white/50 text-xs text-center mb-2">Green = already read · Tap any chapter to open it</p>
