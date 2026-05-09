@@ -17,14 +17,6 @@ function isAfterDeadline() {
   return nyHour >= 23;
 }
 
-function todayEST() {
-  return new Intl.DateTimeFormat("en-US", {
-    timeZone: "America/New_York", year: "numeric", month: "2-digit", day: "2-digit",
-  }).format(new Date()).split("/").reverse().join("-").replace(/(\d+)-(\d+)-(\d+)/, "$1-$3-$2")
-    // reformat MM/DD/YYYY → YYYY-MM-DD
-    .replace(/(\d{2})\/(\d{2})\/(\d{4})/, "$3-$1-$2");
-}
-
 function getToday() {
   const d = new Date();
   const ny = new Intl.DateTimeFormat("en-US", {
@@ -455,6 +447,18 @@ export default function GraceChallengeContent() {
                   <div className="mb-8">
                     <p className="text-white text-sm font-semibold mb-1" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>Share your story with the community</p>
                     <p className="text-white/55 text-xs mb-3">How did it go? What did you do, say, or feel? Honesty is grace too.</p>
+                    <div className="flex gap-2 mb-3">
+                      <button
+                        onClick={() => setCompleted(true)}
+                        className={`flex-1 py-2 rounded-xl border text-sm font-semibold transition ${completed === true ? "bg-green-500/25 border-green-400/50 text-green-200" : "bg-white/8 border-white/20 text-white/55 hover:bg-white/12"}`}>
+                        ✅ I did it
+                      </button>
+                      <button
+                        onClick={() => setCompleted(false)}
+                        className={`flex-1 py-2 rounded-xl border text-sm font-semibold transition ${completed === false ? "bg-white/20 border-white/40 text-white" : "bg-white/8 border-white/20 text-white/55 hover:bg-white/12"}`}>
+                        🌱 Couldn't this time
+                      </button>
+                    </div>
                     <textarea
                       value={response} onChange={e => setResponse(e.target.value)}
                       placeholder="Write your story here..."
@@ -464,7 +468,7 @@ export default function GraceChallengeContent() {
                     {submitError && (
                       <p className="text-red-300 text-sm mb-3" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>{submitError}</p>
                     )}
-                    <button onClick={handleSubmit} disabled={!response.trim() || submitting}
+                    <button onClick={handleSubmit} disabled={!response.trim() || completed === null || submitting}
                       className="w-full bg-yellow-400/25 hover:bg-yellow-400/35 border border-yellow-300/40 text-white font-semibold py-3 rounded-xl transition disabled:opacity-40 text-base">
                       {submitting ? "Posting..." : "Post to the Community 💛"}
                     </button>
@@ -474,6 +478,18 @@ export default function GraceChallengeContent() {
                     {isEditing ? (
                       <>
                         <p className="text-yellow-300 text-xs mb-3" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>⚠️ Editing forfeits votes received so far.</p>
+                        <div className="flex gap-2 mb-3">
+                          <button
+                            onClick={() => setEditCompleted(true)}
+                            className={`flex-1 py-2 rounded-xl border text-sm font-semibold transition ${editCompleted === true ? "bg-green-500/25 border-green-400/50 text-green-200" : "bg-white/8 border-white/20 text-white/55 hover:bg-white/12"}`}>
+                            ✅ I did it
+                          </button>
+                          <button
+                            onClick={() => setEditCompleted(false)}
+                            className={`flex-1 py-2 rounded-xl border text-sm font-semibold transition ${editCompleted === false ? "bg-white/20 border-white/40 text-white" : "bg-white/8 border-white/20 text-white/55 hover:bg-white/12"}`}>
+                            🌱 Couldn't this time
+                          </button>
+                        </div>
                         <textarea
                           value={editText} onChange={e => setEditText(e.target.value)}
                           className="w-full bg-white/10 border border-white/30 rounded-xl px-4 py-3 text-white text-base resize-none focus:outline-none focus:border-white/60 mb-3"

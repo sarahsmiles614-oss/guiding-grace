@@ -152,5 +152,22 @@ Return ONLY a JSON object with these exact fields, no markdown, no preamble:
     }
   }
 
+  // Fire push notifications to all subscribers
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://guidinggrace.app";
+  await fetch(`${baseUrl}/api/push-send`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.CRON_SECRET}`,
+    },
+    body: JSON.stringify({
+      title: `Guiding Grace — ${parsed.title}`,
+      body: parsed.verse_reference
+        ? `${parsed.verse_reference}: "${parsed.verse_text?.slice(0, 80)}..."`
+        : "Your daily devotion is ready. Begin your morning with grace.",
+      url: "/today",
+    }),
+  }).catch(() => {});
+
   return NextResponse.json({ message: "Generated", title: parsed.title });
 }

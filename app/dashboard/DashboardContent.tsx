@@ -23,8 +23,32 @@ export default function DashboardContent() {
   }
 
   async function requestNotifications() {
-    const result = await Notification.requestPermission();
-    setNotifStatus(result);
+    const permission = await Notification.requestPermission();
+    setNotifStatus(permission);
+    if (permission !== "granted") return;
+
+    try {
+      const reg = await navigator.serviceWorker.ready;
+      const existing = await reg.pushManager.getSubscription();
+      if (existing) return;
+
+      const sub = await reg.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY,
+      });
+
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return;
+
+      await fetch("/api/push-subscribe", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({ subscription: sub.toJSON() }),
+      });
+    } catch {}
   }
 
   useEffect(() => {

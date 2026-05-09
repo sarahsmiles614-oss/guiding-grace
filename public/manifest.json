@@ -27,5 +27,28 @@
       "type": "image/png",
       "purpose": "maskable"
     }
+  ],
+  "shortcuts": [
+    {
+      "name": "Today",
+      "short_name": "Today",
+      "description": "See today's devotion and content",
+      "url": "/today",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Daily Devotion",
+      "short_name": "Devotion",
+      "description": "Read today's devotion",
+      "url": "/devotions",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Grace Challenge",
+      "short_name": "Challenge",
+      "description": "Take today's grace challenge",
+      "url": "/grace-challenge",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    }
   ]
 }
