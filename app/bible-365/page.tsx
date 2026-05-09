@@ -258,7 +258,7 @@ function Bible365Inner() {
     if (userId) {
       supabase.from("bible365_completed_days")
         .upsert({ user_id: userId, plan_order: planOrder, day: d, completed_at: now }, { onConflict: "user_id,plan_order,day" })
-        .then();
+        .then().catch(() => {});
     }
   }
 
@@ -272,7 +272,7 @@ function Bible365Inner() {
     if (userId) {
       supabase.from("bible365_completed_days")
         .delete().eq("user_id", userId).eq("plan_order", planOrder).eq("day", d)
-        .then();
+        .then().catch(() => {});
     }
   }
 
@@ -322,7 +322,7 @@ function Bible365Inner() {
         try { localStorage.setItem(`bible365_completed_${currentPlan}`, JSON.stringify([...days])); } catch {}
       }
 
-    });
+    }).catch(() => {});
   }, []);
 
   // ── Save progress ──────────────────────────────────────────────────────────
