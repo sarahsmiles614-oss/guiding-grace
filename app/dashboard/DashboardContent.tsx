@@ -62,15 +62,15 @@ export default function DashboardContent() {
         <div className="max-w-5xl w-full">
           <div className="flex justify-between items-center mb-10">
             <NavMenu />
-            <h1 className="text-2xl font-bold text-white" style={{ textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>Guiding Grace</h1>
+            <h1 className="text-3xl font-bold text-white" style={{ textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>Guiding Grace</h1>
             <div className="flex items-center gap-6">
-              <Link href="/account" className="text-white hover:text-white text-sm">Account</Link>
-              <button onClick={() => signOut().then(() => router.push("/"))} className="text-sm text-white hover:text-white">Sign out</button>
+              <Link href="/account" className="text-white hover:text-white text-base">Account</Link>
+              <button onClick={() => signOut().then(() => router.push("/"))} className="text-base text-white hover:text-white">Sign out</button>
             </div>
           </div>
 
           {user && (
-            <p className="text-white mb-6 text-lg text-center" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
+            <p className="text-white mb-6 text-xl text-center" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
               Welcome, {user.user_metadata?.full_name?.split(" ")[0] || "friend"} 🌿
             </p>
           )}
@@ -79,13 +79,13 @@ export default function DashboardContent() {
             <div className="mb-10">
               <Link href="/today">
                 <div className="bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/30 rounded-2xl p-6 transition cursor-pointer text-center">
-                  <p className="text-white/50 text-xs uppercase tracking-widest mb-2">
+                  <p className="text-white/50 text-sm uppercase tracking-widest mb-2">
                     {new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })}
                   </p>
-                  <h2 className="text-white text-2xl font-bold mb-2" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>
+                  <h2 className="text-white text-3xl font-bold mb-2" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>
                     See Today's Content ✨
                   </h2>
-                  <p className="text-white/60 text-sm">Devotion · Challenge · Study Guide · Game · and more</p>
+                  <p className="text-white/60 text-base">Devotion · Challenge · Study Guide · Game · and more</p>
                 </div>
               </Link>
             </div>
@@ -93,10 +93,10 @@ export default function DashboardContent() {
 
           {(subStatus === "expired" || subStatus === "none") && (
             <div className="mb-10 text-center max-w-lg mx-auto">
-              <p className="text-white text-xl font-semibold mb-2" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>
+              <p className="text-white text-2xl font-semibold mb-2" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>
                 {subStatus === "none" ? "No subscription found" : "Your trial has ended"}
               </p>
-              <p className="text-white text-sm mb-6" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
+              <p className="text-white text-base mb-6" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
                 Subscribe to continue walking in grace and access all features.
               </p>
               <Link href="/subscribe">
@@ -114,16 +114,16 @@ export default function DashboardContent() {
                   <span className="text-5xl flex-shrink-0">💛</span>
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
-                      <p className="text-yellow-300 text-xs uppercase tracking-widest font-semibold" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>Live Now</p>
+                      <p className="text-yellow-300 text-sm uppercase tracking-widest font-semibold" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>Live Now</p>
                       <span className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse" />
                     </div>
-                    <h2 className="text-white text-xl font-bold mb-2" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>
+                    <h2 className="text-white text-2xl font-bold mb-2" style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>
                       Daily Grace Challenge
                     </h2>
-                    <p className="text-white text-sm leading-relaxed mb-4" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
+                    <p className="text-white text-base leading-relaxed mb-4" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
                       A fresh real-world challenge drops every morning. Share your story, vote for responses that move you, and see who the community honors as Most Loved.
                     </p>
-                    <span className="text-yellow-200 text-xs font-semibold" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
+                    <span className="text-yellow-200 text-sm font-semibold" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
                       Take Today's Challenge →
                     </span>
                   </div>
@@ -132,25 +132,25 @@ export default function DashboardContent() {
             </Link>
           </div>
 
-          <p className="text-white text-xs uppercase tracking-widest mb-6 text-center">Everything Inside</p>
+          <p className="text-white text-sm uppercase tracking-widest mb-6 text-center">Everything Inside</p>
           <div className={`grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 ${subStatus !== "active" ? "opacity-40 pointer-events-none select-none" : ""}`}>
             {features.map((f) => (
               <Link key={f.href} href={f.href} className="group hover:opacity-80 transition p-2">
-                <span className="text-3xl mb-3 block group-hover:scale-110 transition-transform">{f.icon}</span>
-                <p className="text-white text-sm font-semibold mb-1 leading-tight" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>{f.label}</p>
-                <p className="text-white text-xs leading-relaxed" style={{ textShadow: "0 1px 3px rgba(0,0,0,0.8)" }}>{f.desc}</p>
+                <span className="text-4xl mb-3 block group-hover:scale-110 transition-transform">{f.icon}</span>
+                <p className="text-white text-base font-semibold mb-1 leading-tight" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>{f.label}</p>
+                <p className="text-white text-sm leading-relaxed" style={{ textShadow: "0 1px 3px rgba(0,0,0,0.8)" }}>{f.desc}</p>
               </Link>
             ))}
           </div>
 
           <div className="mt-14 text-center">
-            <p className="text-white text-xs mb-3">Know someone who could use this?</p>
+            <p className="text-white text-sm mb-3">Know someone who could use this?</p>
             <ShareButton
               title="Guiding Grace"
               text="I have been using Guiding Grace for daily devotions and faith challenges — thought you might love it too."
               url="https://guidinggrace.app"
               label="🤍 Share Guiding Grace"
-              className="bg-white/10 hover:bg-white/20 border border-white/20 text-white hover:text-white text-sm font-medium px-6 py-3 rounded-2xl backdrop-blur-sm transition"
+              className="bg-white/10 hover:bg-white/20 border border-white/20 text-white hover:text-white text-base font-medium px-6 py-3 rounded-2xl backdrop-blur-sm transition"
             />
           </div>
         </div>
