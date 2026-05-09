@@ -4,6 +4,10 @@ import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import Link from "next/link";
 
+declare global {
+  interface Window { google?: any; }
+}
+
 const inputClass = "w-full bg-white/10 border border-white/25 rounded-lg text-white placeholder-white/60 text-xs py-2 px-3 focus:outline-none focus:border-white/60 transition";
 
 export default function AuthForm() {
@@ -19,29 +23,62 @@ export default function AuthForm() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [rememberMe, setRememberMe] = useState(true);
+  const [googleReady, setGoogleReady] = useState(false);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
       if (user) router.push("/dashboard");
     });
+
+    const script = document.createElement("script");
+    script.src = "https://accounts.google.com/gsi/client";
+    script.async = true;
+    script.onload = () => {
+      if (!window.google || !process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID) return;
+      window.google.accounts.id.initialize({
+        client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
+        callback: handleGoogleCredential,
+        auto_select: false,
+        cancel_on_tap_outside: true,
+      });
+      setGoogleReady(true);
+    };
+    document.head.appendChild(script);
+    return () => { document.head.removeChild(script); };
   }, [router]);
+
+  useEffect(() => {
+    if (!googleReady) return;
+    const el = document.getElementById("google-btn-container");
+    if (el && window.google) {
+      window.google.accounts.id.renderButton(el, {
+        theme: "filled_black",
+        size: "large",
+        text: "continue_with",
+        shape: "rectangular",
+        width: el.offsetWidth || 300,
+        logo_alignment: "left",
+      });
+    }
+  }, [googleReady]);
+
+  async function handleGoogleCredential(credentialResponse: { credential: string }) {
+    setLoading(true); reset();
+    const { error } = await supabase.auth.signInWithIdToken({
+      provider: "google",
+      token: credentialResponse.credential,
+    });
+    if (error) { setError(error.message); setLoading(false); return; }
+    const hasIntent = isNewUser && typeof window !== "undefined" && localStorage.getItem("subscribe_intent");
+    router.push(hasIntent ? "/subscribe" : "/dashboard");
+  }
 
   function reset() { setError(""); setSuccess(""); }
 
-  function getCallbackUrl() {
-    const hasIntent = isNewUser && typeof window !== "undefined" && localStorage.getItem("subscribe_intent");
-    const next = hasIntent ? "/subscribe" : "/dashboard";
-    return `${window.location.origin}/auth/callback?next=${next}`;
-  }
-
-  async function handleGoogle() {
-    setLoading(true); reset();
-    await supabase.auth.signInWithOAuth({ provider: "google", options: { redirectTo: getCallbackUrl(), queryParams: { prompt: "select_account" } } });
-  }
-
   async function handleFacebook() {
     setLoading(true); reset();
-    await supabase.auth.signInWithOAuth({ provider: "facebook", options: { redirectTo: getCallbackUrl() } });
+    const next = isNewUser && typeof window !== "undefined" && localStorage.getItem("subscribe_intent") ? "/subscribe" : "/dashboard";
+    await supabase.auth.signInWithOAuth({ provider: "facebook", options: { redirectTo: `${window.location.origin}/auth/callback?next=${next}` } });
   }
 
   async function handleEmailSubmit() {
@@ -94,12 +131,15 @@ export default function AuthForm() {
     <div className="w-full">
       {error && <p className="text-red-300 text-xs mb-2 text-center">{error}</p>}
 
-      {/* Social buttons */}
+      {/* Google button — rendered by Google's GSI, opens a popup (no redirect) */}
       <div className="flex gap-2 mb-3">
-        <button onClick={handleGoogle} disabled={loading} className="flex-1 flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs font-medium py-2 rounded-lg transition disabled:opacity-50">
-          <svg width="13" height="13" viewBox="0 0 48 48"><path fill="#fff" d="M47.5 24.5c0-1.6-.1-3.2-.4-4.7H24v9h13.1c-.6 3-2.3 5.5-4.9 7.2v6h7.9c4.6-4.2 7.4-10.5 7.4-17.5z"/><path fill="#fff" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.9-6c-2.1 1.4-4.8 2.3-8 2.3-6.1 0-11.3-4.1-13.2-9.7H2.7v6.2C6.7 42.9 14.8 48 24 48z"/><path fill="#fff" d="M10.8 28.8c-.5-1.4-.7-2.8-.7-4.3s.3-3 .7-4.3v-6.2H2.7C1 17.4 0 20.6 0 24s1 6.6 2.7 9l8.1-4.2z"/><path fill="#fff" d="M24 9.5c3.4 0 6.5 1.2 8.9 3.5l6.7-6.7C35.9 2.4 30.5 0 24 0 14.8 0 6.7 5.1 2.7 12.8l8.1 4.2C12.7 13.6 17.9 9.5 24 9.5z"/></svg>
-          Continue with Google
-        </button>
+        <div id="google-btn-container" className="flex-1" style={{ minHeight: "40px" }}>
+          {!googleReady && (
+            <div className="w-full flex items-center justify-center gap-2 bg-white/10 border border-white/20 text-white/50 text-xs font-medium py-2 rounded-lg h-10">
+              Loading...
+            </div>
+          )}
+        </div>
         <button onClick={handleFacebook} disabled={loading} className="flex-1 flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs font-medium py-2 rounded-lg transition disabled:opacity-50">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="white"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.413c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>
           Continue with Facebook
