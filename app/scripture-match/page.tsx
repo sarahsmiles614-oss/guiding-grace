@@ -303,12 +303,13 @@ export default function ScriptureMatchPage() {
             )}
             {error && <p className="text-red-300 text-center py-20 text-sm">{error}</p>}
 
-            {!loading && !error && !won && (
+            {!loading && !error && (
               <div className="grid grid-cols-3 gap-3">
                 {cards.map(card => (
                   <button
                     key={card.id}
                     onClick={() => handleSelect(card.id)}
+                    disabled={won}
                     className={`relative h-24 rounded-2xl border text-xs font-medium leading-tight p-2 transition-all duration-300 text-center flex items-center justify-center
                       ${card.matched
                         ? "bg-green-500/30 border-green-400/50 text-green-200 scale-95"
@@ -352,7 +353,7 @@ export default function ScriptureMatchPage() {
             )}
 
             {!loading && !error && !won && (
-              <p className="text-white/40 text-xs text-center mt-6">
+              <p className="text-white/40 text-xs text-center mt-4">
                 Tap a card to flip it. Match the pairs to win.
               </p>
             )}
