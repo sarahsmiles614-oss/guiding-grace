@@ -10,6 +10,15 @@ const BG = "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Im
 interface Pair { left: string; right: string; difficulty: string; }
 interface Card { id: string; text: string; pairIndex: number; side: "left" | "right"; matched: boolean; flipped: boolean; }
 
+const PAIR_COLORS = [
+  "bg-emerald-500/30 border-emerald-400/50 text-emerald-200",
+  "bg-sky-500/30 border-sky-400/50 text-sky-200",
+  "bg-violet-500/30 border-violet-400/50 text-violet-200",
+  "bg-amber-500/30 border-amber-400/50 text-amber-200",
+  "bg-rose-500/30 border-rose-400/50 text-rose-200",
+  "bg-teal-500/30 border-teal-400/50 text-teal-200",
+];
+
 function buildCards(pairs: Pair[]): Card[] {
   const cards: Card[] = [];
   pairs.forEach((p, i) => {
@@ -312,7 +321,7 @@ export default function ScriptureMatchPage() {
                     disabled={won}
                     className={`relative h-24 rounded-2xl border text-xs font-medium leading-tight p-2 transition-all duration-300 text-center flex items-center justify-center
                       ${card.matched
-                        ? "bg-green-500/30 border-green-400/50 text-green-200 scale-95"
+                        ? `${PAIR_COLORS[card.pairIndex % PAIR_COLORS.length]} scale-95`
                         : card.flipped
                         ? selected.includes(card.id)
                           ? "bg-yellow-400/25 border-yellow-300/60 text-white scale-105 shadow-lg"
