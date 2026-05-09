@@ -60,45 +60,75 @@ export default function ScriptureMatchPage() {
       const ctx = getAudioCtx();
       const t = ctx.currentTime;
 
-      // Sharp noise burst — quick "thwip" of a card flip
-      const bufferSize = Math.floor(ctx.sampleRate * 0.035);
+      // Noise swish — papery card sound
+      const bufferSize = Math.floor(ctx.sampleRate * 0.055);
       const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
       const data = buffer.getChannelData(0);
       for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
       const noise = ctx.createBufferSource();
       noise.buffer = buffer;
 
-      const filter = ctx.createBiquadFilter();
-      filter.type = "bandpass";
-      filter.frequency.value = 3500;
-      filter.Q.value = 0.8;
+      const bandpass = ctx.createBiquadFilter();
+      bandpass.type = "bandpass";
+      bandpass.frequency.value = 2600;
+      bandpass.Q.value = 1.4;
 
-      const gain = ctx.createGain();
-      gain.gain.setValueAtTime(0.5, t);
-      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.035);
+      const noiseGain = ctx.createGain();
+      noiseGain.gain.setValueAtTime(0.35, t);
+      noiseGain.gain.exponentialRampToValueAtTime(0.001, t + 0.055);
 
-      noise.connect(filter);
-      filter.connect(gain);
-      gain.connect(ctx.destination);
+      noise.connect(bandpass);
+      bandpass.connect(noiseGain);
+      noiseGain.connect(ctx.destination);
       noise.start(t);
-      noise.stop(t + 0.035);
+      noise.stop(t + 0.055);
+
+      // Tonal snap — pitch drops like a physical card
+      const osc = ctx.createOscillator();
+      const oscGain = ctx.createGain();
+      osc.type = "triangle";
+      osc.frequency.setValueAtTime(900, t);
+      osc.frequency.exponentialRampToValueAtTime(180, t + 0.055);
+      oscGain.gain.setValueAtTime(0.1, t);
+      oscGain.gain.exponentialRampToValueAtTime(0.001, t + 0.055);
+      osc.connect(oscGain);
+      oscGain.connect(ctx.destination);
+      osc.start(t);
+      osc.stop(t + 0.055);
     } catch {}
   }
 
   function playMatch() {
     try {
-      const ctx = new AudioContext();
-      [520, 660, 780].forEach((freq, i) => {
+      const ctx = getAudioCtx();
+      const t = ctx.currentTime;
+
+      // Three bell tones with harmonics — satisfying chime
+      [523, 659, 784].forEach((freq, i) => {
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
-        osc.connect(gain);
-        gain.connect(ctx.destination);
         osc.type = "sine";
         osc.frequency.value = freq;
-        gain.gain.setValueAtTime(0.15, ctx.currentTime + i * 0.1);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.1 + 0.15);
-        osc.start(ctx.currentTime + i * 0.1);
-        osc.stop(ctx.currentTime + i * 0.1 + 0.15);
+        gain.gain.setValueAtTime(0, t + i * 0.11);
+        gain.gain.linearRampToValueAtTime(0.18, t + i * 0.11 + 0.01);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + i * 0.11 + 0.5);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(t + i * 0.11);
+        osc.stop(t + i * 0.11 + 0.5);
+
+        // Octave harmonic for bell-like richness
+        const osc2 = ctx.createOscillator();
+        const gain2 = ctx.createGain();
+        osc2.type = "sine";
+        osc2.frequency.value = freq * 2;
+        gain2.gain.setValueAtTime(0, t + i * 0.11);
+        gain2.gain.linearRampToValueAtTime(0.05, t + i * 0.11 + 0.01);
+        gain2.gain.exponentialRampToValueAtTime(0.001, t + i * 0.11 + 0.3);
+        osc2.connect(gain2);
+        gain2.connect(ctx.destination);
+        osc2.start(t + i * 0.11);
+        osc2.stop(t + i * 0.11 + 0.3);
       });
     } catch {}
   }
