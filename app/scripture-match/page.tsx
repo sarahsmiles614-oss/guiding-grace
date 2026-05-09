@@ -11,12 +11,12 @@ interface Pair { left: string; right: string; difficulty: string; }
 interface Card { id: string; text: string; pairIndex: number; side: "left" | "right"; matched: boolean; flipped: boolean; }
 
 const PAIR_COLORS = [
-  "bg-emerald-500/30 border-emerald-400/50 text-emerald-200",
   "bg-sky-500/30 border-sky-400/50 text-sky-200",
   "bg-violet-500/30 border-violet-400/50 text-violet-200",
   "bg-amber-500/30 border-amber-400/50 text-amber-200",
   "bg-rose-500/30 border-rose-400/50 text-rose-200",
-  "bg-teal-500/30 border-teal-400/50 text-teal-200",
+  "bg-orange-500/30 border-orange-400/50 text-orange-200",
+  "bg-indigo-500/30 border-indigo-400/50 text-indigo-200",
 ];
 
 function buildCards(pairs: Pair[]): Card[] {
