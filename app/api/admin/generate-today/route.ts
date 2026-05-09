@@ -57,7 +57,8 @@ Return ONLY a JSON object with these exact fields, no markdown, no preamble:
   "verse_reference": "Book Chapter:Verse",
   "verse_text": "The full verse text from NIV",
   "reflection": "2-3 sentences of warm, personal spiritual reflection on the verse. Speak directly to the reader.",
-  "challenge": "One specific, outward-facing community act of grace the reader can do today that mirrors the devotion theme. 1-2 sentences. Warm and achievable. CRITICAL RULES: (1) Must involve reaching out TO or serving ANOTHER PERSON — a neighbor, friend, stranger, family member, or church community. (2) Must never be inner work, journaling, personal reflection, or prayer alone — those belong in a separate journal feature. (3) Must never cost money or require any purchase. Examples: text encouragement to someone by name, sit with someone who is lonely, invite a neighbor to church, pray OUT LOUD with a friend, help someone with a task, check in on someone you've been meaning to call."
+  "challenge": "One specific, outward-facing community act of grace the reader can do today that mirrors the devotion theme. 1-2 sentences. Warm and achievable. CRITICAL RULES: (1) Must involve reaching out TO or serving ANOTHER PERSON — a neighbor, friend, stranger, family member, or church community. (2) Must never be inner work, journaling, personal reflection, or prayer alone — those belong in a separate journal feature. (3) Must never cost money or require any purchase. Examples: text encouragement to someone by name, sit with someone who is lonely, invite a neighbor to church, pray OUT LOUD with a friend, help someone with a task, check in on someone you've been meaning to call.",
+  "journal_challenge": "One personal, inward reflection prompt tied to today's devotion theme. 1-2 sentences. This is private — for the reader's own heart and growth, not about others. CRITICAL RULES: (1) Must be personal introspection — examining your own heart, memories, beliefs, or feelings in light of the verse. (2) Must never involve another person or outward action — that belongs in the Grace Challenge. (3) Should feel like a gentle, honest question from a trusted friend. Examples: 'Where in your life have you been holding back from trusting God fully?', 'Think of a moment when you felt God's grace most clearly — what made it feel real?', 'What fear or worry are you carrying today that this verse speaks directly to?'"
 }`
       }]
     }),
@@ -78,6 +79,7 @@ Return ONLY a JSON object with these exact fields, no markdown, no preamble:
       verse_reference: parsed.verse_reference,
       verse_text: parsed.verse_text,
       reflection: parsed.reflection,
+      journal_challenge: parsed.journal_challenge,
     });
   }
 

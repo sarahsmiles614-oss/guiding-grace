@@ -14,6 +14,35 @@ export default function DashboardContent() {
   const router = useRouter();
   const [user, setUser] = useState<any>(null);
   const [subStatus, setSubStatus] = useState<"loading" | "active" | "expired" | "none">("loading");
+  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [notifStatus, setNotifStatus] = useState("unknown");
+
+  function dismissOnboarding() {
+    localStorage.setItem("gg_welcomed", "true");
+    setShowOnboarding(false);
+  }
+
+  async function requestNotifications() {
+    const result = await Notification.requestPermission();
+    setNotifStatus(result);
+  }
+
+  useEffect(() => {
+    if (!localStorage.getItem("gg_welcomed")) setShowOnboarding(true);
+    if (typeof Notification !== "undefined") {
+      setNotifStatus(Notification.permission);
+      const hour = new Date().getHours();
+      const today = new Date().toISOString().split("T")[0];
+      const lastShown = localStorage.getItem("gg_notif_shown");
+      if (Notification.permission === "granted" && lastShown !== today && hour >= 7 && hour <= 11) {
+        new Notification("Guiding Grace 🙏", {
+          body: "Your daily devotion is ready. Begin your morning with grace.",
+          icon: "/icon.jpg",
+        });
+        localStorage.setItem("gg_notif_shown", today);
+      }
+    }
+  }, []);
 
   useEffect(() => {
     async function load() {
@@ -57,6 +86,44 @@ export default function DashboardContent() {
   ];
 
   return (
+    <>
+    {showOnboarding && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center px-6" onClick={dismissOnboarding}>
+        <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
+        <div className="relative bg-black/85 border border-white/20 rounded-3xl p-8 max-w-sm w-full" onClick={e => e.stopPropagation()}>
+          <h2 className="text-white text-2xl font-bold mb-2 text-center" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+            Welcome to Guiding Grace 🌿
+          </h2>
+          <p className="text-white/60 text-sm text-center mb-7">Here's where to begin your faith journey:</p>
+          <div className="space-y-5 mb-8">
+            <div className="flex items-start gap-4">
+              <span className="text-2xl">📖</span>
+              <div>
+                <p className="text-white font-semibold text-sm">Start with Daily Devotions</p>
+                <p className="text-white/55 text-xs mt-0.5">A fresh scripture and reflection every morning to anchor your day.</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-4">
+              <span className="text-2xl">📔</span>
+              <div>
+                <p className="text-white font-semibold text-sm">Go deeper in Dive Deeper</p>
+                <p className="text-white/55 text-xs mt-0.5">Journal your thoughts, answer reflection questions, and write your prayer.</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-4">
+              <span className="text-2xl">💛</span>
+              <div>
+                <p className="text-white font-semibold text-sm">Join the Grace Challenge</p>
+                <p className="text-white/55 text-xs mt-0.5">A daily real-world challenge — share your story with the community.</p>
+              </div>
+            </div>
+          </div>
+          <button onClick={dismissOnboarding} className="w-full bg-white/20 hover:bg-white/30 border border-white/30 text-white font-semibold py-3 rounded-2xl transition text-sm">
+            Get Started →
+          </button>
+        </div>
+      </div>
+    )}
     <PageBackground url="https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/sign/Images%20also/thibault-mokuenko-pY-bhzf_ZDk-unsplash.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV85MzA0YmFjMS1lYTk0LTQzODItYjE3YS1hNDU4OTgwZDllYTEiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJJbWFnZXMgYWxzby90aGliYXVsdC1tb2t1ZW5rby1wWS1iaHpmX1pEay11bnNwbGFzaC5qcGciLCJpYXQiOjE3NzcwODU0MjMsImV4cCI6MTg1NDg0NTQyM30.pyRROLomZi4S8_Gu7aVOheZJexH5vsyWF2CTG4ryhHw">
       <main className="flex-1 p-6 md:p-12 flex flex-col items-center">
         <div className="max-w-5xl w-full">
@@ -73,6 +140,18 @@ export default function DashboardContent() {
             <p className="text-white mb-6 text-xl text-center" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
               Welcome, {user.user_metadata?.full_name?.split(" ")[0] || "friend"} 🌿
             </p>
+          )}
+
+          {notifStatus === "default" && (
+            <div className="mb-6 bg-white/10 border border-white/20 rounded-2xl px-5 py-4 flex items-center justify-between gap-4">
+              <div>
+                <p className="text-white text-sm font-semibold">🔔 Get daily reminders</p>
+                <p className="text-white/55 text-xs mt-0.5">We'll remind you when your devotion is ready each morning.</p>
+              </div>
+              <button onClick={requestNotifications} className="flex-shrink-0 bg-white/20 hover:bg-white/30 border border-white/30 text-white text-xs font-semibold px-4 py-2 rounded-xl transition">
+                Enable
+              </button>
+            </div>
           )}
 
           {subStatus === "active" && (
@@ -156,5 +235,6 @@ export default function DashboardContent() {
         </div>
       </main>
     </PageBackground>
+    </>
   );
 }

@@ -344,16 +344,16 @@ export default function GraceChallengeContent() {
             <div className="flex justify-between items-center mb-5">
               <Link href="/dashboard" className="text-white text-sm hover:text-white transition" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>← Home</Link>
               <h1 className="text-xl font-bold text-white" style={{ textShadow: "0 2px 10px rgba(0,0,0,0.9)" }}>Daily Grace Challenge</h1>
-              <Link href="/grace-challenge/rules" className="text-white text-sm hover:text-white transition" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>Rules</Link>
+              <Link href="/grace-challenge/rules" className="text-white/60 text-xs hover:text-white transition border border-white/20 hover:border-white/40 px-2.5 py-1 rounded-lg" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>How it Works</Link>
             </div>
 
             {/* Nav buttons */}
-            <div className="flex gap-3 mb-8">
-              <Link href="/grace-challenge/leaderboard" className="flex-1 flex items-center justify-center gap-2 bg-yellow-400/20 hover:bg-yellow-400/30 border border-yellow-300/40 text-yellow-200 font-semibold text-sm py-3 rounded-2xl transition" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
+            <div className="flex gap-3 mb-6">
+              <Link href="/grace-challenge/leaderboard" className="flex-1 flex items-center justify-center gap-2 bg-yellow-400/20 hover:bg-yellow-400/30 border border-yellow-300/40 text-yellow-200 font-semibold text-sm py-2.5 rounded-2xl transition" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
                 🏆 Leaderboard
               </Link>
-              <Link href="/grace-challenge/favorites" className="flex-1 flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 border border-white/20 text-white hover:text-white font-semibold text-sm py-3 rounded-2xl transition" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
-                ⭐ Saved Responses
+              <Link href="/grace-challenge/favorites" className="flex-1 flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 border border-white/20 text-white font-semibold text-sm py-2.5 rounded-2xl transition" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
+                ⭐ My Saved Responses
               </Link>
             </div>
 
@@ -371,175 +371,214 @@ export default function GraceChallengeContent() {
               </div>
             ) : (
               <>
-                {/* Challenge */}
-                <p className="text-white text-sm uppercase tracking-widest mb-3 text-center" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>Today's Community Challenge</p>
-                <p className="text-3xl font-bold text-white mb-3 leading-relaxed text-center"
-                  style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 16px rgba(0,0,0,0.9)" }}>
-                  {challenge.challenge_text}
-                </p>
-                <p className="text-white/80 text-sm text-center mb-8" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>
-                  Go do this — then come back and tell the community how it went. 💛
-                </p>
+                {/* Challenge card */}
+                <div className="bg-white/10 border border-white/20 rounded-3xl p-6 mb-6 text-center backdrop-blur-sm">
+                  <p className="text-yellow-300 text-xs uppercase tracking-widest font-semibold mb-3" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>
+                    Today's Community Challenge
+                  </p>
+                  <p className="text-white text-2xl font-bold leading-relaxed mb-4"
+                    style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 2px 16px rgba(0,0,0,0.9)" }}>
+                    {challenge.challenge_text}
+                  </p>
+                  <ShareButton
+                    title="Today's Grace Challenge — Guiding Grace"
+                    text={`Today's Grace Challenge: "${challenge.challenge_text}"\n\nJoin the community on Guiding Grace:`}
+                    url="https://guidinggrace.app"
+                    label="🤍 Share This Challenge"
+                    className="text-white/60 hover:text-white text-xs transition"
+                  />
+                </div>
 
-                {/* Most Loved banner */}
+                {/* 3-step flow guide */}
+                {!userPost && (
+                  <div className="bg-white/8 border border-white/15 rounded-2xl px-5 py-4 mb-6">
+                    <p className="text-white/50 text-xs uppercase tracking-widest mb-3 text-center">How it works</p>
+                    <div className="flex items-start gap-3">
+                      <div className="flex flex-col items-center gap-1 flex-shrink-0">
+                        <span className="text-lg">☀️</span>
+                        <div className="w-px h-4 bg-white/15" />
+                        <span className="text-lg">💛</span>
+                        <div className="w-px h-4 bg-white/15" />
+                        <span className="text-lg">🏆</span>
+                      </div>
+                      <div className="space-y-3 flex-1">
+                        <div>
+                          <p className="text-white text-sm font-semibold leading-tight" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>Go do the challenge today</p>
+                          <p className="text-white/55 text-xs mt-0.5">Any act of grace counts — big or small.</p>
+                        </div>
+                        <div>
+                          <p className="text-white text-sm font-semibold leading-tight" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>Come back and share your story</p>
+                          <p className="text-white/55 text-xs mt-0.5">Then give your 1 heart to the response that moves you most. <span className="text-yellow-200">You must vote to receive votes.</span></p>
+                        </div>
+                        <div>
+                          <p className="text-white text-sm font-semibold leading-tight" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>Winner is revealed at midnight EST</p>
+                          <p className="text-white/55 text-xs mt-0.5">Most hearts wins Most Loved. Results on the leaderboard.</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Most Loved banner (yesterday's winner) */}
                 {revealed && winner && (
-                  <div className="mb-8 text-center">
-                    <p className="text-yellow-300 text-sm uppercase tracking-widest mb-2" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>🏆 Most Loved Today</p>
-                    <p className="text-white font-bold text-xl mb-2" style={{ textShadow: "0 2px 8px rgba(0,0,0,0.9)" }}>{displayName(winner)}</p>
-                    <p className="text-white text-base italic mb-1" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>"{winner.post_text?.slice(0, 120)}{winner.post_text?.length > 120 ? "..." : ""}"</p>
-                    <p className="text-yellow-200 text-sm" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>Your community has voted. 💛</p>
+                  <div className="mb-6 bg-yellow-400/15 border border-yellow-300/30 rounded-2xl p-5 text-center">
+                    <p className="text-yellow-300 text-xs uppercase tracking-widest mb-2 font-semibold" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>🏆 Most Loved Yesterday</p>
+                    <p className="text-white font-bold text-lg mb-1" style={{ textShadow: "0 2px 8px rgba(0,0,0,0.9)" }}>{displayName(winner)}</p>
+                    <p className="text-white/80 text-sm italic mb-2" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>"{winner.post_text?.slice(0, 120)}{winner.post_text?.length > 120 ? "..." : ""}"</p>
+                    <Link href="/grace-challenge/leaderboard" className="text-yellow-200 text-xs underline hover:text-yellow-100 transition">
+                      See full leaderboard →
+                    </Link>
                   </div>
                 )}
 
                 {/* Hearts status */}
-                <div className="mb-6">
-                  <p className="text-white text-sm mb-2 text-center" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>Your Hearts</p>
-                  <div className="flex gap-2 mb-1 justify-center">
-                    {Array.from({ length: HEARTS_PER_DAY }).map((_, i) => (
-                      <span key={i} className="text-2xl">{i < givenHearts.length ? "💛" : "🤍"}</span>
-                    ))}
+                <div className="bg-white/8 border border-white/15 rounded-2xl px-5 py-4 mb-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-white text-sm font-semibold" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>Your heart today</p>
+                      {usedAllHearts ? (
+                        <p className="text-green-300 text-xs mt-0.5">✓ Voted — your received hearts will count at midnight</p>
+                      ) : (
+                        <p className="text-white/55 text-xs mt-0.5">Give it to the story that moves you most — closes midnight EST</p>
+                      )}
+                    </div>
+                    <div className="flex gap-1">
+                      {Array.from({ length: HEARTS_PER_DAY }).map((_, i) => (
+                        <span key={i} className="text-2xl">{i < givenHearts.length ? "💛" : "🤍"}</span>
+                      ))}
+                    </div>
                   </div>
-                  {usedAllHearts ? (
-                    <p className="text-green-300 text-sm text-center" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>✓ Heart given — your votes count!</p>
-                  ) : (
-                    <p className="text-white text-sm text-center" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>Give your heart or your received votes won't count. Closes midnight EST.</p>
-                  )}
                 </div>
 
                 {/* Submission form */}
                 {!userPost ? (
                   <div className="mb-8">
-                    <p className="text-white text-sm uppercase tracking-widest mb-3 text-center" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>Tell the Community</p>
+                    <p className="text-white text-sm font-semibold mb-1" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>Share your story with the community</p>
+                    <p className="text-white/55 text-xs mb-3">How did it go? What did you do, say, or feel? Honesty is grace too.</p>
                     <textarea
                       value={response} onChange={e => setResponse(e.target.value)}
-                      placeholder="How did it go? What did you do, say, or feel? Encourage the community with your story..."
-                      className="w-full bg-white/10 border border-white/30 rounded-xl px-4 py-3 text-white placeholder-white/60 text-base resize-none focus:outline-none focus:border-white/60 mb-3"
+                      placeholder="Write your story here..."
+                      className="w-full bg-white/10 border border-white/30 rounded-xl px-4 py-3 text-white placeholder-white/50 text-base resize-none focus:outline-none focus:border-white/60 mb-3"
                       rows={4}
                     />
                     {submitError && (
                       <p className="text-red-300 text-sm mb-3" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>{submitError}</p>
                     )}
                     <button onClick={handleSubmit} disabled={!response.trim() || submitting}
-                      className="w-full bg-white/25 hover:bg-white/35 text-white font-semibold py-3 rounded-xl transition disabled:opacity-40 text-base">
-                      {submitting ? "Posting..." : "Share with the Community 💛"}
+                      className="w-full bg-yellow-400/25 hover:bg-yellow-400/35 border border-yellow-300/40 text-white font-semibold py-3 rounded-xl transition disabled:opacity-40 text-base">
+                      {submitting ? "Posting..." : "Post to the Community 💛"}
                     </button>
                   </div>
-                ) : userPost ? (
-                  <div className="mb-8">
+                ) : (
+                  <div className="bg-white/8 border border-white/15 rounded-2xl px-5 py-4 mb-8">
                     {isEditing ? (
                       <>
-                        <p className="text-yellow-300 text-sm mb-3" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>⚠️ Editing forfeits votes received so far.</p>
+                        <p className="text-yellow-300 text-xs mb-3" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>⚠️ Editing forfeits votes received so far.</p>
                         <textarea
                           value={editText} onChange={e => setEditText(e.target.value)}
                           className="w-full bg-white/10 border border-white/30 rounded-xl px-4 py-3 text-white text-base resize-none focus:outline-none focus:border-white/60 mb-3"
                           rows={4}
                         />
                         <div className="flex gap-3">
-                          <button onClick={() => setIsEditing(false)}
-                            className="flex-1 text-white font-semibold py-2 rounded-xl transition hover:text-white">
+                          <button onClick={() => setIsEditing(false)} className="flex-1 text-white/70 font-semibold py-2 rounded-xl transition hover:text-white text-sm">
                             Cancel
                           </button>
                           <button onClick={handleEditSubmit} disabled={!editText.trim() || editCompleted === null || editSubmitting}
-                            className="flex-1 bg-yellow-400/30 hover:bg-yellow-400/40 text-white font-semibold py-2 rounded-xl transition disabled:opacity-40">
+                            className="flex-1 bg-yellow-400/30 hover:bg-yellow-400/40 text-white font-semibold py-2 rounded-xl transition disabled:opacity-40 text-sm">
                             {editSubmitting ? "Saving..." : "Save & Forfeit Votes"}
                           </button>
                         </div>
                       </>
                     ) : (
                       <>
-                        <div className="flex items-start justify-between mb-2">
-                          <p className="text-white text-sm">Your response</p>
+                        <div className="flex items-center justify-between mb-2">
+                          <p className="text-green-300 text-xs font-semibold">✓ Your story is live</p>
                           {!isAfterDeadline() && (
-                            <button onClick={startEditing} className="text-white/70 hover:text-white text-sm transition">Edit</button>
+                            <button onClick={startEditing} className="text-white/50 hover:text-white text-xs transition">Edit</button>
                           )}
                         </div>
-                        <p className="text-white text-base leading-relaxed text-center" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>{userPost.post_text}</p>
-                        <p className="text-white/70 text-sm mt-3 text-center" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>Your story is live — inspiring the community 💛</p>
+                        <p className="text-white text-sm leading-relaxed" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>{userPost.post_text}</p>
+                        <p className="text-white/45 text-xs mt-2">Inspiring the community — don't forget to give your heart 💛</p>
                       </>
                     )}
                   </div>
-                ) : null}
-
-                {/* Share challenge */}
-                <div className="flex justify-center mb-6">
-                  <ShareButton
-                    title="Today's Grace Challenge — Guiding Grace"
-                    text={`Today's Grace Challenge: "${challenge.challenge_text}"\n\nJoin the community on Guiding Grace:`}
-                    url="https://guidinggrace.app"
-                    label="🤍 Share This Challenge"
-                    className="text-white hover:text-white text-sm transition"
-                  />
-                </div>
+                )}
 
                 {/* Community responses */}
-                <p className="text-white text-sm uppercase tracking-widest mb-4 text-center" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>
-                  What the Community Did Today · Voting closes at midnight EST
-                </p>
+                <div className="flex items-center justify-between mb-4">
+                  <p className="text-white text-sm font-semibold" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>
+                    Community Responses
+                    {posts.filter(p => !blockedIds.has(p.user_id)).length > 0 && (
+                      <span className="text-white/45 font-normal ml-2 text-xs">
+                        {posts.filter(p => !blockedIds.has(p.user_id)).length} {posts.filter(p => !blockedIds.has(p.user_id)).length === 1 ? "person" : "people"} shared today
+                      </span>
+                    )}
+                  </p>
+                  <p className="text-white/40 text-xs">Voting closes midnight EST</p>
+                </div>
 
-                <div className="space-y-6">
+                <div className="space-y-4">
                   {posts.filter(post => !blockedIds.has(post.user_id)).map(post => (
-                    <div key={post.id} className={`${winner?.id === post.id && revealed ? "border-l-2 border-yellow-400 pl-4" : ""}`}>
-                      <div className="flex justify-between items-start mb-1">
-                        <p className="text-white text-sm text-center flex-1" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>{displayName(post)}</p>
+                    <div key={post.id} className={`bg-white/8 border rounded-2xl px-4 py-4 ${winner?.id === post.id && revealed ? "border-yellow-400/50 bg-yellow-400/8" : "border-white/15"}`}>
+                      <div className="flex justify-between items-start mb-2">
+                        <div>
+                          <p className="text-white text-sm font-semibold" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>{displayName(post)}</p>
+                          <span className="text-xs text-white/45">{post.completed ? "✅ Did it" : "🌱 Chose not to"}</span>
+                        </div>
                         <div className="flex items-center gap-2">
                           {post.user_id !== userId && (
-                            <button
-                              onClick={() => toggleFavorite(post.id)}
-                              className="text-base hover:scale-110 transition"
-                              title="Save to favorites"
-                            >
+                            <button onClick={() => toggleFavorite(post.id)} className="text-base hover:scale-110 transition" title="Save to favorites">
                               {favorites.includes(post.id) ? "⭐" : "☆"}
                             </button>
                           )}
                           {post.user_id !== userId && !connectedIds.has(post.user_id) && (
-                            <button
-                              onClick={() => handleConnect(post.user_id)}
-                              disabled={pendingConnects.has(post.user_id)}
-                              className="text-xs text-white/50 hover:text-white transition disabled:opacity-40"
-                              title="Connect"
-                            >
-                              {connectedIds.has(post.user_id) ? "✓" : pendingConnects.has(post.user_id) ? "Requested" : "+ Connect"}
+                            <button onClick={() => handleConnect(post.user_id)} disabled={pendingConnects.has(post.user_id)}
+                              className="text-xs text-white/45 hover:text-white transition disabled:opacity-40">
+                              {pendingConnects.has(post.user_id) ? "Requested" : "+ Connect"}
                             </button>
                           )}
                           {post.user_id !== userId && (
-                            <button
-                              onClick={() => handleBlock(post.user_id)}
-                              className="text-xs text-white/30 hover:text-red-300 transition"
-                              title="Block user"
-                            >
-                              Block
-                            </button>
+                            <button onClick={() => handleReport(post.id, post.post_text, post.user_id)}
+                              className="text-xs text-white/25 hover:text-red-300 transition">Report</button>
                           )}
                           {post.user_id !== userId && (
-                            <button
-                              onClick={() => handleReport(post.id, post.post_text, post.user_id)}
-                              className="text-xs text-white/30 hover:text-red-300 transition"
-                              title="Report content"
-                            >
-                              Report
-                            </button>
+                            <button onClick={() => handleBlock(post.user_id)}
+                              className="text-xs text-white/25 hover:text-red-300 transition">Block</button>
                           )}
                           {post.user_id !== userId && (
                             <button
                               onClick={() => toggleHeart(post.id, post.user_id)}
                               disabled={!givenHearts.includes(post.id) && heartsLeft === 0}
-                              className={`text-xl transition ${!givenHearts.includes(post.id) && heartsLeft === 0 ? "opacity-40 cursor-default" : "hover:scale-110"}`}
-                              title={givenHearts.includes(post.id) ? "Remove vote" : "Give a heart"}
+                              className={`text-xl transition ${!givenHearts.includes(post.id) && heartsLeft === 0 ? "opacity-35 cursor-default" : "hover:scale-110"}`}
+                              title={givenHearts.includes(post.id) ? "Remove vote" : "Give your heart"}
                             >
                               {givenHearts.includes(post.id) ? "💛" : "🤍"}
                             </button>
                           )}
                         </div>
                       </div>
-                      <p className="text-white text-base leading-relaxed text-center" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>
+                      <p className="text-white text-sm leading-relaxed" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>
                         {post.post_text}
                       </p>
                     </div>
                   ))}
                   {posts.length === 0 && (
-                    <p className="text-white text-base text-center py-6">Be the first to share a response today.</p>
+                    <div className="text-center py-8">
+                      <p className="text-white/60 text-sm mb-1">No stories yet today.</p>
+                      <p className="text-white/40 text-xs">Be the first — go do the challenge and share how it went.</p>
+                    </div>
                   )}
                 </div>
+
+                {/* Bottom leaderboard CTA */}
+                {posts.length > 0 && (
+                  <div className="mt-8 text-center">
+                    <Link href="/grace-challenge/leaderboard"
+                      className="inline-flex items-center gap-2 bg-yellow-400/15 hover:bg-yellow-400/25 border border-yellow-300/30 text-yellow-200 font-semibold text-sm px-6 py-3 rounded-2xl transition">
+                      🏆 See the Leaderboard
+                    </Link>
+                  </div>
+                )}
               </>
             )}
           </div>

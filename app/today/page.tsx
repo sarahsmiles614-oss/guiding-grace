@@ -36,7 +36,7 @@ export default function TodayPage() {
     const today = getToday();
 
     const [devotionRes, challengeRes, guideRes] = await Promise.all([
-      supabase.from("daily_devotions").select("title, verse_reference, verse_text, reflection").eq("devotion_date", today).single(),
+      supabase.from("daily_devotions").select("title, verse_reference, verse_text, reflection, journal_challenge").eq("devotion_date", today).single(),
       supabase.from("grace_challenges").select("challenge_text").eq("challenge_date", today).single(),
       supabase.from("study_guides").select("title, background, questions").eq("guide_date", today).single(),
     ]);
@@ -132,6 +132,23 @@ export default function TodayPage() {
                       </div>
                       <p className="text-white text-sm leading-relaxed">
                         {challenge.challenge_text}
+                      </p>
+                    </div>
+                  </Link>
+                )}
+
+                {devotion?.journal_challenge && (
+                  <Link href="/dive-deeper">
+                    <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-5 hover:bg-white/15 transition cursor-pointer">
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center gap-2">
+                          <span className="text-xl">📔</span>
+                          <p className="text-white/50 text-xs uppercase tracking-widest font-semibold">Personal Reflection</p>
+                        </div>
+                        <span className="text-white/30 text-xs">Journal →</span>
+                      </div>
+                      <p className="text-white/80 text-sm leading-relaxed italic">
+                        "{devotion.journal_challenge}"
                       </p>
                     </div>
                   </Link>

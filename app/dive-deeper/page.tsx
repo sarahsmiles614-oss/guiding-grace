@@ -1,6 +1,5 @@
 "use client";
 import { useState, useEffect, Suspense } from "react";
-import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import SubscriptionGuard from "@/components/SubscriptionGuard";
 import PageBackground from "@/components/PageBackground";
@@ -41,7 +40,6 @@ function DiveDeeperContent() {
   });
   const [devotion, setDevotion] = useState<any>(null);
   const [questions, setQuestions] = useState<string[]>(DEFAULT_QUESTIONS);
-  const [challenge, setChallenge] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -81,15 +79,13 @@ function DiveDeeperContent() {
     setViewingDate(date);
     setSaved(false);
 
-    const [{ data: dev }, { data: guide }, { data: ch }, { data: journal }] = await Promise.all([
-      supabase.from("daily_devotions").select("title, verse_reference, verse_text, reflection").eq("devotion_date", date).single(),
+    const [{ data: dev }, { data: guide }, { data: journal }] = await Promise.all([
+      supabase.from("daily_devotions").select("title, verse_reference, verse_text, reflection, journal_challenge").eq("devotion_date", date).single(),
       supabase.from("study_guides").select("questions").eq("guide_date", date).single(),
-      supabase.from("grace_challenges").select("challenge_text").eq("challenge_date", date).single(),
       supabase.from("devotion_journal").select("*").eq("user_id", uid).eq("devotion_date", date).single(),
     ]);
 
     setDevotion(dev);
-    setChallenge(ch);
 
     const qs = guide?.questions?.length ? guide.questions : DEFAULT_QUESTIONS;
     setQuestions(qs);
@@ -338,17 +334,17 @@ function DiveDeeperContent() {
                       ))}
 
                       <div>
-                        <p className="text-white/90 text-xs uppercase tracking-widest mb-1">Today's Challenge</p>
-                        {challenge ? (
+                        <p className="text-white/90 text-xs uppercase tracking-widest mb-1">Personal Challenge</p>
+                        {devotion?.journal_challenge ? (
                           <div className="rounded-xl px-4 py-3 mb-2">
-                            <p className="text-amber-100 text-sm leading-relaxed">{challenge.challenge_text}</p>
+                            <p className="text-amber-100 text-sm leading-relaxed">{devotion.journal_challenge}</p>
                           </div>
                         ) : (
                           <div className="rounded-xl px-4 py-3 mb-2">
-                            <p className="text-white/80 text-sm italic">No challenge found for this date.</p>
+                            <p className="text-white/80 text-sm italic">Reflect on how today's verse speaks to your heart.</p>
                           </div>
                         )}
-                        <p className="text-white font-semibold text-sm mb-2" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>How I responded — or plan to</p>
+                        <p className="text-white font-semibold text-sm mb-2" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>My honest reflection</p>
                         <textarea
                           value={challengeResponse}
                           onChange={e => setChallengeResponse(e.target.value)}
