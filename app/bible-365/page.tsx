@@ -157,6 +157,7 @@ function Bible365Inner() {
   const [playerExpanded, setPlayerExpanded] = useState(false);
   const [showDayPicker, setShowDayPicker] = useState(false);
   const [dayPickerInput, setDayPickerInput] = useState("");
+  const [showBrowserSheet, setShowBrowserSheet] = useState(false);
 
   // Screen wake lock — keeps screen on while reading
   const wakeLockRef = useRef<WakeLockSentinel | null>(null);
@@ -807,6 +808,14 @@ function Bible365Inner() {
                   <Link href="/dive-deeper" className="text-white/90 hover:text-white text-sm transition">📔 Journal</Link>
                 </div>
 
+                {/* Browse Bible button */}
+                <button
+                  onClick={() => { setShowBrowserSheet(true); setPickerStep("book"); }}
+                  className="w-full flex items-center justify-center gap-2 bg-white/10 hover:bg-white/18 border border-white/25 text-white text-sm font-medium py-2.5 rounded-xl transition mb-5"
+                >
+                  📖 Browse Bible — jump to any book or chapter
+                </button>
+
                 {/* Day heading */}
                 <div className="mb-5">
                   <p className="text-white text-xs uppercase tracking-widest mb-1">Today's Reading</p>
@@ -1032,6 +1041,92 @@ function Bible365Inner() {
             </div>
           </div>
         )
+      )}
+
+      {/* ── Browse Bible bottom sheet ── */}
+      {showBrowserSheet && (
+        <div className="fixed inset-0 z-50 flex items-end" onClick={() => { setShowBrowserSheet(false); setPickerStep("book"); }}>
+          <div
+            className="w-full max-w-2xl mx-auto bg-black/97 rounded-t-3xl overflow-hidden flex flex-col"
+            style={{ maxHeight: "88vh" }}
+            onClick={e => e.stopPropagation()}
+          >
+            {/* Sheet header */}
+            <div className="px-6 pt-4 pb-0 flex-shrink-0">
+              <div className="w-10 h-1 bg-white/20 rounded-full mx-auto mb-4" />
+              <div className="flex items-center justify-between mb-3">
+                {pickerStep === "chapter" ? (
+                  <button onClick={() => setPickerStep("book")} className="text-white/70 hover:text-white text-sm transition">← Books</button>
+                ) : <div className="w-12" />}
+                <p className="text-white font-bold text-lg" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+                  {pickerStep === "chapter" ? pickerBook : "Browse Bible"}
+                </p>
+                <button onClick={() => { setShowBrowserSheet(false); setPickerStep("book"); }} className="text-white/40 hover:text-white text-2xl leading-none transition">✕</button>
+              </div>
+              {pickerStep === "book" && (
+                <div className="flex -mx-6">
+                  <button onClick={() => setTocTab("ot")} className={`flex-1 py-2.5 text-sm font-semibold transition ${tocTab === "ot" ? "bg-white/25 text-white" : "bg-white/8 text-white/60 hover:text-white"}`}>Old Testament</button>
+                  <button onClick={() => setTocTab("nt")} className={`flex-1 py-2.5 text-sm font-semibold transition ${tocTab === "nt" ? "bg-white/25 text-white" : "bg-white/8 text-white/60 hover:text-white"}`}>New Testament</button>
+                </div>
+              )}
+              {pickerStep === "chapter" && (
+                <p className="text-white/50 text-xs text-center mb-2">Green = already read · Tap any chapter to open it</p>
+              )}
+            </div>
+
+            {/* Scrollable content */}
+            <div className="overflow-y-auto flex-1">
+              {pickerStep === "book" && (
+                <div>
+                  {categories.map(category => (
+                    <div key={category.label}>
+                      <p className="text-white/50 text-xs font-bold tracking-widest uppercase px-5 pt-4 pb-2">{category.label}</p>
+                      {category.books.map(book => (
+                        <button
+                          key={book}
+                          onClick={() => { setPickerBook(book); setPickerStep("chapter"); }}
+                          className="w-full text-left px-5 py-4 bg-white/5 hover:bg-white/15 border-b border-white/8 text-white font-semibold text-lg transition flex items-center justify-between"
+                        >
+                          <span>{book}</span>
+                          <span className="text-white/40">›</span>
+                        </button>
+                      ))}
+                    </div>
+                  ))}
+                  <div className="h-8" />
+                </div>
+              )}
+
+              {pickerStep === "chapter" && pickerBook && (
+                <div className="grid grid-cols-5 gap-2 p-5">
+                  {Array.from({ length: CHAPTER_COUNTS[pickerBook] ?? 1 }, (_, i) => i + 1).map(ch => {
+                    const match = plan.find(r => r.chapters.some(c => c.bookName === pickerBook && c.chapter === ch));
+                    const targetDay = match ? match.day : plan.find(r => r.chapters.some(c => c.bookName === pickerBook))?.day ?? 1;
+                    const isDone = completedDays.has(targetDay);
+                    return (
+                      <button
+                        key={ch}
+                        onClick={() => {
+                          cancelSpeech();
+                          setResumeVerse(0); setCurrentVerse(-1);
+                          setSavedDay(targetDay); setDay(targetDay);
+                          saveProgress(targetDay, 0, fontSize, speedRef.current, highlightColor);
+                          setPickerStep("book");
+                          setShowBrowserSheet(false);
+                          window.scrollTo({ top: 0 });
+                        }}
+                        className={`font-bold py-3 rounded-lg text-sm transition ${isDone ? "bg-green-500/25 border border-green-400/40 text-green-200" : "bg-white/10 hover:bg-white/25 text-white"}`}
+                      >
+                        {ch}
+                      </button>
+                    );
+                  })}
+                  <div className="col-span-5 h-4" />
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
       )}
 
       {/* ── Journal highlight panel (bottom sheet) ── */}
