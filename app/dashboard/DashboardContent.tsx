@@ -79,12 +79,16 @@ export default function DashboardContent() {
         return;
       }
 
-      const { data: sub } = await supabase
+      const { data: sub, error: subError } = await supabase
         .from("subscriptions")
         .select("status, trial_end_date")
         .eq("user_id", user.id)
         .single();
 
+      if (subError && subError.code !== "PGRST116") {
+        // DB error — don't falsely show "no subscription", just leave loading resolved as none
+        setSubStatus("none"); return;
+      }
       if (!sub) { setSubStatus("none"); return; }
 
       const isTrialing = sub.status === "trialing" && new Date(sub.trial_end_date) > new Date();

@@ -19,12 +19,16 @@ export default function SubscriptionGuard({ children }: { children: React.ReactN
         setAllowed(true); setChecking(false); return;
       }
 
-      const { data: sub } = await supabase
+      const { data: sub, error: subError } = await supabase
         .from("subscriptions")
         .select("status, trial_end_date")
         .eq("user_id", user.id)
         .single();
 
+      if (subError && subError.code !== "PGRST116") {
+        // DB error (not just "no rows") — fail open so paying users aren't locked out
+        setAllowed(true); setChecking(false); return;
+      }
       if (!sub) { router.push("/subscribe"); return; }
 
       const isTrialing = sub.status === "trialing" && new Date(sub.trial_end_date) > new Date();

@@ -143,7 +143,7 @@ function CheckoutContent() {
       // Redirect to Stripe hosted checkout
       window.location.href = data.url;
     }
-    init();
+    init().catch(() => { setError("Something went wrong. Please try again."); setLoading(false); });
   }, [mode, router]);
 
   const appearance = {
