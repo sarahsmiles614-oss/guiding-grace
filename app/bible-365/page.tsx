@@ -148,6 +148,7 @@ function Bible365Inner() {
 
 
   const [showHowItWorks, setShowHowItWorks] = useState(false);
+  const [playerHidden, setPlayerHidden] = useState(false);
   const [playerExpanded, setPlayerExpanded] = useState(false);
   const [showDayPicker, setShowDayPicker] = useState(false);
   const [dayPickerInput, setDayPickerInput] = useState("");
@@ -179,8 +180,8 @@ function Bible365Inner() {
     return () => document.removeEventListener("visibilitychange", onVisibilityChange);
   }, [view]);
 
-  // Auto-expand the audio player when playback starts
-  useEffect(() => { if (playing) setPlayerExpanded(true); }, [playing]);
+  // Show bar and expand controls when playback starts
+  useEffect(() => { if (playing) { setPlayerHidden(false); setPlayerExpanded(true); } }, [playing]);
 
   // Journal highlight panel
   const [selectedVerse, setSelectedVerse] = useState<Verse | null>(null);
@@ -534,7 +535,7 @@ function Bible365Inner() {
   return (
     <SubscriptionGuard>
       <PageBackground url="https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/images/saud-edum-cgapZpzd7v0-unsplash%20(1).jpg" overlayOpacity={0.35}>
-        <main className="flex-1 p-6 pb-24 flex flex-col items-center">
+        <main className="flex-1 p-6 pb-36 flex flex-col items-center">
           <div className="max-w-2xl w-full">
 
             {/* ── BOOK BROWSER (TOC) ── */}
@@ -937,71 +938,95 @@ function Bible365Inner() {
         </main>
       </PageBackground>
 
-      {/* ── Floating audio player ── */}
+      {/* ── Audio player bar ── */}
       {view === "reading" && hasSpeech && (
-        <div className="fixed bottom-6 right-4 z-40">
-          {playerExpanded ? (
-            <div className="bg-black/90 backdrop-blur-md border border-white/20 rounded-2xl p-4 shadow-2xl w-72">
-              {/* Collapse button */}
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-white/50 text-xs uppercase tracking-widest">Audio</span>
-                <button onClick={() => setPlayerExpanded(false)} className="text-white/40 hover:text-white text-lg leading-none transition">✕</button>
-              </div>
+        playerHidden ? (
+          /* Hidden — small floating button to restore */
+          <button
+            onClick={() => setPlayerHidden(false)}
+            className="fixed bottom-6 right-4 z-40 flex items-center gap-1.5 bg-black/80 backdrop-blur border border-white/25 text-white px-3 py-2 rounded-full shadow-xl text-sm"
+          >
+            🎧 <span className="text-xs">Audio</span>
+          </button>
+        ) : (
+          /* Full-width bottom bar */
+          <div className="fixed bottom-0 left-0 right-0 z-40 bg-black/95 backdrop-blur-md border-t border-white/15">
+            <div className="max-w-2xl mx-auto px-4 py-3">
 
-              {/* Current verse label */}
-              {(playing || resumeVerse > 0) && verses.length > 0 && (
-                <p className="text-white/70 text-xs text-center mb-3 truncate">
-                  {playing && currentVerse >= 0
-                    ? `▶ ${verses[currentVerse]?.reference}`
-                    : `Paused · ${verses[Math.min(resumeVerse, verses.length - 1)]?.reference}`}
-                </p>
+              {/* Collapsed bar — play button + label */}
+              {!playerExpanded && (
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={handlePlayPause}
+                    disabled={loading || !!fetchError}
+                    className={`w-12 h-12 flex-shrink-0 rounded-full border-2 flex items-center justify-center text-2xl transition disabled:opacity-30 ${playing ? "bg-white border-white text-gray-900" : "bg-white/20 border-white/60 text-white hover:bg-white/30"}`}
+                  >{playing ? "⏸" : "▶"}</button>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-white font-semibold text-sm">🎧 Listen to Day {day}</p>
+                    <p className="text-white/50 text-xs truncate">
+                      {playing && currentVerse >= 0 && verses.length > 0
+                        ? `Now reading: ${verses[currentVerse]?.reference}`
+                        : resumeVerse > 0 && verses.length > 0
+                        ? `Paused at: ${verses[Math.min(resumeVerse, verses.length - 1)]?.reference}`
+                        : "Tap ▶ to follow along hands-free"}
+                    </p>
+                  </div>
+                  <button onClick={() => setPlayerExpanded(true)} className="text-white/50 hover:text-white text-xs border border-white/20 px-2 py-1 rounded-lg transition flex-shrink-0">More</button>
+                  <button onClick={() => setPlayerHidden(true)} className="text-white/40 hover:text-white text-xl leading-none transition flex-shrink-0">✕</button>
+                </div>
               )}
 
-              {/* Transport controls */}
-              <div className="flex items-center justify-center gap-3 mb-3">
-                <button onClick={handleRestartDay} disabled={loading || !!fetchError}
-                  title="Restart" className="text-white/60 hover:text-white disabled:opacity-20 transition text-lg">⏮</button>
-                <button onClick={handleSkipBack} disabled={loading || !!fetchError || verses.length === 0}
-                  title="Previous verse" className="text-white hover:text-white disabled:opacity-20 transition text-xl">⏪</button>
-                <button onClick={handlePlayPause} disabled={loading || !!fetchError}
-                  className={`w-12 h-12 rounded-full border-2 flex items-center justify-center text-xl transition disabled:opacity-30 ${playing ? "bg-white border-white text-gray-900" : "bg-white/15 border-white/50 text-white hover:bg-white/25"}`}
-                >{playing ? "⏸" : "▶"}</button>
-                <button onClick={handleSkipForward} disabled={loading || !!fetchError || verses.length === 0}
-                  title="Next verse" className="text-white hover:text-white disabled:opacity-20 transition text-xl">⏩</button>
-                <button onClick={() => { cancelSpeech(); setResumeVerse(0); setCurrentVerse(-1); saveProgress(day, 0, fontSize, speedRef.current, highlightColor); }}
-                  disabled={!playing && resumeVerse === 0} title="Stop"
-                  className="text-white/60 hover:text-white disabled:opacity-20 transition text-lg">⏹</button>
-              </div>
+              {/* Expanded bar — full controls */}
+              {playerExpanded && (
+                <div>
+                  {/* Current verse */}
+                  {(playing || resumeVerse > 0) && verses.length > 0 && (
+                    <p className="text-white/60 text-xs text-center mb-2 truncate">
+                      {playing && currentVerse >= 0
+                        ? `▶ ${verses[currentVerse]?.reference}`
+                        : `Paused · ${verses[Math.min(resumeVerse, verses.length - 1)]?.reference}`}
+                    </p>
+                  )}
+                  {/* Transport */}
+                  <div className="flex items-center justify-center gap-4 mb-2">
+                    <button onClick={handleRestartDay} disabled={loading || !!fetchError}
+                      className="text-white/60 hover:text-white disabled:opacity-20 transition text-xl">⏮</button>
+                    <button onClick={handleSkipBack} disabled={loading || !!fetchError || verses.length === 0}
+                      className="text-white hover:text-white/80 disabled:opacity-20 transition text-2xl">⏪</button>
+                    <button onClick={handlePlayPause} disabled={loading || !!fetchError}
+                      className={`w-14 h-14 rounded-full border-2 flex items-center justify-center text-2xl transition disabled:opacity-30 ${playing ? "bg-white border-white text-gray-900" : "bg-white/20 border-white/60 text-white hover:bg-white/30"}`}
+                    >{playing ? "⏸" : "▶"}</button>
+                    <button onClick={handleSkipForward} disabled={loading || !!fetchError || verses.length === 0}
+                      className="text-white hover:text-white/80 disabled:opacity-20 transition text-2xl">⏩</button>
+                    <button onClick={() => { cancelSpeech(); setResumeVerse(0); setCurrentVerse(-1); saveProgress(day, 0, fontSize, speedRef.current, highlightColor); }}
+                      disabled={!playing && resumeVerse === 0}
+                      className="text-white/60 hover:text-white disabled:opacity-20 transition text-xl">⏹</button>
+                  </div>
+                  {/* Speed + font + collapse */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1">
+                      <span className="text-white/50 text-xs">Speed</span>
+                      {SPEEDS.map(s => (
+                        <button key={s} onClick={() => handleSpeed(s)}
+                          className={`text-xs px-2 py-0.5 rounded border transition ${speed === s ? "border-white/60 text-white bg-white/20 font-semibold" : "border-white/20 text-white/60 hover:text-white"}`}
+                        >{s}×</button>
+                      ))}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <button onClick={() => handleFontSize(fontSize === "lg" ? "base" : "sm")} disabled={fontSize === "sm"}
+                        className="text-white/60 hover:text-white disabled:opacity-20 border border-white/20 px-2 py-0.5 rounded transition text-xs">A−</button>
+                      <button onClick={() => handleFontSize(fontSize === "sm" ? "base" : "lg")} disabled={fontSize === "lg"}
+                        className="text-white/60 hover:text-white disabled:opacity-20 border border-white/20 px-2 py-0.5 rounded transition text-xs">A+</button>
+                      <button onClick={() => setPlayerExpanded(false)} className="text-white/40 hover:text-white text-xs border border-white/20 px-2 py-0.5 rounded transition ml-1">Less</button>
+                      <button onClick={() => setPlayerHidden(true)} className="text-white/40 hover:text-white text-xl leading-none transition">✕</button>
+                    </div>
+                  </div>
+                </div>
+              )}
 
-              {/* Speed + font */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1">
-                  <span className="text-white/60 text-xs">Speed</span>
-                  {SPEEDS.map(s => (
-                    <button key={s} onClick={() => handleSpeed(s)}
-                      className={`text-xs px-1.5 py-0.5 rounded border transition ${speed === s ? "border-white/60 text-white bg-white/15 font-semibold" : "border-white/20 text-white/70 hover:text-white"}`}
-                    >{s}×</button>
-                  ))}
-                </div>
-                <div className="flex items-center gap-1">
-                  <button onClick={() => handleFontSize(fontSize === "lg" ? "base" : "sm")} disabled={fontSize === "sm"}
-                    className="text-white/70 hover:text-white disabled:opacity-20 border border-white/30 px-1.5 py-0.5 rounded transition text-xs">A−</button>
-                  <button onClick={() => handleFontSize(fontSize === "sm" ? "base" : "lg")} disabled={fontSize === "lg"}
-                    className="text-white/70 hover:text-white disabled:opacity-20 border border-white/30 px-1.5 py-0.5 rounded transition text-xs">A+</button>
-                </div>
-              </div>
             </div>
-          ) : (
-            /* Collapsed pill */
-            <button
-              onClick={() => setPlayerExpanded(true)}
-              className={`flex items-center gap-2 backdrop-blur border text-white px-4 py-2.5 rounded-full shadow-xl text-sm font-medium transition ${playing ? "bg-white/25 border-white/40 animate-pulse" : "bg-black/70 border-white/20 hover:bg-black/90"}`}
-            >
-              <span>{playing ? "⏸" : "▶"}</span>
-              <span className="text-xs">{playing ? "Listening" : "Audio"}</span>
-            </button>
-          )}
-        </div>
+          </div>
+        )
       )}
 
       {/* ── Journal highlight panel (bottom sheet) ── */}
