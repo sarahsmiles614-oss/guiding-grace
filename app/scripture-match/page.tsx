@@ -116,21 +116,13 @@ export default function ScriptureMatchPage() {
   async function loadGame(diff: "all" | "easy" | "medium" | "hard" = difficulty) {
     setLoading(true); setGenerating(false); setError("");
     const today = new Date().toISOString().split("T")[0];
-    let { data } = await supabase
+
+    // Check for today's cards first
+    const { data } = await supabase
       .from("scripture_match_cards")
       .select("pairs")
       .eq("card_date", today)
       .single();
-
-    if (!data) {
-      const { data: latest } = await supabase
-        .from("scripture_match_cards")
-        .select("pairs")
-        .order("card_date", { ascending: false })
-        .limit(1)
-        .single();
-      data = latest;
-    }
 
     if (data) {
       initGame(data.pairs, diff);
@@ -138,11 +130,12 @@ export default function ScriptureMatchPage() {
       return;
     }
 
+    // No cards for today — generate fresh content
     setGenerating(true);
     const res = await fetch("/api/generate-scripture-match", { method: "POST" });
     const json = await res.json();
     if (json.error || !json.pairs) {
-      setError("Could not load today's game. Make sure today's devotion has been generated first.");
+      setError("Could not generate today's game. Please try again in a moment.");
       setLoading(false);
       setGenerating(false);
       return;

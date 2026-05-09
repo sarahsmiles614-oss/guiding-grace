@@ -17,13 +17,24 @@ export async function POST() {
 
   if (existing) return NextResponse.json({ message: "Already generated" });
 
-  const { data: devotion } = await supabase
+  // Try today's devotion first; fall back to a recent one so generation never fails
+  let { data: devotion } = await supabase
     .from("daily_devotions")
     .select("title, verse_reference, verse_text, reflection")
     .eq("devotion_date", today)
     .single();
 
-  if (!devotion) return NextResponse.json({ error: "No devotion for today" }, { status: 404 });
+  if (!devotion) {
+    const { data: recent } = await supabase
+      .from("daily_devotions")
+      .select("title, verse_reference, verse_text, reflection")
+      .order("devotion_date", { ascending: false })
+      .limit(1)
+      .single();
+    devotion = recent;
+  }
+
+  if (!devotion) return NextResponse.json({ error: "No devotion data found" }, { status: 404 });
 
   const response = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
