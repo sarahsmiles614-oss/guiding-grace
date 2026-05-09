@@ -29,7 +29,6 @@ function formatDate(dateStr: string) {
 }
 
 function DiveDeeperContent() {
-  const searchParams = useSearchParams();
   const [userId, setUserId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<Tab>(() => {
     if (typeof window !== "undefined") {
