@@ -42,18 +42,18 @@ export default function DashboardContent() {
   }, [router]);
 
   const features = [
-    { label: "Daily Devotions", href: "/devotions", icon: "📖", desc: "Scripture and reflection delivered every morning" },
-    { label: "Bible in 365 Days", href: "/bible-365", icon: "🎧", desc: "Read or listen through the entire Bible in one year" },
-    { label: "Dive Deeper", href: "/dive-deeper", icon: "📔", desc: "Daily journal worksheet — reflect on the devotion, challenge, and your prayer" },
-    { label: "His Promises", href: "/promises", icon: "🕊️", desc: "Discover scripture promises by category and save your favorites" },
-    { label: "Shame Recycle Bin", href: "/shame-recycle", icon: "🗑️", desc: "Release guilt and shame — let it burn away" },
-    { label: "Heaven's Hearts", href: "/heavens-hearts", icon: "💜", desc: "Honor your deceased loved ones with a beautiful memorial wall" },
-    { label: "Nightly Reflections", href: "/nightly-reflections", icon: "🌙", desc: "End your day with gratitude and surrender" },
-    { label: "Heroes & Villains", href: "/heroes-villains", icon: "⚔️", desc: "Explore the stories of the bold heroes and notorious villains of the Bible" },
-    { label: "P.U.S.H. Prayer Wall", href: "/prayer-wall", icon: "🙏", desc: "Pray Until Something Happens — post and pray together" },
-    { label: "Scripture Match", href: "/scripture-match", icon: "🎮", desc: "Match verses and characters — beat your best time" },
-    { label: "Study Groups", href: "/study-groups", icon: "✝️", desc: "Study the Word together — group discussion, Q&A, and Bible trivia" },
-    { label: "Share Studio", href: "/share-studio", icon: "🎨", desc: "Create beautiful scripture and memorial cards to share with friends and family" },
+    { label: "Daily Devotions", href: "/devotions", icon: "📖", desc: "A fresh scripture, reflection, and guided thought every morning — start your day anchored in faith" },
+    { label: "Bible in 365 Days", href: "/bible-365", icon: "🎧", desc: "Read or listen through the entire Bible in a year — 4 reading plans, audio playback, verse highlights, journal, and full progress tracking" },
+    { label: "Dive Deeper", href: "/dive-deeper", icon: "📔", desc: "Your personal journal for each day's devotion, grace challenge, and prayer — record what God is showing you and save highlighted verses" },
+    { label: "His Promises", href: "/promises", icon: "🕊️", desc: "Browse hundreds of God's promises filtered by category — save your favorites, tap for a new one, and customize a card to share" },
+    { label: "Shame Recycle Bin", href: "/shame-recycle", icon: "🗑️", desc: "Write what weighs on you, watch it burn away in flames, and receive a scripture of grace and freedom in return" },
+    { label: "Heaven's Hearts", href: "/heavens-hearts", icon: "💜", desc: "Honor loved ones in heaven — create a personalized memorial, choose your name style, and add them to the community tribute wall" },
+    { label: "Nightly Reflections", href: "/nightly-reflections", icon: "🌙", desc: "End your day by writing your burdens and blessings — surrender them to God and receive a scripture of peace" },
+    { label: "Heroes & Villains", href: "/heroes-villains", icon: "⚔️", desc: "Explore the bold heroes and notorious villains of the Bible — their stories, their failures, and what God did with them" },
+    { label: "P.U.S.H. Prayer Wall", href: "/prayer-wall", icon: "🙏", desc: "Post prayer requests, agree in prayer for others, and watch the wall fill with faith — Pray Until Something Happens" },
+    { label: "Scripture Match", href: "/scripture-match", icon: "🎮", desc: "Flip cards to match Bible verses with characters and references — a fun memory game you can play solo and beat your best time" },
+    { label: "Study Groups", href: "/study-groups", icon: "✝️", desc: "Create or join a group to dig into scripture together — discussion threads, community Q&A, and Bible trivia challenges" },
+    { label: "Share Studio", href: "/share-studio", icon: "🎨", desc: "Build custom scripture and memorial cards with 30+ nature and faith backgrounds, your own text, and share them anywhere" },
   ];
 
   return (
@@ -136,9 +136,9 @@ export default function DashboardContent() {
           <div className={`grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 ${subStatus !== "active" ? "opacity-40 pointer-events-none select-none" : ""}`}>
             {features.map((f) => (
               <Link key={f.href} href={f.href} className="group hover:opacity-80 transition p-2">
-                <span className="text-4xl mb-3 block group-hover:scale-110 transition-transform">{f.icon}</span>
-                <p className="text-white text-base font-semibold mb-1 leading-tight" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>{f.label}</p>
-                <p className="text-white text-sm leading-relaxed" style={{ textShadow: "0 1px 3px rgba(0,0,0,0.8)" }}>{f.desc}</p>
+                <span className="text-5xl mb-3 block group-hover:scale-110 transition-transform">{f.icon}</span>
+                <p className="text-white text-lg font-semibold mb-1 leading-tight" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>{f.label}</p>
+                <p className="text-white text-base leading-relaxed" style={{ textShadow: "0 1px 3px rgba(0,0,0,0.8)" }}>{f.desc}</p>
               </Link>
             ))}
           </div>

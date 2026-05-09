@@ -1,4 +1,4 @@
-const CACHE = "guiding-grace-v3";
+const CACHE = "guiding-grace-v4";
 
 self.addEventListener("install", () => self.skipWaiting());
 self.addEventListener("activate", (e) =>
