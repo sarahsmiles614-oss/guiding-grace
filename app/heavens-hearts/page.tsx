@@ -124,7 +124,7 @@ export default function HeavensHeartsPage() {
     setMemorials(mapped);
 
     for (const { id, x, y } of toSave) {
-      await supabase.from("memorials").update({ x, y }).eq("id", id);
+      await supabase.from("memorials").update({ x, y }).eq("id", id).catch(() => {});
     }
   }
 

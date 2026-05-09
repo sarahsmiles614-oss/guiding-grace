@@ -107,14 +107,16 @@ export default function AccountContent() {
   async function savePrefs() {
     if (!user) return;
     setSavingPrefs(true);
-    await supabase.from("user_preferences").upsert({
+    const { error } = await supabase.from("user_preferences").upsert({
       user_id: user.id,
       email: user.email,
       ...prefs,
     }, { onConflict: "user_id" });
     setSavingPrefs(false);
-    setPrefsSaved(true);
-    setTimeout(() => setPrefsSaved(false), 3000);
+    if (!error) {
+      setPrefsSaved(true);
+      setTimeout(() => setPrefsSaved(false), 3000);
+    }
   }
 
   async function saveName() {
