@@ -55,7 +55,7 @@ export default function NavMenu() {
       androidPrompt.prompt();
       await androidPrompt.userChoice;
       setAndroidPrompt(null);
-    } else if (isIos) {
+    } else {
       setShowIosInstructions(v => !v);
     }
   }
@@ -100,7 +100,7 @@ export default function NavMenu() {
               <div className="text-white text-base py-2.5 px-2 rounded-lg hover:bg-white/10 transition">Terms & Conditions</div>
             </Link>
 
-            {!isStandalone && (androidPrompt || isIos) && (
+            {!isStandalone && (
               <>
                 <button
                   onClick={handleInstall}
@@ -110,7 +110,10 @@ export default function NavMenu() {
                 </button>
                 {showIosInstructions && (
                   <div className="mx-2 mt-1 mb-2 bg-white/10 rounded-xl px-3 py-2 text-white/70 text-sm leading-relaxed">
-                    Tap <span className="font-bold">⎙ Share</span> then <span className="font-bold">"Add to Home Screen"</span>
+                    {isIos
+                      ? <><span>Tap </span><span className="font-bold">⎙ Share</span><span> at the bottom of your browser, then </span><span className="font-bold">"Add to Home Screen"</span></>
+                      : <><span>Tap your browser menu and choose </span><span className="font-bold">"Add to Home Screen"</span><span> or </span><span className="font-bold">"Install App"</span></>
+                    }
                   </div>
                 )}
               </>
