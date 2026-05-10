@@ -40,7 +40,7 @@ export default function ScreenshotGallery() {
               className="flex-shrink-0 rounded-2xl overflow-hidden border border-white/20 hover:border-white/50 transition-all hover:scale-[1.03] active:scale-[0.97] shadow-lg"
               style={{ width: 90, aspectRatio: "9/16", position: "relative" }}
             >
-              <img src={s.url} alt={s.label} className="absolute inset-0 w-full h-full object-cover" />
+              <img src={s.url} alt={s.label} className="absolute inset-0 w-full h-full object-contain bg-black" />
               <div className="absolute inset-0 bg-black/30" />
               <div className="absolute bottom-0 left-0 right-0 pb-2 px-1 text-center">
                 <p className="text-white text-[8px] font-bold leading-tight" style={{ textShadow: "0 1px 4px rgba(0,0,0,1)" }}>
@@ -66,7 +66,7 @@ export default function ScreenshotGallery() {
             <img
               src={screenshots[open].url}
               alt={screenshots[open].label}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-contain bg-black"
             />
 
             {/* Prev / Next */}
