@@ -138,7 +138,7 @@ export default function HeavensHeartsPage() {
       const totalRows = Math.ceil(memorials.length / cols);
       const x = 10 + (col / Math.max(totalCols - 1, 1)) * 80 + (Math.random() * 8 - 4);
       const y = 10 + (row / Math.max(totalRows - 1, 1)) * 80 + (Math.random() * 8 - 4);
-      return { ...m, x: Math.max(5, Math.min(92, x)), y: Math.max(5, Math.min(92, y)) };
+      return { ...m, x: Math.max(5, Math.min(92, x)), y: Math.max(5, y) };
     });
     setMemorials(updated);
     for (const m of updated) {
@@ -155,7 +155,7 @@ export default function HeavensHeartsPage() {
     const col = idx % cols;
     const row = Math.floor(idx / cols);
     const x = Math.min(85, 12 + col * 30 + (Math.random() * 6 - 3));
-    const y = Math.min(85, 12 + row * 22 + (Math.random() * 6 - 3));
+    const y = 12 + row * 22 + (Math.random() * 6 - 3);
     const { data, error } = await supabase
       .from("memorials")
       .insert({
@@ -665,7 +665,7 @@ export default function HeavensHeartsPage() {
                   ref={canvasRef}
                   onClick={() => setSelectedId(null)}
                   className="hh-canvas relative"
-                  style={{ minHeight: 600, touchAction: isDragging || isResizing || isRotating ? "none" : "auto" }}
+                  style={{ minHeight: Math.max(600, Math.ceil(memorials.length / 3) * 160 + 120), touchAction: isDragging || isResizing || isRotating ? "none" : "auto" }}
                 >
                   {memorials.map((m) => {
                     const sel = selectedId === m.id;
