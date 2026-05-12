@@ -20,11 +20,13 @@ export async function POST(req: Request) {
     }
   }
 
-  const today = new Date().toISOString().split("T")[0];
   const date = new Date();
-  const fullDate = date.toLocaleString("en-US", { month: "long", day: "numeric", year: "numeric" });
-  const month = date.toLocaleString("en-US", { month: "long" });
-  const day = date.getDate();
+  const today = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/New_York", year: "numeric", month: "2-digit", day: "2-digit",
+  }).format(date).replace(/(\d+)\/(\d+)\/(\d+)/, "$3-$1-$2");
+  const fullDate = date.toLocaleString("en-US", { timeZone: "America/New_York", month: "long", day: "numeric", year: "numeric" });
+  const month = date.toLocaleString("en-US", { timeZone: "America/New_York", month: "long" });
+  const day = parseInt(new Intl.DateTimeFormat("en-US", { timeZone: "America/New_York", day: "numeric" }).format(date));
 
   const { data: existingDevotion } = await supabase.from("daily_devotions").select("id").eq("devotion_date", today).single();
   const { data: existingChallenge } = await supabase.from("grace_challenges").select("id").eq("challenge_date", today).single();
@@ -49,7 +51,12 @@ export async function POST(req: Request) {
         role: "user",
         content: `Today is ${fullDate}. Generate a daily Christian devotion and a matching real-world grace challenge for a faith app called Guiding Grace.
 
-Consider the season, any nearby Christian holidays (Easter season, Pentecost, Advent, Christmas, etc.), or meaningful dates like Mother's Day, Memorial Day, etc. for ${month} ${day}.
+IMPORTANT — Theme priority order (highest first):
+1. If today IS a specific US holiday or observance (Mother's Day, Father's Day, Memorial Day, Independence Day, Thanksgiving, Christmas, Easter, New Year's, etc.), use THAT as the theme — do not use the liturgical season instead.
+2. Otherwise, consider the Christian liturgical season (Advent, Christmas, Epiphany, Lent, Easter/Pentecost, Ordinary Time).
+3. Otherwise, choose a timeless faith theme appropriate for ${month}.
+
+Today specifically is ${fullDate}. Check if this date is a US holiday or observance before choosing a theme.
 
 Return ONLY a JSON object with these exact fields, no markdown, no preamble:
 {

@@ -50,7 +50,12 @@ export async function POST(req: Request) {
         role: "user",
         content: `Today is ${fullDate}. Generate a daily Christian devotion and a matching real-world grace challenge for a faith app called Guiding Grace.
 
-Consider the season, any nearby Christian holidays (Easter season, Pentecost, Advent, Christmas, etc.), or meaningful dates like Mother's Day, Memorial Day, etc. for ${month} ${day}.
+IMPORTANT — Theme priority order (highest first):
+1. If today IS a specific US holiday or observance (Mother's Day, Father's Day, Memorial Day, Independence Day, Thanksgiving, Christmas, Easter, New Year's, etc.), use THAT as the theme — do not use the liturgical season instead.
+2. Otherwise, consider the Christian liturgical season (Advent, Christmas, Epiphany, Lent, Easter/Pentecost, Ordinary Time).
+3. Otherwise, choose a timeless faith theme appropriate for ${month}.
+
+Today specifically is ${fullDate}. Check if this date is a US holiday or observance before choosing a theme.
 
 Return ONLY a JSON object with these exact fields, no markdown, no preamble:
 {
