@@ -285,7 +285,7 @@ export default function HeavensHeartsPage() {
     function onMove(ev: MouseEvent) {
       if (action === "drag") {
         const x = Math.max(0, Math.min(95, ((ev.clientX - canvas.left) / canvas.width) * 100));
-        const y = Math.max(0, Math.min(95, ((ev.clientY - canvas.top) / canvas.height) * 100));
+        const y = Math.max(0, Math.min(98, ((ev.clientY - canvas.top) / canvas.height) * 100));
         latestRef.current = { ...latestRef.current!, x, y };
         setMemorials((prev) => prev.map((m) => (m.id === id ? { ...m, x, y } : m)));
       } else if (action === "resize") {
@@ -339,7 +339,7 @@ export default function HeavensHeartsPage() {
       if (!touch) return;
       if (action === "drag") {
         const x = Math.max(0, Math.min(95, ((touch.clientX - canvas.left) / canvas.width) * 100));
-        const y = Math.max(0, Math.min(95, ((touch.clientY - canvas.top) / canvas.height) * 100));
+        const y = Math.max(0, Math.min(98, ((touch.clientY - canvas.top) / canvas.height) * 100));
         latestRef.current = { ...latestRef.current!, x, y };
         setMemorials((prev) => prev.map((m) => (m.id === id ? { ...m, x, y } : m)));
       } else if (action === "resize") {
@@ -665,7 +665,7 @@ export default function HeavensHeartsPage() {
                   ref={canvasRef}
                   onClick={() => setSelectedId(null)}
                   className="hh-canvas relative"
-                  style={{ minHeight: Math.max(600, Math.ceil(memorials.length / 3) * 160 + 120), touchAction: isDragging || isResizing || isRotating ? "none" : "auto" }}
+                  style={{ minHeight: Math.max(1200, memorials.length * 120 + 300), touchAction: isDragging || isResizing || isRotating ? "none" : "auto" }}
                 >
                   {memorials.map((m) => {
                     const sel = selectedId === m.id;
