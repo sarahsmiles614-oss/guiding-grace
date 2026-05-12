@@ -151,11 +151,9 @@ export default function HeavensHeartsPage() {
     if (!newName.trim() || !userId) return;
     // Place new names in a grid so they spread out instead of clustering
     const idx = memorials.length;
-    const cols = 3;
-    const col = idx % cols;
-    const row = Math.floor(idx / cols);
-    const x = Math.min(85, 12 + col * 30 + (Math.random() * 6 - 3));
-    const y = 12 + row * 22 + (Math.random() * 6 - 3);
+    const col = idx % 3;
+    const x = 15 + col * 30 + (Math.random() * 8 - 4);
+    const y = 8 + (Math.random() * 25);
     const { data, error } = await supabase
       .from("memorials")
       .insert({
