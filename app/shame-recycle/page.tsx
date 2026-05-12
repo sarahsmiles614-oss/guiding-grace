@@ -301,16 +301,24 @@ export default function ShameRecyclePage() {
                     — {currentScripture.reference}
                   </p>
 
-                  <button onClick={handleReset}
-                    className="bg-white/10 hover:bg-white/20 text-white border border-amber-300/25 px-8 py-3 text-sm backdrop-blur-sm tracking-wider"
+                  <div className="flex gap-3 justify-center"
                     style={{
                       animation: "textFadeIn 2s ease-out forwards",
                       animationDelay: "3s",
                       opacity: 0,
                     }}
                   >
-                    Release Another
-                  </button>
+                    <button onClick={handleReset}
+                      className="bg-white/10 hover:bg-white/20 text-white border border-amber-300/25 px-8 py-3 text-sm backdrop-blur-sm tracking-wider"
+                    >
+                      Release Another
+                    </button>
+                    <Link href="/dashboard"
+                      className="bg-white/10 hover:bg-white/20 text-white border border-amber-300/25 px-8 py-3 text-sm backdrop-blur-sm tracking-wider"
+                    >
+                      ← Home
+                    </Link>
+                  </div>
                 </div>
               </div>
             )}
