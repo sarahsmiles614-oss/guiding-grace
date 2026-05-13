@@ -1,0 +1,13 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "app.guidinggrace.twa",
+      "sha256_cert_fingerprints": [
+        "31:3F:9F:79:B9:CE:08:6B:A5:B8:36:66:75:A4:48:D1:71:2F:F5:5D:B6:52:EA:4F:28:E7:61:6E:CA:A3:E9:46",
+        "16:C4:46:9A:44:58:A0:EB:C3:7F:DB:D1:68:11:C2:3E:36:83:0B:67:BE:89:97:8C:7B:C2:70:F7:7F:77:53:DA"
+      ]
+    }
+  }
+]
