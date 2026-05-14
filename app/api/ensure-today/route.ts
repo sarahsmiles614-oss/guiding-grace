@@ -72,14 +72,26 @@ Today is ${weekday}, ${fullDate}.
 - Verse: Choose a verse from the NIV Bible that directly connects to the theme. Quote it accurately word-for-word.
 - Reflection: 3–4 warm, personal sentences. Speak directly to the reader as "you." Be specific to the verse. Be encouraging but honest — not preachy. End with a natural lead-in toward the challenge.
 
---- CHALLENGE REQUIREMENTS ---
-The challenge must be the real-world outward expression of the devotion theme. It flows directly from what the devotion said.
-RULES (all must be followed):
+--- TWO SEPARATE CHALLENGES — UNDERSTAND THE DIFFERENCE ---
+This app has TWO distinct challenges. They are not the same. Do not overlap them.
+
+CHALLENGE 1 — THE GRACE CHALLENGE (field: "challenge")
+This is grace directed OUTWARD — toward another person or the community.
+RULES:
 1. Must involve another person — a neighbor, friend, family member, stranger, coworker, or community member.
 2. Must be a specific, doable action — not vague ("be kind today" is too vague; "text one person you've been meaning to check on and tell them one specific thing you appreciate about them" is specific).
 3. Must be achievable today by anyone regardless of schedule or budget — no purchases, no events, no travel required.
-4. Must NEVER be inner work: no journaling, no personal prayer alone, no self-reflection — those belong in the journal feature.
+4. Must NEVER be inner work: no journaling, no personal prayer alone, no self-reflection — those belong in the journal.
 5. Should feel connected to the devotion — the user should be able to see how the verse led to this action.
+
+CHALLENGE 2 — THE JOURNAL INWARD CHALLENGE (field: "journal_challenge")
+This is grace directed INWARD — toward yourself. It is private. It is about extending the same grace to yourself that God extends to you, and being honest with yourself about your own heart.
+RULES:
+1. Must be entirely inward and personal — no action toward others.
+2. Should invite honest self-examination: where have you withheld grace from yourself? Where are you being too hard on yourself, avoiding something God is asking you to face, or carrying shame you've never released?
+3. Should feel warm but searching — not guilt-inducing, but gently honest.
+4. Must connect to the same devotion theme as the grace challenge, but from the inside out.
+Examples: "Where in your life are you extending grace to everyone except yourself — and what would it feel like to finally receive it?" or "Is there something God has already forgiven that you still haven't forgiven yourself for? Sit with that today."
 
 --- OUTPUT FORMAT ---
 Return ONLY a valid JSON object. No markdown, no explanation, no preamble. Exactly these fields:
@@ -89,7 +101,7 @@ Return ONLY a valid JSON object. No markdown, no explanation, no preamble. Exact
   "verse_text": "Exact NIV verse text here",
   "reflection": "3-4 sentences of reflection here.",
   "challenge": "1-2 sentences describing the specific grace challenge here.",
-  "journal_challenge": "The inward personal challenge for the journal. 1-2 sentences. This is private self-reflection — NOT outward action. Ask the reader to look honestly within themselves about how this verse applies to their inner life, relationships, habits, or heart. Should feel searching and personal. Examples: 'Think of one relationship where you've been withholding grace — what would it look like to soften there today?' or 'Where in your life have you been waiting for God to move instead of trusting what He's already placed in your hands?'",
+  "journal_challenge": "Grace toward YOURSELF. 1-2 sentences. Private, inward, honest. This must feed into and complement the grace challenge — the two are two sides of the same coin. The idea: you cannot truly give to others what you haven't first received yourself. So the inward challenge prepares the heart for the outward one, or reflects on what the outward one stirred up inside. They should feel like one complete movement — inward then outward.",
   "study_questions": ["Question 1 about the verse or theme (specific, thought-provoking)", "Question 2 about personal application (honest self-examination)", "Question 3 about how this connects to living out faith this week (practical)"]
 }`,
       }],
