@@ -43,7 +43,7 @@ export default function PrayerWallPage() {
         setUserName(user.user_metadata?.full_name || "Friend");
         supabase.from("blocked_users").select("blocked_id").eq("blocker_id", user.id).then(({ data }) => {
           if (data) setBlockedIds(new Set(data.map((r: any) => r.blocked_id)));
-        }).catch(() => {});
+        }, () => {});
       }
     });
     loadPrayers();
