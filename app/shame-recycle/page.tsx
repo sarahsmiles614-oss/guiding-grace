@@ -11,6 +11,26 @@ export default function ShameRecyclePage() {
   const [currentScripture, setCurrentScripture] = useState(graceScriptures[0]);
   const fallbackTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const mainTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [isListening, setIsListening] = useState(false);
+  const recognitionRef = useRef<any>(null);
+
+  function toggleVoice() {
+    if (isListening) { recognitionRef.current?.stop(); setIsListening(false); return; }
+    const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SR) { alert("Voice input isn't supported. Try Chrome or Safari."); return; }
+    const r = new SR();
+    r.continuous = true; r.interimResults = true; r.lang = "en-US";
+    r.onresult = (event: any) => {
+      let final = "";
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        if (event.results[i].isFinal) final += event.results[i][0].transcript + " ";
+      }
+      if (final) setText(prev => (prev ? prev.trimEnd() + " " : "") + final.trim());
+    };
+    r.onend = () => setIsListening(false);
+    r.onerror = () => setIsListening(false);
+    recognitionRef.current = r; r.start(); setIsListening(true);
+  }
 
   // Pre-generate particle data so it doesn't shift on re-render
   const embers = useMemo(() => Array.from({ length: 28 }, (_, i) => ({
@@ -104,7 +124,14 @@ export default function ShameRecyclePage() {
                   style={{ fontFamily: "'Lora', Georgia, serif" }}
                 />
 
-                <div className="flex justify-end mt-2">
+                <div className="flex justify-between items-center mt-2">
+                  <button
+                    type="button"
+                    onClick={toggleVoice}
+                    className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border transition ${isListening ? "bg-red-500/30 border-red-400/50 text-red-300 animate-pulse" : "bg-white/10 border-white/20 text-white/60 hover:bg-white/20"}`}
+                  >
+                    🎤 {isListening ? "Tap to stop" : "Speak"}
+                  </button>
                   <button
                     onClick={handleRelease}
                     disabled={!text.trim() || isReleasing}

@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect, Suspense, useRef } from "react";
 import Link from "next/link";
 import SubscriptionGuard from "@/components/SubscriptionGuard";
 import PageBackground from "@/components/PageBackground";
@@ -60,6 +60,10 @@ function DiveDeeperContent() {
   const [reflections, setReflections] = useState("");
   const [savingReflections, setSavingReflections] = useState(false);
   const [reflectionsSaved, setReflectionsSaved] = useState(false);
+
+  // Voice input
+  const [isListening, setIsListening] = useState(false);
+  const recognitionRef = useRef<any>(null);
 
   useEffect(() => { init(); }, []);
 
@@ -197,6 +201,42 @@ function DiveDeeperContent() {
     setTimeout(() => setReflectionsSaved(false), 3000);
   }
 
+  function toggleVoice(onResult: (text: string) => void) {
+    if (isListening) {
+      recognitionRef.current?.stop();
+      setIsListening(false);
+      return;
+    }
+    const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SR) { alert("Voice input isn't supported. Try Chrome or Safari."); return; }
+    const r = new SR();
+    r.continuous = true;
+    r.interimResults = true;
+    r.lang = "en-US";
+    r.onresult = (event: any) => {
+      let final = "";
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        if (event.results[i].isFinal) final += event.results[i][0].transcript + " ";
+      }
+      if (final) onResult(final.trim());
+    };
+    r.onend = () => setIsListening(false);
+    r.onerror = () => setIsListening(false);
+    recognitionRef.current = r;
+    r.start();
+    setIsListening(true);
+  }
+
+  const micBtn = (onResult: (text: string) => void) => (
+    <button
+      type="button"
+      onClick={() => toggleVoice(onResult)}
+      className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border transition mb-3 ${isListening ? "bg-red-500/30 border-red-400/50 text-red-300 animate-pulse" : "bg-white/10 border-white/20 text-white/60 hover:bg-white/20"}`}
+    >
+      🎤 {isListening ? "Tap to stop" : "Speak"}
+    </button>
+  );
+
   const isToday = viewingDate === getToday();
 
   return (
@@ -212,6 +252,14 @@ function DiveDeeperContent() {
                 Dive Deeper
               </h1>
               <Link href="/bible-365" className="text-white/90 hover:text-white text-sm transition">📖 Bible</Link>
+            </div>
+
+            {/* Quick nav */}
+            <div className="flex gap-2 mb-4 overflow-x-auto pb-1">
+              <Link href="/devotions" className="flex-shrink-0 text-xs px-3 py-1.5 rounded-lg border border-white/20 text-white/70 hover:text-white transition">📖 Devotion</Link>
+              <Link href="/grace-challenge" className="flex-shrink-0 text-xs px-3 py-1.5 rounded-lg border border-white/20 text-white/70 hover:text-white transition">💛 Challenge</Link>
+              <Link href="/grace-challenge/favorites" className="flex-shrink-0 text-xs px-3 py-1.5 rounded-lg border border-white/20 text-white/70 hover:text-white transition">⭐ Favorites</Link>
+              <Link href="/grace-challenge/leaderboard" className="flex-shrink-0 text-xs px-3 py-1.5 rounded-lg border border-white/20 text-white/70 hover:text-white transition">🏆 Leaderboard</Link>
             </div>
 
             {/* Tab bar */}
@@ -310,8 +358,9 @@ function DiveDeeperContent() {
                           onChange={e => setStoodOut(e.target.value)}
                           placeholder="Write freely..."
                           rows={4}
-                          className="w-full bg-transparent border border-white/30 rounded-xl px-4 py-3 text-white placeholder-white/80 text-sm resize-none focus:outline-none focus:border-white/50 leading-relaxed"
+                          className="w-full bg-transparent border border-white/30 rounded-xl px-4 py-3 text-white placeholder-white/80 text-sm resize-none focus:outline-none focus:border-white/50 leading-relaxed mb-2"
                         />
+                        {micBtn(text => setStoodOut(prev => (prev ? prev.trimEnd() + " " : "") + text))}
                       </div>
 
                       {questions.map((q, i) => (
@@ -327,8 +376,9 @@ function DiveDeeperContent() {
                             }}
                             placeholder="Your thoughts..."
                             rows={3}
-                            className="w-full bg-transparent border border-white/30 rounded-xl px-4 py-3 text-white placeholder-white/80 text-sm resize-none focus:outline-none focus:border-white/50 leading-relaxed"
+                            className="w-full bg-transparent border border-white/30 rounded-xl px-4 py-3 text-white placeholder-white/80 text-sm resize-none focus:outline-none focus:border-white/50 leading-relaxed mb-2"
                           />
+                          {micBtn(text => setQuestionNotes(prev => { const n = [...prev]; n[i] = (n[i] ? n[i].trimEnd() + " " : "") + text; return n; }))}
                         </div>
                       ))}
 
@@ -349,8 +399,9 @@ function DiveDeeperContent() {
                           onChange={e => setChallengeResponse(e.target.value)}
                           placeholder="Be honest. Even small steps count."
                           rows={3}
-                          className="w-full bg-transparent border border-white/30 rounded-xl px-4 py-3 text-white placeholder-white/80 text-sm resize-none focus:outline-none focus:border-white/50 leading-relaxed"
+                          className="w-full bg-transparent border border-white/30 rounded-xl px-4 py-3 text-white placeholder-white/80 text-sm resize-none focus:outline-none focus:border-white/50 leading-relaxed mb-2"
                         />
+                        {micBtn(text => setChallengeResponse(prev => (prev ? prev.trimEnd() + " " : "") + text))}
                       </div>
 
                       <div>
@@ -361,8 +412,9 @@ function DiveDeeperContent() {
                           onChange={e => setPrayer(e.target.value)}
                           placeholder="Dear Lord..."
                           rows={5}
-                          className="w-full bg-transparent border border-white/30 rounded-xl px-4 py-3 text-white placeholder-white/80 text-sm resize-none focus:outline-none focus:border-white/50 leading-relaxed"
+                          className="w-full bg-transparent border border-white/30 rounded-xl px-4 py-3 text-white placeholder-white/80 text-sm resize-none focus:outline-none focus:border-white/50 leading-relaxed mb-2"
                         />
+                        {micBtn(text => setPrayer(prev => (prev ? prev.trimEnd() + " " : "") + text))}
                       </div>
 
                       <div className="flex gap-3">
@@ -487,8 +539,9 @@ function DiveDeeperContent() {
                   onChange={e => setReflections(e.target.value)}
                   placeholder="Write whatever is on your heart..."
                   rows={16}
-                  className="w-full bg-transparent border border-white/30 rounded-xl px-4 py-3 text-white placeholder-white/80 text-sm resize-none focus:outline-none focus:border-white/50 leading-relaxed mb-4"
+                  className="w-full bg-transparent border border-white/30 rounded-xl px-4 py-3 text-white placeholder-white/80 text-sm resize-none focus:outline-none focus:border-white/50 leading-relaxed mb-2"
                 />
+                {micBtn(text => setReflections(prev => (prev ? prev.trimEnd() + " " : "") + text))}
                 <button
                   onClick={handleSaveReflections}
                   disabled={savingReflections}

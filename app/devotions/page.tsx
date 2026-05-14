@@ -203,7 +203,7 @@ export default function DevotionsPage() {
             <div className="flex justify-between items-center mb-6">
               <Link href="/dashboard" className="text-white/70 text-sm">← Home</Link>
               <h1 className="text-lg font-bold text-white" style={{ textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>Daily Devotions</h1>
-              <div className="w-16" />
+              <Link href="/dive-deeper" className="text-white/70 text-sm hover:text-white transition">📔 Journal</Link>
             </div>
 
             {/* Streak counter */}

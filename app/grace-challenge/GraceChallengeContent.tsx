@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import SubscriptionGuard from "@/components/SubscriptionGuard";
 import { supabase } from "@/lib/supabase";
@@ -50,6 +50,8 @@ export default function GraceChallengeContent() {
   const [editSubmitting, setEditSubmitting] = useState(false);
   const [connectedIds, setConnectedIds] = useState<Set<string>>(new Set());
   const [pendingConnects, setPendingConnects] = useState<Set<string>>(new Set());
+  const [isListening, setIsListening] = useState(false);
+  const recognitionRef = useRef<any>(null);
 
   const loadChallenge = useCallback(async () => {
     const today = getToday();
@@ -285,6 +287,35 @@ export default function GraceChallengeContent() {
     alert("Thank you — this has been reported for review.");
   }
 
+  function toggleVoice(setter: React.Dispatch<React.SetStateAction<string>>) {
+    if (isListening) {
+      recognitionRef.current?.stop();
+      setIsListening(false);
+      return;
+    }
+    const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SR) {
+      alert("Voice input isn't supported on this browser. Try Chrome or Safari.");
+      return;
+    }
+    const r = new SR();
+    r.continuous = true;
+    r.interimResults = true;
+    r.lang = "en-US";
+    r.onresult = (event: any) => {
+      let final = "";
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        if (event.results[i].isFinal) final += event.results[i][0].transcript + " ";
+      }
+      if (final) setter(prev => (prev ? prev.trimEnd() + " " : "") + final.trim());
+    };
+    r.onend = () => setIsListening(false);
+    r.onerror = () => setIsListening(false);
+    recognitionRef.current = r;
+    r.start();
+    setIsListening(true);
+  }
+
   async function handleGenerate() {
     setGenerating(true);
     await fetch("/api/admin/generate-today", { method: "POST" });
@@ -333,7 +364,10 @@ export default function GraceChallengeContent() {
             <div className="flex justify-between items-center mb-5">
               <Link href="/dashboard" className="text-white text-sm hover:text-white transition" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>← Home</Link>
               <h1 className="text-xl font-bold text-white" style={{ textShadow: "0 2px 10px rgba(0,0,0,0.9)" }}>Daily Grace Challenge</h1>
-              <Link href="/grace-challenge/rules" className="text-white/60 text-xs hover:text-white transition border border-white/20 hover:border-white/40 px-2.5 py-1 rounded-lg" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>How it Works</Link>
+              <div className="flex items-center gap-2">
+                <Link href="/dive-deeper" className="text-white/60 text-xs hover:text-white transition border border-white/20 hover:border-white/40 px-2.5 py-1 rounded-lg" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>📔 Journal</Link>
+                <Link href="/grace-challenge/rules" className="text-white/60 text-xs hover:text-white transition border border-white/20 hover:border-white/40 px-2.5 py-1 rounded-lg" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>How it Works</Link>
+              </div>
             </div>
 
             {/* Nav buttons */}
@@ -459,9 +493,16 @@ export default function GraceChallengeContent() {
                     <textarea
                       value={response} onChange={e => setResponse(e.target.value)}
                       placeholder="Write your story here..."
-                      className="w-full bg-white/10 border border-white/30 rounded-xl px-4 py-3 text-white placeholder-white/50 text-base resize-none focus:outline-none focus:border-white/60 mb-3"
+                      className="w-full bg-white/10 border border-white/30 rounded-xl px-4 py-3 text-white placeholder-white/50 text-base resize-none focus:outline-none focus:border-white/60 mb-2"
                       rows={4}
                     />
+                    <button
+                      type="button"
+                      onClick={() => toggleVoice(setResponse)}
+                      className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border transition mb-3 ${isListening ? "bg-red-500/30 border-red-400/50 text-red-300 animate-pulse" : "bg-white/10 border-white/20 text-white/60 hover:bg-white/20"}`}
+                    >
+                      🎤 {isListening ? "Tap to stop" : "Speak your story"}
+                    </button>
                     {submitError && (
                       <p className="text-red-300 text-sm mb-3" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}>{submitError}</p>
                     )}
@@ -489,9 +530,16 @@ export default function GraceChallengeContent() {
                         </div>
                         <textarea
                           value={editText} onChange={e => setEditText(e.target.value)}
-                          className="w-full bg-white/10 border border-white/30 rounded-xl px-4 py-3 text-white text-base resize-none focus:outline-none focus:border-white/60 mb-3"
+                          className="w-full bg-white/10 border border-white/30 rounded-xl px-4 py-3 text-white text-base resize-none focus:outline-none focus:border-white/60 mb-2"
                           rows={4}
                         />
+                        <button
+                          type="button"
+                          onClick={() => toggleVoice(setEditText)}
+                          className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border transition mb-3 ${isListening ? "bg-red-500/30 border-red-400/50 text-red-300 animate-pulse" : "bg-white/10 border-white/20 text-white/60 hover:bg-white/20"}`}
+                        >
+                          🎤 {isListening ? "Tap to stop" : "Speak your story"}
+                        </button>
                         <div className="flex gap-3">
                           <button onClick={() => setIsEditing(false)} className="flex-1 text-white/70 font-semibold py-2 rounded-xl transition hover:text-white text-sm">
                             Cancel

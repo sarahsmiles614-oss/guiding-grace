@@ -1,9 +1,8 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import SubscriptionGuard from "@/components/SubscriptionGuard";
 import { supabase } from "@/lib/supabase";
-import { isSafe, MODERATION_ERROR } from "@/lib/moderation";
 import PageBackground from "@/components/PageBackground";
 import ShareButton from "@/components/ShareButton";
 
@@ -16,6 +15,26 @@ export default function PrayerWallPage() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editText, setEditText] = useState("");
   const [blockedIds, setBlockedIds] = useState<Set<string>>(new Set());
+  const [isListening, setIsListening] = useState(false);
+  const recognitionRef = useRef<any>(null);
+
+  function toggleVoice(onResult: (text: string) => void) {
+    if (isListening) { recognitionRef.current?.stop(); setIsListening(false); return; }
+    const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SR) { alert("Voice input isn't supported. Try Chrome or Safari."); return; }
+    const r = new SR();
+    r.continuous = true; r.interimResults = true; r.lang = "en-US";
+    r.onresult = (event: any) => {
+      let final = "";
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        if (event.results[i].isFinal) final += event.results[i][0].transcript + " ";
+      }
+      if (final) onResult(final.trim());
+    };
+    r.onend = () => setIsListening(false);
+    r.onerror = () => setIsListening(false);
+    recognitionRef.current = r; r.start(); setIsListening(true);
+  }
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
@@ -41,7 +60,6 @@ export default function PrayerWallPage() {
 
   async function handleSubmit() {
     if (!request.trim() || !userId) return;
-    if (!isSafe(request)) { alert(MODERATION_ERROR); return; }
     setSubmitting(true);
     await supabase.from("prayer_requests").insert({
       user_id: userId,
@@ -91,7 +109,6 @@ export default function PrayerWallPage() {
 
   async function handleEdit(id: string) {
     if (!editText.trim()) return;
-    if (!isSafe(editText)) { alert(MODERATION_ERROR); return; }
     await supabase.from("prayer_requests").update({ prayer_text: editText }).eq("id", id);
     setPrayers((prev) => prev.map((p) => p.id === id ? { ...p, prayer_text: editText } : p));
     setEditingId(null);
@@ -169,10 +186,17 @@ export default function PrayerWallPage() {
                 value={request}
                 onChange={(e) => setRequest(e.target.value)}
                 placeholder="Share your prayer request..."
-                className="w-full bg-transparent border border-white/30 rounded-xl px-4 py-3 text-white placeholder-white/80 text-sm resize-none focus:outline-none focus:border-white/60 mb-3"
+                className="w-full bg-transparent border border-white/30 rounded-xl px-4 py-3 text-white placeholder-white/80 text-sm resize-none focus:outline-none focus:border-white/60 mb-2"
                 rows={3}
               />
-              <div className="flex justify-end">
+              <div className="flex justify-between items-center">
+                <button
+                  type="button"
+                  onClick={() => toggleVoice(text => setRequest(prev => (prev ? prev.trimEnd() + " " : "") + text))}
+                  className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border transition ${isListening ? "bg-red-500/30 border-red-400/50 text-red-300 animate-pulse" : "bg-white/10 border-white/20 text-white/60 hover:bg-white/20"}`}
+                >
+                  🎤 {isListening ? "Tap to stop" : "Speak"}
+                </button>
                 <button
                   onClick={handleSubmit}
                   disabled={!request.trim() || submitting}

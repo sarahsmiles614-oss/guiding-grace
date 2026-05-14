@@ -13,6 +13,27 @@ export default function NightlyReflectionsPage() {
   const [showFallback, setShowFallback] = useState(false);
   const fallbackTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const mainTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [isListening, setIsListening] = useState(false);
+  const [listeningTarget, setListeningTarget] = useState<"burdens" | "blessings" | null>(null);
+  const recognitionRef = useRef<any>(null);
+
+  function toggleVoice(target: "burdens" | "blessings", setter: React.Dispatch<React.SetStateAction<string>>) {
+    if (isListening) { recognitionRef.current?.stop(); setIsListening(false); setListeningTarget(null); return; }
+    const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SR) { alert("Voice input isn't supported. Try Chrome or Safari."); return; }
+    const r = new SR();
+    r.continuous = true; r.interimResults = true; r.lang = "en-US";
+    r.onresult = (event: any) => {
+      let final = "";
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        if (event.results[i].isFinal) final += event.results[i][0].transcript + " ";
+      }
+      if (final) setter(prev => (prev ? prev.trimEnd() + " " : "") + final.trim());
+    };
+    r.onend = () => { setIsListening(false); setListeningTarget(null); };
+    r.onerror = () => { setIsListening(false); setListeningTarget(null); };
+    recognitionRef.current = r; r.start(); setIsListening(true); setListeningTarget(target);
+  }
 
   useEffect(() => {
     return () => {
@@ -85,6 +106,10 @@ export default function NightlyReflectionsPage() {
                       className="w-full h-32 p-2 text-sm border border-white/50 focus:border-white/80 outline-none bg-white/5 text-white placeholder-white/70 resize-none disabled:opacity-50 rounded-lg"
                       placeholder="What weighed on your heart..."
                     />
+                    <button type="button" onClick={() => toggleVoice("burdens", setBurdens)}
+                      className={`mt-1 flex items-center gap-1 text-xs px-2 py-1 rounded-lg border transition ${isListening && listeningTarget === "burdens" ? "bg-red-500/30 border-red-400/50 text-red-300 animate-pulse" : "bg-white/10 border-white/20 text-white/60 hover:bg-white/20"}`}>
+                      🎤 {isListening && listeningTarget === "burdens" ? "Stop" : "Speak"}
+                    </button>
                   </div>
                   <div>
                     <label htmlFor="blessings" className="block text-white font-semibold mb-1 text-sm">
@@ -98,6 +123,10 @@ export default function NightlyReflectionsPage() {
                       className="w-full h-32 p-2 text-sm border border-white/50 focus:border-white/80 outline-none bg-white/5 text-white placeholder-white/70 resize-none disabled:opacity-50 rounded-lg"
                       placeholder="What brought you joy..."
                     />
+                    <button type="button" onClick={() => toggleVoice("blessings", setBlessings)}
+                      className={`mt-1 flex items-center gap-1 text-xs px-2 py-1 rounded-lg border transition ${isListening && listeningTarget === "blessings" ? "bg-red-500/30 border-red-400/50 text-red-300 animate-pulse" : "bg-white/10 border-white/20 text-white/60 hover:bg-white/20"}`}>
+                      🎤 {isListening && listeningTarget === "blessings" ? "Stop" : "Speak"}
+                    </button>
                   </div>
                 </div>
 

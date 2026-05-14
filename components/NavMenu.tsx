@@ -5,6 +5,7 @@ import Link from "next/link";
 const features = [
   { label: "Daily Devotions",      href: "/daily" },
   { label: "Grace Challenge",      href: "/grace-challenge" },
+  { label: "Dive Deeper Journal",  href: "/dive-deeper" },
   { label: "His Promises",         href: "/promises" },
   { label: "Dive Deeper",          href: "/dive-deeper" },
   { label: "Bible 365",            href: "/bible-365" },
