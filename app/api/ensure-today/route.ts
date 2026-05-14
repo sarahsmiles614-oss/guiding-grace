@@ -33,8 +33,8 @@ export async function POST(req: Request) {
 
   const date = new Date();
   const fullDate = date.toLocaleString("en-US", { timeZone: "America/New_York", month: "long", day: "numeric", year: "numeric" });
+  const weekday = date.toLocaleString("en-US", { timeZone: "America/New_York", weekday: "long" });
   const month = date.toLocaleString("en-US", { timeZone: "America/New_York", month: "long" });
-  const day = parseInt(new Intl.DateTimeFormat("en-US", { timeZone: "America/New_York", day: "numeric" }).format(date));
 
   const response = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
@@ -45,26 +45,49 @@ export async function POST(req: Request) {
     },
     body: JSON.stringify({
       model: "claude-opus-4-7",
-      max_tokens: 1000,
+      max_tokens: 1200,
       messages: [{
         role: "user",
-        content: `Today is ${fullDate}. Generate a daily Christian devotion and a matching real-world grace challenge for a faith app called Guiding Grace.
+        content: `You are generating daily content for Guiding Grace — a Christian faith app built for people who want to LIVE their faith, not just read about it. Users take on a real-world grace challenge every day, share their story with a community, and vote on each other's responses. The devotion and challenge are always directly connected — the devotion inspires, the challenge is how you go live it out.
 
-IMPORTANT — Theme priority order (highest first):
-1. If today IS a specific US holiday or observance (Mother's Day, Father's Day, Memorial Day, Independence Day, Thanksgiving, Christmas, Easter, New Year's, etc.), use THAT as the theme — do not use the liturgical season instead.
-2. Otherwise, consider the Christian liturgical season (Advent, Christmas, Epiphany, Lent, Easter/Pentecost, Ordinary Time).
-3. Otherwise, choose a timeless faith theme appropriate for ${month}.
+Today is ${weekday}, ${fullDate}.
 
-Today specifically is ${fullDate}. The day of the week is ${date.toLocaleString("en-US", { timeZone: "America/New_York", weekday: "long" })}.
-CRITICAL: Holidays fall on a SPECIFIC day only — not the day before or after. Mother's Day is ONLY the second Sunday in May. Father's Day is ONLY the third Sunday in June. Memorial Day is ONLY the last Monday in May. If today is not that exact day, do NOT use that holiday as the theme. Choose a different timeless theme instead.
+--- THEME SELECTION (follow this priority order exactly) ---
+1. If today is a major US Christian or national holiday/observance, use that theme. Known dates:
+   - Mother's Day = second Sunday in May (NOT the days before or after)
+   - Father's Day = third Sunday in June (NOT the days before or after)
+   - Memorial Day = last Monday in May (NOT the days before or after)
+   - Independence Day = July 4 only
+   - Thanksgiving = fourth Thursday in November only
+   - Christmas = December 25 only
+   - Easter = varies (calculate correctly for the year)
+   - New Year's Day = January 1 only
+   Today is ${weekday}. Apply the holiday rule ONLY if today's date exactly matches. If it does not match, do NOT use a nearby holiday as the theme.
+2. If no holiday applies, consider the Christian liturgical season (Advent, Lent, Easter season, Ordinary Time, Pentecost).
+3. If neither applies, choose a fresh, meaningful faith theme for ${month} — grace, forgiveness, courage, service, trust, community, healing, gratitude, purpose, patience, etc. Vary the theme; avoid repeating common ones like "prayer" or "trust" unless they are especially fitting for the date.
 
-Return ONLY a JSON object with these exact fields, no markdown, no preamble:
+--- DEVOTION REQUIREMENTS ---
+- Title: 4–6 words, evocative and specific (not generic like "Walking in Faith")
+- Verse: Choose a verse from the NIV Bible that directly connects to the theme. Quote it accurately word-for-word.
+- Reflection: 3–4 warm, personal sentences. Speak directly to the reader as "you." Be specific to the verse. Be encouraging but honest — not preachy. End with a natural lead-in toward the challenge.
+
+--- CHALLENGE REQUIREMENTS ---
+The challenge must be the real-world outward expression of the devotion theme. It flows directly from what the devotion said.
+RULES (all must be followed):
+1. Must involve another person — a neighbor, friend, family member, stranger, coworker, or community member.
+2. Must be a specific, doable action — not vague ("be kind today" is too vague; "text one person you've been meaning to check on and tell them one specific thing you appreciate about them" is specific).
+3. Must be achievable today by anyone regardless of schedule or budget — no purchases, no events, no travel required.
+4. Must NEVER be inner work: no journaling, no personal prayer alone, no self-reflection — those belong in the journal feature.
+5. Should feel connected to the devotion — the user should be able to see how the verse led to this action.
+
+--- OUTPUT FORMAT ---
+Return ONLY a valid JSON object. No markdown, no explanation, no preamble. Exactly these fields:
 {
-  "title": "Short devotion title (5 words or less)",
+  "title": "Devotion title here",
   "verse_reference": "Book Chapter:Verse",
-  "verse_text": "The full verse text from NIV",
-  "reflection": "2-3 sentences of warm, personal spiritual reflection on the verse. Speak directly to the reader.",
-  "challenge": "One specific, outward-facing community act of grace the reader can do today that mirrors the devotion theme. 1-2 sentences. Warm and achievable. CRITICAL RULES: (1) Must involve reaching out TO or serving ANOTHER PERSON — a neighbor, friend, stranger, family member, or church community. (2) Must never be inner work, journaling, personal reflection, or prayer alone — those belong in a separate journal feature. (3) Must never cost money or require any purchase. Examples: text encouragement to someone by name, sit with someone who is lonely, invite a neighbor to church, pray OUT LOUD with a friend, help someone with a task, check in on someone you've been meaning to call."
+  "verse_text": "Exact NIV verse text here",
+  "reflection": "3-4 sentences of reflection here.",
+  "challenge": "1-2 sentences describing the specific grace challenge here."
 }`,
       }],
     }),
