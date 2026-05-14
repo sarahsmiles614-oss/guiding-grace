@@ -585,7 +585,7 @@ export default function HeavensHeartsPage() {
                       className="flex-1 px-4 py-3 rounded-lg border-2 border-rose-200 focus:border-rose-400 outline-none text-rose-900"
                     />
                     <div className="flex-1 flex items-center justify-center px-5 py-3 rounded-lg bg-gradient-to-br from-rose-50 to-pink-100 border-2 border-rose-200 min-h-[52px] overflow-hidden">
-                      <p className="text-2xl drop-shadow whitespace-nowrap" style={{ fontFamily: fontFamily(selectedFont.value), color: newName ? selectedColor : "#e2a0b4" }}>
+                      <p className="drop-shadow whitespace-nowrap" style={{ fontFamily: fontFamily(selectedFont.value), color: newName ? selectedColor : "#e2a0b4", fontSize: "clamp(1rem, 5vw, 1.5rem)" }}>
                         {newName || "preview"}
                       </p>
                     </div>
@@ -698,8 +698,8 @@ export default function HeavensHeartsPage() {
                           </div>
                         ) : (
                           <p
-                            className="text-4xl drop-shadow-[0_2px_8px_rgba(0,0,0,0.3)] whitespace-nowrap"
-                            style={{ fontFamily: fontFamily(m.font_style), color: m.color }}
+                            className="drop-shadow-[0_2px_8px_rgba(0,0,0,0.3)] whitespace-nowrap"
+                            style={{ fontFamily: fontFamily(m.font_style), color: m.color, fontSize: "clamp(1rem, 5vw, 2.25rem)" }}
                           >
                             {m.name}
                           </p>

@@ -6,7 +6,8 @@
       "Bash(wc:*)",
       "Bash(npm run:*)",
       "Bash(cat \"/c/Users/sazia/Downloads/Guiding Grace — Daily Devotions & His Promises \\(1\\)/migrations/\"*.sql)",
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "mcp__claude_ai_Supabase__list_projects"
     ]
   }
 }
