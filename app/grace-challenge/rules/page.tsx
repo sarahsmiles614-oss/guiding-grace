@@ -15,6 +15,11 @@ const rules = [
     body: "Write a short story about how you took on the challenge — or share why you chose not to. Both count. Honesty is grace too. All entries can be voted on.",
   },
   {
+    icon: "🕊️",
+    title: "Can't Do Today's Challenge?",
+    body: "If for any reason you aren't able to do today's challenge, you may share a past experience or even a story you bore witness to — as long as it is within the theme. That said, it is preferred you do the work. This is for your growth after all. But it is understandable that we might not always get the opportunity to complete what is asked of us. Participation is still encouraged.",
+  },
+  {
     icon: "💛",
     title: "1 Heart to Give",
     body: "Every day you receive 1 heart to award to the response that moves you most. You can't vote for yourself. You can change your vote as many times as you want until the midnight EST deadline.",

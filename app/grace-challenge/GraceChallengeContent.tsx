@@ -447,7 +447,6 @@ export default function GraceChallengeContent() {
                   <div className="mb-8">
                     <p className="text-white text-sm font-semibold mb-1" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}>Share your story with the community</p>
                     <p className="text-white/55 text-xs mb-1">How did it go? What did you do, say, or feel? Honesty is grace too.</p>
-                    <p className="text-white/45 text-xs mb-3">Can't do today's challenge? Share a past story that fits today's theme — what matters is the spirit of grace, not the timing.</p>
                     <div className="flex gap-2 mb-3">
                       <button
                         onClick={() => setCompleted(true)}
