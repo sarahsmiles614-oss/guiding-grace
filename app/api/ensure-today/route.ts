@@ -26,8 +26,9 @@ export async function POST(req: Request) {
 
   const { data: existingDevotion } = await supabase.from("daily_devotions").select("id").eq("devotion_date", today).single();
   const { data: existingChallenge } = await supabase.from("grace_challenges").select("id").eq("challenge_date", today).single();
+  const { data: existingGuide } = await supabase.from("study_guides").select("id").eq("guide_date", today).single();
 
-  if (existingDevotion && existingChallenge) {
+  if (existingDevotion && existingChallenge && existingGuide) {
     return NextResponse.json({ message: "Already exists" });
   }
 
@@ -87,7 +88,9 @@ Return ONLY a valid JSON object. No markdown, no explanation, no preamble. Exact
   "verse_reference": "Book Chapter:Verse",
   "verse_text": "Exact NIV verse text here",
   "reflection": "3-4 sentences of reflection here.",
-  "challenge": "1-2 sentences describing the specific grace challenge here."
+  "challenge": "1-2 sentences describing the specific grace challenge here.",
+  "journal_challenge": "The inward personal challenge for the journal. 1-2 sentences. This is private self-reflection — NOT outward action. Ask the reader to look honestly within themselves about how this verse applies to their inner life, relationships, habits, or heart. Should feel searching and personal. Examples: 'Think of one relationship where you've been withholding grace — what would it look like to soften there today?' or 'Where in your life have you been waiting for God to move instead of trusting what He's already placed in your hands?'",
+  "study_questions": ["Question 1 about the verse or theme (specific, thought-provoking)", "Question 2 about personal application (honest self-examination)", "Question 3 about how this connects to living out faith this week (practical)"]
 }`,
       }],
     }),
@@ -108,6 +111,7 @@ Return ONLY a valid JSON object. No markdown, no explanation, no preamble. Exact
       verse_reference: parsed.verse_reference,
       verse_text: parsed.verse_text,
       reflection: parsed.reflection,
+      journal_challenge: parsed.journal_challenge,
     });
   }
 
@@ -115,6 +119,13 @@ Return ONLY a valid JSON object. No markdown, no explanation, no preamble. Exact
     await supabase.from("grace_challenges").insert({
       challenge_text: parsed.challenge,
       challenge_date: today,
+    });
+  }
+
+  if (!existingGuide && parsed.study_questions?.length) {
+    await supabase.from("study_guides").insert({
+      guide_date: today,
+      questions: parsed.study_questions,
     });
   }
 
