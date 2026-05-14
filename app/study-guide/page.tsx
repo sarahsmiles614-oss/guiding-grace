@@ -8,6 +8,12 @@ import { getBiblePlan, PlanOrder } from "@/lib/bible-plan";
 
 const BG = "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images%204/zoltan-tasi-KHD_FA43aMw-unsplash.jpg";
 
+interface FillBlankExercise {
+  reference: string;
+  parts: string[];
+  answers: string[];
+}
+
 interface StudyGuide {
   title: string;
   verse_reference: string;
@@ -16,6 +22,7 @@ interface StudyGuide {
   questions: string[];
   application: string;
   related_verses: { reference: string; text: string }[];
+  fill_blank?: FillBlankExercise[];
 }
 
 type GuideMode = "devotion" | "canonical" | "chronological";
@@ -30,8 +37,12 @@ export default function StudyGuidePage() {
   const [planDay, setPlanDay] = useState(1);
   const [planLabel, setPlanLabel] = useState("");
 
+  // Fill in the blank state
+  const [fillInputs, setFillInputs] = useState<string[][]>([]);
+  const [fillChecked, setFillChecked] = useState(false);
+  const [fillRevealed, setFillRevealed] = useState(false);
+
   useEffect(() => {
-    // Read saved Bible 365 state from localStorage
     const raw = localStorage.getItem("bible365_order");
     const order: GuideMode = raw === "devotion" || raw === "canonical" || raw === "chronological" ? raw : "canonical";
     setMode(order);
@@ -62,33 +73,48 @@ export default function StudyGuidePage() {
     setOpenQ(null);
   }, [mode, planDay]);
 
+  function initFillInputs(g: StudyGuide) {
+    if (g.fill_blank) {
+      setFillInputs(g.fill_blank.map(ex => ex.answers.map(() => "")));
+    } else {
+      setFillInputs([]);
+    }
+    setFillChecked(false);
+    setFillRevealed(false);
+  }
+
   async function loadDevotionGuide() {
     setLoading(true); setError(""); setGuide(null);
     const today = new Date().toISOString().split("T")[0];
 
     let { data } = await supabase
       .from("study_guides")
-      .select("title, verse_reference, background, interpretation, questions, application, related_verses")
+      .select("title, verse_reference, background, interpretation, questions, application, related_verses, fill_blank")
       .eq("guide_date", today)
       .single();
 
     if (!data) {
       const { data: latest } = await supabase
         .from("study_guides")
-        .select("title, verse_reference, background, interpretation, questions, application, related_verses")
+        .select("title, verse_reference, background, interpretation, questions, application, related_verses, fill_blank")
         .order("guide_date", { ascending: false })
         .limit(1)
         .single();
       data = latest;
     }
 
-    if (data) { setGuide(data); setLoading(false); return; }
+    if (data && data.fill_blank) {
+      setGuide(data);
+      initFillInputs(data);
+      setLoading(false);
+      return;
+    }
 
     setGenerating(true);
     const res = await fetch("/api/generate-study-guide", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({}) });
     const json = await res.json();
     if (json.error) setError("Could not load today's study guide. Check back after midnight.");
-    else setGuide(json.guide);
+    else { setGuide(json.guide); initFillInputs(json.guide); }
     setGenerating(false);
     setLoading(false);
   }
@@ -99,11 +125,16 @@ export default function StudyGuidePage() {
 
     const { data } = await supabase
       .from("study_guides")
-      .select("title, verse_reference, background, interpretation, questions, application, related_verses")
+      .select("title, verse_reference, background, interpretation, questions, application, related_verses, fill_blank")
       .eq("guide_date", planKey)
       .single();
 
-    if (data) { setGuide(data); setLoading(false); return; }
+    if (data && data.fill_blank) {
+      setGuide(data);
+      initFillInputs(data);
+      setLoading(false);
+      return;
+    }
 
     setGenerating(true);
     const res = await fetch("/api/generate-study-guide", {
@@ -113,15 +144,39 @@ export default function StudyGuidePage() {
     });
     const json = await res.json();
     if (json.error) setError("Could not generate a study guide for this reading.");
-    else setGuide(json.guide);
+    else { setGuide(json.guide); initFillInputs(json.guide); }
     setGenerating(false);
     setLoading(false);
   }
 
+  function setFillInput(ei: number, pi: number, value: string) {
+    setFillChecked(false);
+    setFillRevealed(false);
+    setFillInputs(prev => prev.map((row, ri) => ri === ei ? row.map((v, ci) => ci === pi ? value : v) : row));
+  }
+
+  function resetFill() {
+    if (guide?.fill_blank) setFillInputs(guide.fill_blank.map(ex => ex.answers.map(() => "")));
+    setFillChecked(false);
+    setFillRevealed(false);
+  }
+
+  function fillScore() {
+    if (!guide?.fill_blank) return { correct: 0, total: 0 };
+    let correct = 0, total = 0;
+    guide.fill_blank.forEach((ex, ei) => {
+      ex.answers.forEach((ans, pi) => {
+        total++;
+        if (fillInputs[ei]?.[pi]?.trim().toLowerCase() === ans.toLowerCase()) correct++;
+      });
+    });
+    return { correct, total };
+  }
+
   const MODES: { id: GuideMode; label: string; sub: string }[] = [
-    { id: "devotion",       label: "Daily Deep Dive", sub: "Today's scripture" },
-    { id: "canonical",      label: "📖 Canonical",    sub: `Day ${planDay}` },
-    { id: "chronological",  label: "🕰️ Chronological", sub: `Day ${planDay}` },
+    { id: "devotion",      label: "Daily Deep Dive", sub: "Today's scripture" },
+    { id: "canonical",     label: "📖 Canonical",    sub: `Day ${planDay}` },
+    { id: "chronological", label: "🕰️ Chronological", sub: `Day ${planDay}` },
   ];
 
   return (
@@ -152,7 +207,6 @@ export default function StudyGuidePage() {
               ))}
             </div>
 
-            {/* Plan passage label */}
             {mode !== "devotion" && planLabel && !loading && !generating && (
               <p className="text-amber-200/70 text-xs font-semibold uppercase tracking-widest mb-4">{planLabel}</p>
             )}
@@ -180,17 +234,13 @@ export default function StudyGuidePage() {
 
                 <div>
                   <p className="text-white/50 text-xs uppercase tracking-widest mb-3">Background</p>
-                  <p className="text-white text-sm leading-relaxed" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
-                    {guide.background}
-                  </p>
+                  <p className="text-white text-sm leading-relaxed" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>{guide.background}</p>
                 </div>
 
                 {guide.interpretation && (
                   <div>
                     <p className="text-white/50 text-xs uppercase tracking-widest mb-3">Interpretation</p>
-                    <p className="text-white text-sm leading-relaxed" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
-                      {guide.interpretation}
-                    </p>
+                    <p className="text-white text-sm leading-relaxed" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>{guide.interpretation}</p>
                   </div>
                 )}
 
@@ -212,7 +262,7 @@ export default function StudyGuidePage() {
                           <div className="py-3 px-2">
                             <textarea
                               placeholder="Write your reflection here..."
-                              className="w-full bg-white/10 border border-white/20 rounded-xl text-white text-sm p-3 placeholder-white/80 focus:outline-none focus:border-white/40 resize-none leading-relaxed"
+                              className="w-full bg-white/10 border border-white/20 rounded-xl text-white text-sm p-3 placeholder-white/40 focus:outline-none focus:border-white/40 resize-none leading-relaxed"
                               rows={4}
                             />
                           </div>
@@ -224,9 +274,7 @@ export default function StudyGuidePage() {
 
                 <div>
                   <p className="text-white/50 text-xs uppercase tracking-widest mb-3">Today's Application</p>
-                  <p className="text-white text-sm leading-relaxed" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
-                    {guide.application}
-                  </p>
+                  <p className="text-white text-sm leading-relaxed" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>{guide.application}</p>
                 </div>
 
                 <div>
@@ -235,13 +283,92 @@ export default function StudyGuidePage() {
                     {guide.related_verses.map((v, i) => (
                       <div key={i} className="border-l-2 border-white/20 pl-4">
                         <p className="text-amber-200 text-xs font-semibold mb-1">{v.reference}</p>
-                        <p className="text-white text-sm leading-relaxed italic" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
-                          {v.text}
-                        </p>
+                        <p className="text-white text-sm leading-relaxed italic" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>{v.text}</p>
                       </div>
                     ))}
                   </div>
                 </div>
+
+                {/* Fill in the Blank */}
+                {guide.fill_blank && guide.fill_blank.length > 0 && (
+                  <div>
+                    <p className="text-white/50 text-xs uppercase tracking-widest mb-1">Fill in the Blank</p>
+                    <p className="text-white/30 text-xs mb-4">Type the missing word(s) from each verse</p>
+
+                    <div className="space-y-4">
+                      {guide.fill_blank.map((ex, ei) => (
+                        <div key={ei} className="bg-white/5 border border-white/10 rounded-xl p-4">
+                          <p className="text-amber-200 text-xs font-semibold mb-3">{ex.reference}</p>
+                          <p className="text-white text-sm leading-loose italic">
+                            {ex.parts.map((part, pi) => (
+                              <span key={pi}>
+                                {part}
+                                {pi < ex.answers.length && (
+                                  <input
+                                    type="text"
+                                    value={fillInputs[ei]?.[pi] ?? ""}
+                                    onChange={e => setFillInput(ei, pi, e.target.value)}
+                                    readOnly={fillRevealed}
+                                    placeholder="______"
+                                    className={`inline-block mx-1 px-2 py-0.5 bg-white/10 rounded border-b-2 text-white text-sm focus:outline-none transition-colors not-italic ${
+                                      fillRevealed
+                                        ? "border-amber-400 text-amber-200 bg-amber-400/10"
+                                        : fillChecked
+                                          ? fillInputs[ei]?.[pi]?.trim().toLowerCase() === ex.answers[pi].toLowerCase()
+                                            ? "border-green-400 bg-green-400/10"
+                                            : "border-red-400 bg-red-400/10"
+                                          : "border-white/30 focus:border-white/70"
+                                    }`}
+                                    style={{ width: `${Math.max(ex.answers[pi].length + 2, 7)}ch` }}
+                                  />
+                                )}
+                              </span>
+                            ))}
+                          </p>
+                          {fillRevealed && (
+                            <p className="text-amber-200/60 text-xs mt-2 not-italic">
+                              {ex.answers.join(" · ")}
+                            </p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="flex gap-2 mt-4">
+                      <button
+                        onClick={() => setFillChecked(true)}
+                        disabled={fillRevealed}
+                        className="flex-1 bg-white/20 hover:bg-white/30 border border-white/30 text-white text-sm font-semibold py-2.5 rounded-xl transition disabled:opacity-40"
+                      >
+                        Check Answers
+                      </button>
+                      <button
+                        onClick={() => { setFillRevealed(true); setFillChecked(false); }}
+                        disabled={fillRevealed}
+                        className="bg-white/10 hover:bg-white/20 border border-white/20 text-white/60 hover:text-white text-sm py-2.5 px-4 rounded-xl transition disabled:opacity-40"
+                      >
+                        Reveal
+                      </button>
+                      <button
+                        onClick={resetFill}
+                        className="bg-white/10 hover:bg-white/20 border border-white/20 text-white/60 hover:text-white text-sm py-2.5 px-4 rounded-xl transition"
+                      >
+                        Reset
+                      </button>
+                    </div>
+
+                    {fillChecked && !fillRevealed && (() => {
+                      const { correct, total } = fillScore();
+                      return (
+                        <p className="text-center text-white/70 text-sm mt-3">
+                          {correct === total
+                            ? "🎉 Perfect score!"
+                            : `${correct} / ${total} correct — keep going!`}
+                        </p>
+                      );
+                    })()}
+                  </div>
+                )}
 
               </div>
             )}
