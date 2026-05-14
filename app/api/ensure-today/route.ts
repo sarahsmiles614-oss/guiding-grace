@@ -55,7 +55,8 @@ IMPORTANT — Theme priority order (highest first):
 2. Otherwise, consider the Christian liturgical season (Advent, Christmas, Epiphany, Lent, Easter/Pentecost, Ordinary Time).
 3. Otherwise, choose a timeless faith theme appropriate for ${month}.
 
-Today specifically is ${fullDate}. Check if this date is a US holiday or observance before choosing a theme.
+Today specifically is ${fullDate}. The day of the week is ${date.toLocaleString("en-US", { timeZone: "America/New_York", weekday: "long" })}.
+CRITICAL: Holidays fall on a SPECIFIC day only — not the day before or after. Mother's Day is ONLY the second Sunday in May. Father's Day is ONLY the third Sunday in June. Memorial Day is ONLY the last Monday in May. If today is not that exact day, do NOT use that holiday as the theme. Choose a different timeless theme instead.
 
 Return ONLY a JSON object with these exact fields, no markdown, no preamble:
 {
