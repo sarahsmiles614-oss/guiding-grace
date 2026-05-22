@@ -26,6 +26,11 @@ export async function GET(request: NextRequest) {
   if (next === "/subscribe") {
     const { data: { user } } = await supabase.auth.getUser();
     if (user) {
+      // Admin bypass
+      if (user.email === "sarahsmiles614@gmail.com") {
+        return NextResponse.redirect(new URL("/dashboard", requestUrl.origin));
+      }
+
       const { data: sub } = await supabase
         .from("subscriptions")
         .select("status, trial_end_date")
