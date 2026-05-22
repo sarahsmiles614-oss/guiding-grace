@@ -4,6 +4,7 @@ import Link from "next/link";
 import AuthForm from "@/components/AuthForm";
 import ScreenshotGallery from "@/components/ScreenshotGallery";
 import NavMenu from "@/components/NavMenu";
+import InstallBanner from "@/components/InstallBanner";
 
 const BG = "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images%204/heejing-kim-TqaFGqxiCQo-unsplash.jpg";
 
@@ -161,6 +162,9 @@ export default async function Home() {
                 </div>
               </div>
             )}
+
+            {/* Install Banner */}
+            <InstallBanner />
 
             {/* Screenshot Gallery */}
             <div className="mb-4">

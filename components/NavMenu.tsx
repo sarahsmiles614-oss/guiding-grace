@@ -7,7 +7,6 @@ const features = [
   { label: "Grace Challenge",      href: "/grace-challenge" },
   { label: "Dive Deeper Journal",  href: "/dive-deeper" },
   { label: "His Promises",         href: "/promises" },
-  { label: "Dive Deeper",          href: "/dive-deeper" },
   { label: "Bible 365",            href: "/bible-365" },
   { label: "P.U.S.H. Prayer Wall", href: "/prayer-wall" },
   { label: "Heaven's Hearts",      href: "/heavens-hearts" },
@@ -75,6 +74,35 @@ export default function NavMenu() {
 
       {open && (
         <div className="absolute left-0 top-10 w-64 bg-black/80 backdrop-blur-md border border-white/20 rounded-2xl overflow-hidden shadow-2xl z-50">
+
+          {/* Install App — top of menu */}
+          {!isStandalone && (
+            <div className="px-3 pt-3 pb-2 border-b border-white/10">
+              <a
+                href="https://play.google.com/store/apps/details?id=app.guidinggrace.twa"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-white text-sm font-semibold py-2 px-2 rounded-lg hover:bg-white/10 transition mb-1"
+              >
+                📲 Get on Google Play
+              </a>
+              <button
+                onClick={handleInstall}
+                className="w-full text-left flex items-center gap-2 text-white text-sm py-2 px-2 rounded-lg hover:bg-white/10 transition"
+              >
+                ⊕ Add to Home Screen
+              </button>
+              {showIosInstructions && (
+                <div className="mx-2 mt-1 mb-1 bg-white/10 rounded-xl px-3 py-2 text-white/70 text-xs leading-relaxed">
+                  {isIos
+                    ? <>Tap <strong>⎙ Share</strong> then <strong>"Add to Home Screen"</strong></>
+                    : <>Tap browser menu (⋮) → <strong>"Install App"</strong></>
+                  }
+                </div>
+              )}
+            </div>
+          )}
+
           <div className="px-3 pt-3 pb-1">
             <p className="text-white/40 text-xs uppercase tracking-widest px-2 mb-1">Features</p>
             {features.map(f => (
@@ -101,24 +129,6 @@ export default function NavMenu() {
               <div className="text-white text-base py-2.5 px-2 rounded-lg hover:bg-white/10 transition">Terms & Conditions</div>
             </Link>
 
-            {!isStandalone && (
-              <>
-                <button
-                  onClick={handleInstall}
-                  className="w-full text-left text-white text-base py-2.5 px-2 rounded-lg hover:bg-white/10 transition"
-                >
-                  📲 Add to Home Screen
-                </button>
-                {showIosInstructions && (
-                  <div className="mx-2 mt-1 mb-2 bg-white/10 rounded-xl px-3 py-2 text-white/70 text-sm leading-relaxed">
-                    {isIos
-                      ? <><span>Tap </span><span className="font-bold">⎙ Share</span><span> at the bottom of your browser, then </span><span className="font-bold">"Add to Home Screen"</span></>
-                      : <><span>Tap your browser menu and choose </span><span className="font-bold">"Add to Home Screen"</span><span> or </span><span className="font-bold">"Install App"</span></>
-                    }
-                  </div>
-                )}
-              </>
-            )}
           </div>
         </div>
       )}
