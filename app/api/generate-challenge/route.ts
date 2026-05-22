@@ -31,21 +31,30 @@ export async function GET(req: Request) {
       "anthropic-version": "2023-06-01",
     },
     body: JSON.stringify({
-      model: "claude-sonnet-4-6",
-      max_tokens: 1000,
+      model: "claude-opus-4-7",
+      max_tokens: 2500,
       messages: [{
         role: "user",
-        content: `Today is ${fullDate}. Generate a daily Christian devotion and a matching real-world grace challenge for a faith app called Guiding Grace.
+        content: `Today is ${fullDate}. Generate a rich, deeply meaningful daily Christian devotion and two challenges for a faith app called Guiding Grace.
 
-Consider the season, any nearby Christian holidays (Easter season, Pentecost, Advent, Christmas, etc.), or meaningful dates like Mother's Day, Memorial Day, etc. for ${month} ${day}.
+Today is a specific day — ${month} ${day} — and it should feel like it. Deeply consider what makes this exact day in the year meaningful: the liturgical season (Advent, Christmas, Epiphany, Lent, Holy Week, Easter, Pentecost, Ordinary Time), any major Christian observances, and cultural moments that touch people's real lives — Mother's Day, Father's Day, Memorial Day, Veterans Day, Thanksgiving, New Year's, the first day of a new season, back-to-school time, harvest season, the longest day, the darkest week. If today lands near a holiday or meaningful date, let that shape the entire devotion. If it is an ordinary day, find the sacred in the ordinary — the turning of a season, a midweek struggle, a quiet Friday. Every single day of the year should feel handcrafted, not generic. The user should open this and think "this was written for today."
+
+EVERYTHING must be connected. The verse, the reflection, the Grace Challenge, and the Journal Challenge should all flow from the same spiritual thread — as if they were written as one unified message for the day. The challenges are not add-ons. They are the lived expression of the devotion.
+
+DEVOTION (reflection field): Write a rich, warm, personal reflection on the verse. Go beyond surface-level encouragement — draw out the deeper spiritual meaning, connect it to real human experience, and speak directly to the reader's heart. This should feel like a trusted pastor or friend sitting with them over coffee. Write as much as is needed to make it land.
+
+GRACE CHALLENGE (community/outward): This must grow directly out of the devotion's message — not just share the same theme, but carry the same spirit into action. It is a community or service-focused act of grace toward others. Completely free. Achievable by anyone, including people who are homebound, elderly, disabled, or isolated. Doable through any form of communication — in person, phone, text, email, social media, handwritten note, or from home. Never require travel or money. Reference the devotion's message so the user feels the connection between what they just read and what they are being called to do. Every day should feel fresh and different. Write as much as needed. End with one sentence offering an alternative for those who truly cannot do the main challenge. Format: the challenge, then 'Alternative: [alternative]'.
+
+JOURNAL CHALLENGE (personal/inward): This also flows directly from the devotion — but turns the lens inward. It is a private reflection challenge for the user's personal journal. Draw specific language or imagery from the verse and reflection. Ask the user to sit with something real — a habit, a fear, a place of pride or shame, a relationship with God they have been avoiding. This is not gentle fluff — it should gently press on something true. Write as much as needed to make it feel searching and honest.
 
 Return ONLY a JSON object with these exact fields, no markdown, no preamble:
 {
   "title": "Short devotion title (5 words or less)",
   "verse_reference": "Book Chapter:Verse",
   "verse_text": "The full verse text from NIV",
-  "reflection": "2-3 sentences of warm, personal spiritual reflection on the verse. Speak directly to the reader.",
-  "challenge": "One specific, practical, real-world act of grace the reader can do today that mirrors the devotion theme. 1-2 sentences. Warm and achievable. IMPORTANT: The challenge must never cost money or require any purchase. It should involve the person themselves (inner work, reflection, a personal habit) or their community (a neighbor, friend, stranger, family member, church) — or both. The goal is to strengthen faith through action, not transaction."
+  "reflection": "Rich, warm, personal devotion reflection. No length limit.",
+  "challenge": "The Grace Challenge — community/outward, rooted in today's devotion message, free, accessible to all, ends with Alternative: [one sentence].",
+  "journal_challenge": "The Journal Challenge — personal, inward, draws specific language from today's verse and reflection, presses gently on something real."
 }`
       }]
     }),
@@ -70,6 +79,7 @@ Return ONLY a JSON object with these exact fields, no markdown, no preamble:
       verse_reference: parsed.verse_reference,
       verse_text: parsed.verse_text,
       reflection: parsed.reflection,
+      journal_challenge: parsed.journal_challenge,
     });
   }
 
