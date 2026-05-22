@@ -124,14 +124,41 @@ export default async function Home() {
 
             {/* Grace Challenge */}
             {challenge && (
-              <div className="bg-white/10 backdrop-blur-sm border border-yellow-300/30 rounded-2xl p-5 mb-8">
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse" />
-                  <p className="text-yellow-300 text-base uppercase tracking-widest font-semibold">Today's Grace Challenge</p>
-                  <span className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse" />
+              <div className="bg-white/10 backdrop-blur-sm border border-yellow-300/30 rounded-2xl overflow-hidden mb-8">
+                <div className="p-5">
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse" />
+                    <p className="text-yellow-300 text-base uppercase tracking-widest font-semibold">Today's Grace Challenge</p>
+                    <span className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse" />
+                  </div>
+                  <p className="text-white text-lg leading-relaxed mb-4">{challenge.challenge_text}</p>
+                  <p className="text-white/50 text-sm italic mb-5">You can do this challenge right now — no sign-in needed. Join to share your response with the community and see who is honored as Most Loved 💛</p>
+
+                  {/* Locked response area */}
+                  <div className="relative">
+                    <textarea
+                      disabled
+                      placeholder="How did you show grace today? Share with the community..."
+                      rows={3}
+                      className="w-full bg-white/5 border border-white/15 rounded-xl px-4 py-3 text-white/30 placeholder-white/25 text-sm resize-none cursor-not-allowed"
+                    />
+                    <div className="absolute inset-0 flex items-center justify-center rounded-xl bg-black/30 backdrop-blur-[1px]">
+                      <div className="text-center px-4">
+                        <p className="text-2xl mb-1">🔒</p>
+                        <p className="text-white/80 text-sm font-semibold">Sign in to respond</p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <p className="text-white text-lg leading-relaxed mb-2">{challenge.challenge_text}</p>
-                <p className="text-white/40 text-base">Sign in to respond and see who the community honors as Most Loved 💛</p>
+
+                {/* CTA strip */}
+                <div className="border-t border-yellow-300/20 px-5 py-4 flex flex-col sm:flex-row gap-3 items-center justify-between">
+                  <p className="text-white/50 text-xs text-center sm:text-left">Free 3-day trial · No card required</p>
+                  <div className="flex gap-2">
+                    <Link href="/" className="px-4 py-2 bg-white/15 hover:bg-white/25 border border-white/25 text-white text-sm font-semibold rounded-xl transition">Sign In</Link>
+                    <Link href="/subscribe" className="px-4 py-2 bg-yellow-400/80 hover:bg-yellow-400 text-black text-sm font-bold rounded-xl transition">✨ Free Trial</Link>
+                  </div>
+                </div>
               </div>
             )}
 
