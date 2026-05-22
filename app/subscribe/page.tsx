@@ -64,7 +64,6 @@ export default function SubscribePage() {
       provider: "google",
       options: {
         redirectTo: `${window.location.origin}/auth/callback?next=/subscribe`,
-        queryParams: { prompt: "select_account" },
       },
     });
   }

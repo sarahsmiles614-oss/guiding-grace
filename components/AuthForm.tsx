@@ -30,17 +30,15 @@ export default function AuthForm() {
 
   async function handleGoogle() {
     setLoading(true); reset();
-    const next = isNewUser && localStorage.getItem("subscribe_intent") ? "/subscribe" : "/dashboard";
     await supabase.auth.signInWithOAuth({
       provider: "google",
-      options: { redirectTo: `${window.location.origin}/auth/callback?next=${next}` },
+      options: { redirectTo: `${window.location.origin}/auth/callback?next=/subscribe` },
     });
   }
 
   async function handleFacebook() {
     setLoading(true); reset();
-    const next = isNewUser && localStorage.getItem("subscribe_intent") ? "/subscribe" : "/dashboard";
-    await supabase.auth.signInWithOAuth({ provider: "facebook", options: { redirectTo: `${window.location.origin}/auth/callback?next=${next}` } });
+    await supabase.auth.signInWithOAuth({ provider: "facebook", options: { redirectTo: `${window.location.origin}/auth/callback?next=/subscribe` } });
   }
 
   async function handleEmailSubmit() {
