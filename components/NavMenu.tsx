@@ -78,14 +78,6 @@ export default function NavMenu() {
           {/* Install App — top of menu */}
           {!isStandalone && (
             <div className="px-3 pt-3 pb-2 border-b border-white/10">
-              <a
-                href="https://play.google.com/store/apps/details?id=app.guidinggrace.twa"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 text-white text-sm font-semibold py-2 px-2 rounded-lg hover:bg-white/10 transition mb-1"
-              >
-                📲 Get on Google Play
-              </a>
               <button
                 onClick={handleInstall}
                 className="w-full text-left flex items-center gap-2 text-white text-sm py-2 px-2 rounded-lg hover:bg-white/10 transition"
