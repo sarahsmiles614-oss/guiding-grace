@@ -33,7 +33,7 @@ export default function AuthForm() {
     const next = isNewUser && localStorage.getItem("subscribe_intent") ? "/subscribe" : "/dashboard";
     await supabase.auth.signInWithOAuth({
       provider: "google",
-      options: { redirectTo: `${window.location.origin}/auth/callback?next=${next}`, queryParams: { prompt: "select_account" } },
+      options: { redirectTo: `${window.location.origin}/auth/callback?next=${next}` },
     });
   }
 
