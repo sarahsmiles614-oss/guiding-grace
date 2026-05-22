@@ -20,7 +20,12 @@ export default function SubscribePage() {
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
-      setUser(data.user);
+      const u = data.user;
+      if (u?.email === "sarahsmiles614@gmail.com") {
+        window.location.href = "/dashboard";
+        return;
+      }
+      setUser(u);
       setLoading(false);
     });
   }, []);
