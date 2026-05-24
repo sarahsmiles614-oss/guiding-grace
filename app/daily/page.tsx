@@ -63,7 +63,7 @@ export default async function DailyPage() {
           <Link href="/" className="text-white/60 text-xs hover:text-white transition border border-white/20 px-3 py-1.5 rounded-xl">Sign In</Link>
         </nav>
 
-        <main className="flex-1 flex flex-col items-center px-6 py-10 max-w-2xl mx-auto w-full">
+        <main className="flex-1 flex flex-col items-center px-6 py-10 max-w-2xl md:max-w-3xl mx-auto w-full">
 
           <p className="text-white/40 text-xs uppercase tracking-widest mb-2">{today}</p>
           <p className="text-white/50 text-xs uppercase tracking-widest mb-8">Daily Devotion</p>
@@ -71,21 +71,21 @@ export default async function DailyPage() {
           {devotion ? (
             <>
               <h1
-                className="text-3xl sm:text-4xl font-bold text-white text-center mb-6 leading-tight"
+                className="text-3xl sm:text-4xl md:text-5xl font-bold text-white text-center mb-6 leading-tight"
                 style={{ fontFamily: "'Playfair Display', Georgia, serif", textShadow: "0 4px 20px rgba(0,0,0,0.8)" }}
               >
                 {devotion.title}
               </h1>
 
               <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-6 mb-6 w-full">
-                <p className="text-amber-200 text-xs font-semibold uppercase tracking-widest mb-3">{devotion.verse_reference}</p>
-                <p className="text-white text-lg leading-relaxed italic mb-4" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.8)", fontFamily: "'Lora', Georgia, serif" }}>
+                <p className="text-amber-200 text-sm md:text-base font-semibold uppercase tracking-widest mb-3">{devotion.verse_reference}</p>
+                <p className="text-white text-lg md:text-2xl leading-relaxed italic mb-4" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.8)", fontFamily: "'Lora', Georgia, serif" }}>
                   "{devotion.verse_text}"
                 </p>
               </div>
 
               <div className="w-full mb-8">
-                <p className="text-white text-lg leading-relaxed" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)", fontFamily: "'Lora', Georgia, serif" }}>
+                <p className="text-white text-lg md:text-xl leading-relaxed" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)", fontFamily: "'Lora', Georgia, serif" }}>
                   {devotion.reflection}
                 </p>
               </div>
