@@ -55,7 +55,14 @@ export default function GraceChallengeContent() {
 
   const loadChallenge = useCallback(async () => {
     const today = getToday();
-    let { data: c } = await supabase.from("grace_challenges").select("*").eq("challenge_date", today).single();
+
+    // Fetch today's challenge and yesterday's winner in parallel
+    const [{ data: c0 }] = await Promise.all([
+      supabase.from("grace_challenges").select("*").eq("challenge_date", today).single(),
+      loadYesterdayWinner(),
+    ]);
+
+    let c = c0;
 
     // If no challenge yet, try generating then re-fetch
     if (!c) {
@@ -74,8 +81,6 @@ export default function GraceChallengeContent() {
       setChallenge(c);
       await loadPosts(c.id);
     }
-    // Also load yesterday's winner to show as banner
-    await loadYesterdayWinner();
     setLoading(false);
   }, []);
 
@@ -107,49 +112,40 @@ export default function GraceChallengeContent() {
   }, [loadChallenge]);
 
   async function loadPosts(challengeId: string) {
-    const { data: { user } } = await supabase.auth.getUser();
-    const { data: p } = await supabase
-      .from("grace_challenge_posts")
-      .select("*")
-      .eq("challenge_id", challengeId)
-      .order("created_at", { ascending: false });
+    const [{ data: { user } }, { data: p }] = await Promise.all([
+      supabase.auth.getUser(),
+      supabase.from("grace_challenge_posts").select("*").eq("challenge_id", challengeId).order("created_at", { ascending: false }),
+    ]);
 
     if (!p) return;
     setPosts(p);
 
-    // Load all-time hearts for displayed users
     const userIds = [...new Set(p.map((x: any) => x.user_id))];
-    if (userIds.length > 0) {
-      const { data: totals } = await supabase
-        .from("user_heart_totals")
-        .select("user_id, lifetime_hearts")
-        .in("user_id", userIds);
-      if (totals) {
-        const map: Record<string, number> = {};
-        totals.forEach((t: any) => { map[t.user_id] = t.lifetime_hearts; });
-        setAllTimeHearts(map);
-      }
+
+    const [totalsResult, heartsResult, favsResult] = await Promise.all([
+      userIds.length > 0
+        ? supabase.from("user_heart_totals").select("user_id, lifetime_hearts").in("user_id", userIds)
+        : Promise.resolve({ data: null }),
+      user
+        ? supabase.from("grace_challenge_hearts").select("post_id").eq("giver_user_id", user.id).eq("challenge_id", challengeId)
+        : Promise.resolve({ data: null }),
+      user
+        ? supabase.from("grace_challenge_favorites").select("post_id").eq("user_id", user.id).eq("challenge_id", challengeId)
+        : Promise.resolve({ data: null }),
+    ]);
+
+    if (totalsResult.data) {
+      const map: Record<string, number> = {};
+      totalsResult.data.forEach((t: any) => { map[t.user_id] = t.lifetime_hearts; });
+      setAllTimeHearts(map);
     }
 
     if (user) {
       const mine = p.find((x: any) => x.user_id === user.id);
       if (mine) setUserPost(mine);
-
-      const { data: hearts } = await supabase
-        .from("grace_challenge_hearts")
-        .select("post_id")
-        .eq("giver_user_id", user.id)
-        .eq("challenge_id", challengeId);
-      if (hearts) setGivenHearts(hearts.map((h: any) => h.post_id));
-
-      const { data: favs } = await supabase
-        .from("grace_challenge_favorites")
-        .select("post_id")
-        .eq("user_id", user.id)
-        .eq("challenge_id", challengeId);
-      if (favs) setFavorites(favs.map((f: any) => f.post_id));
+      if (heartsResult.data) setGivenHearts(heartsResult.data.map((h: any) => h.post_id));
+      if (favsResult.data) setFavorites(favsResult.data.map((f: any) => f.post_id));
     }
-
   }
 
   async function loadYesterdayWinner() {
