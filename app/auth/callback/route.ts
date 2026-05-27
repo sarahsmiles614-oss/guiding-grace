@@ -31,7 +31,13 @@ export async function GET(request: NextRequest) {
         return NextResponse.redirect(new URL("/dashboard", requestUrl.origin));
       }
 
-      const { data: sub } = await supabase
+      // Use service role to bypass RLS — anon client may not have a fully
+      // established session at this point in the server-side callback flow
+      const adminSupabase = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.SUPABASE_SERVICE_ROLE_KEY!
+      );
+      const { data: sub } = await adminSupabase
         .from("subscriptions")
         .select("status, trial_end_date")
         .eq("user_id", user.id)

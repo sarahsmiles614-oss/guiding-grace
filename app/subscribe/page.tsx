@@ -19,11 +19,24 @@ export default function SubscribePage() {
   const [checkEmail, setCheckEmail] = useState(false);
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => {
+    supabase.auth.getUser().then(async ({ data }) => {
       const u = data.user;
-      if (u?.email === "sarahsmiles614@gmail.com") {
+      if (u?.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
         window.location.href = "/dashboard";
         return;
+      }
+      if (u) {
+        const { data: sub } = await supabase
+          .from("subscriptions")
+          .select("status, trial_end_date")
+          .eq("user_id", u.id)
+          .single();
+        const isActive = sub?.status === "active";
+        const isTrialing = sub?.status === "trialing" && sub?.trial_end_date && new Date(sub.trial_end_date) > new Date();
+        if (isActive || isTrialing) {
+          window.location.href = "/dashboard";
+          return;
+        }
       }
       setUser(u);
       setLoading(false);
