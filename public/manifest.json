@@ -2,7 +2,7 @@
   "name": "Guiding Grace",
   "short_name": "Guiding Grace",
   "description": "A daily faith companion",
-  "start_url": "/dashboard",
+  "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "background_color": "#1e0a3c",

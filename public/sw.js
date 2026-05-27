@@ -1,4 +1,4 @@
-const CACHE = "guiding-grace-v4";
+const CACHE = "guiding-grace-v5";
 
 self.addEventListener("install", () => self.skipWaiting());
 self.addEventListener("activate", (e) =>
@@ -26,7 +26,7 @@ self.addEventListener("fetch", (e) => {
         }
         return res;
       })
-      .catch(() => caches.match(e.request))
+      .catch(() => caches.match(e.request).then(cached => cached || new Response("", { status: 503 })))
   );
 });
 
