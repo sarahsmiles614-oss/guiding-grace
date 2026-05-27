@@ -5,6 +5,7 @@ import AuthForm from "@/components/AuthForm";
 import ScreenshotGallery from "@/components/ScreenshotGallery";
 import NavMenu from "@/components/NavMenu";
 import InstallBanner from "@/components/InstallBanner";
+import ShareButton from "@/components/ShareButton";
 
 const BG = "https://pkfaahfiqcedqblrcoqd.supabase.co/storage/v1/object/public/Images%204/heejing-kim-TqaFGqxiCQo-unsplash.jpg";
 
@@ -113,9 +114,13 @@ export default async function Home() {
                     </p>
 
                     <div className="flex flex-col items-center gap-2">
-                      <div className="bg-pink-500/70 backdrop-blur-sm text-white text-sm font-semibold px-5 py-2 rounded-full">
-                        🤍 Share This Devotion
-                      </div>
+                      <ShareButton
+                        title={`${devotion.title} — Guiding Grace`}
+                        text={`"${devotion.verse_text}" — ${devotion.verse_reference}\n\n${devotion.reflection}`}
+                        url="https://guidinggrace.app"
+                        label="🤍 Share This Devotion"
+                        className="bg-pink-500/70 backdrop-blur-sm hover:bg-pink-500/90 text-white text-sm font-semibold px-5 py-2 rounded-full transition"
+                      />
                     </div>
 
                   </div>
