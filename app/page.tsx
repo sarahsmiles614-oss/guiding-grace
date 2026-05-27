@@ -65,7 +65,7 @@ export default async function Home() {
 
         {/* All content centered */}
         <div className="flex-1 w-full flex flex-col items-center px-4 py-8">
-          <div className="w-full max-w-lg">
+          <div className="w-full max-w-lg md:max-w-2xl">
 
             {/* Hero */}
             <div className="text-center mb-6">
@@ -80,7 +80,7 @@ export default async function Home() {
 
             {/* Sign in — top of page */}
             <div className="flex flex-col items-center mb-10">
-              <div className="w-full max-w-xs">
+              <div className="w-full max-w-xs md:max-w-sm">
                 <AuthForm />
               </div>
             </div>
