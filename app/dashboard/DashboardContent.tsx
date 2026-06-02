@@ -8,7 +8,7 @@ import PageBackground from "@/components/PageBackground";
 import ShareButton from "@/components/ShareButton";
 import NavMenu from "@/components/NavMenu";
 
-const ADMIN_EMAILS = ["sarahsmiles614@gmail.com"];
+const ADMIN_EMAILS = [process.env.NEXT_PUBLIC_ADMIN_EMAIL ?? ""].filter(Boolean);
 
 export default function DashboardContent() {
   const router = useRouter();

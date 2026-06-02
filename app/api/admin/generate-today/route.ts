@@ -1,12 +1,13 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { getTodayNY } from "@/lib/dates";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-export async function POST(req: Request) {
+export async function GET(req: Request) {
   const auth = req.headers.get("authorization");
   const isAdmin = auth === `Bearer ${process.env.CRON_SECRET}`;
   if (!isAdmin) {
@@ -15,18 +16,15 @@ export async function POST(req: Request) {
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
     );
     const { data: { user } } = await anonClient.auth.getUser();
-    if (!user || user.email !== "sarahsmiles614@gmail.com") {
+    if (!user || user.email !== process.env.ADMIN_EMAIL) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
   }
 
   const date = new Date();
-  const today = new Intl.DateTimeFormat("en-US", {
-    timeZone: "America/New_York", year: "numeric", month: "2-digit", day: "2-digit",
-  }).format(date).replace(/(\d+)\/(\d+)\/(\d+)/, "$3-$1-$2");
+  const today = getTodayNY();
   const fullDate = date.toLocaleString("en-US", { timeZone: "America/New_York", month: "long", day: "numeric", year: "numeric" });
   const month = date.toLocaleString("en-US", { timeZone: "America/New_York", month: "long" });
-  const day = parseInt(new Intl.DateTimeFormat("en-US", { timeZone: "America/New_York", day: "numeric" }).format(date));
 
   const { data: existingDevotion } = await supabase.from("daily_devotions").select("id").eq("devotion_date", today).single();
   const { data: existingChallenge } = await supabase.from("grace_challenges").select("id").eq("challenge_date", today).single();
@@ -78,6 +76,10 @@ Return ONLY a JSON object with these exact fields, no markdown, no preamble:
   let parsed;
   try { parsed = JSON.parse(text); }
   catch { return NextResponse.json({ error: "Failed to parse", raw: text }, { status: 500 }); }
+
+  const required = ["title", "verse_reference", "verse_text", "reflection", "challenge", "journal_challenge"];
+  const missing = required.filter((k) => !parsed[k]);
+  if (missing.length) return NextResponse.json({ error: `Missing fields: ${missing.join(", ")}`, raw: text }, { status: 500 });
 
   if (!existingDevotion) {
     await supabase.from("daily_devotions").insert({
@@ -178,3 +180,5 @@ Return ONLY a JSON object with these exact fields, no markdown, no preamble:
 
   return NextResponse.json({ message: "Generated", title: parsed.title });
 }
+
+export { GET as POST };

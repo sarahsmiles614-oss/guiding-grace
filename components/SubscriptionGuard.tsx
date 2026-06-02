@@ -13,7 +13,7 @@ export default function SubscriptionGuard({ children }: { children: React.ReactN
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) { router.push("/"); return; }
 
-      if (user.email === "sarahsmiles614@gmail.com") {
+      if (user.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
         setAllowed(true); setChecking(false); return;
       }
 

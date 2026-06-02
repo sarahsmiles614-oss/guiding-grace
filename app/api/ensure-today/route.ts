@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { getTodayNY } from "@/lib/dates";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -20,9 +21,7 @@ export async function POST(req: Request) {
   const { data: { user } } = await anonClient.auth.getUser(token);
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const today = new Intl.DateTimeFormat("en-US", {
-    timeZone: "America/New_York", year: "numeric", month: "2-digit", day: "2-digit",
-  }).format(new Date()).replace(/(\d+)\/(\d+)\/(\d+)/, "$3-$1-$2");
+  const today = getTodayNY();
 
   const { data: existingDevotion } = await supabase.from("daily_devotions").select("id").eq("devotion_date", today).single();
   const { data: existingChallenge } = await supabase.from("grace_challenges").select("id").eq("challenge_date", today).single();
@@ -115,6 +114,10 @@ Return ONLY a valid JSON object. No markdown, no explanation, no preamble. Exact
   let parsed;
   try { parsed = JSON.parse(text); }
   catch { return NextResponse.json({ error: "Failed to parse" }, { status: 500 }); }
+
+  const required = ["title", "verse_reference", "verse_text", "reflection", "challenge", "journal_challenge"];
+  const missing = required.filter((k) => !parsed[k]);
+  if (missing.length) return NextResponse.json({ error: `Missing fields: ${missing.join(", ")}` }, { status: 500 });
 
   if (!existingDevotion) {
     await supabase.from("daily_devotions").insert({
